@@ -1,0 +1,71 @@
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: rgb(101, 7, 7);
+}
+
+
+.cardContainer{
+  background-color: white;
+  height: 250px;
+  width: 400px;
+  box-shadow:5px 5px 5px rgba(5, 5, 5, 0.068);
+  margin: 10px;
+  padding:15px;
+}
+.upperContainer{
+  height :30px;
+  width: 400px;
+  justify-content: space-between;
+  display: flex;
+}
+
+.upperContainer h2{
+  font-size: 12px;
+  padding: 2px;
+  color: black;
+
+}
+
+.upperContainer h1{
+  font-size: 21px;
+  padding: 2px;
+  color: black;
+  font-weight: bold;
+
+}
+.previewContainer{
+  background-color: rgba(0, 0, 0, 0.348);
+  height: 150px;
+  border-radius: 2%;
+  margin-top: 0px;
+  transition: transform 0.4s ease; /* Increased duration, smoother timing */
+  will-change: transform; /* Optimize for transform animations */
+  transform: translateZ(0);
+}
+.bottomContainer{
+  text-align: left;
+}
+
+.bottomContainer h2 {
+ color: black;
+}
+
+
+
+.cardContainer:hover .previewContainer {
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.button{
+  display: inline-block;
+  background-color: red;
+  border-color: black;
+  padding: 10px 20px;
+  border-radius: 50%;
+  box-shadow: 5px 5px 5px rgba(5, 5, 5, 0.068);
+  cursor: pointer;
+}
+

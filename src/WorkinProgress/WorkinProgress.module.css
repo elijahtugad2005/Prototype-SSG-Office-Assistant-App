@@ -1,0 +1,17 @@
+.adminPage {
+  padding: 20px;
+  text-align: center;
+}
+
+.adminPage h2 {
+  color: rgb(255, 255, 255); /* Match Header theme */
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.adminPage p {
+  color: #fff4f4;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
