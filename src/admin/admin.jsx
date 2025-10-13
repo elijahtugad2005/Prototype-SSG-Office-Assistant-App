@@ -11,15 +11,16 @@ function admin (){
 
 
 
-        <div>
-            
-            
-            <Dashboard></Dashboard>
-            
-            
-        
+        <div className={styles.container}>
+           
+            <div className={styles.pagetitle}>
+                <h1>ADMIN DASHBOARD</h1>
+            </div>
+
+            <div className={styles.dashboard}>
+                <Dashboard />
+            </div>
         </div>
-        
     
     );
 }

@@ -55,11 +55,13 @@ body {
   transform: translateZ(0);
 }
 .bottomContainer{
+  margin-top: 0.5rem;
   text-align: left;
 }
 
 .bottomContainer h2 {
  color: black;
+ font-size: 12px;
 }
 
 
