@@ -8,6 +8,7 @@ function Card({
   description = 'No description provided',
   date = 'Unknown',
   to = '',
+  image = '',
 })
  
     
@@ -36,7 +37,15 @@ function Card({
         <h1>{title}</h1>
         <h2 className="priorityContainer">{accessLevel}</h2>
       </div>
-      <div className="previewContainer"></div>
+      <div className="previewContainer">
+        
+         {image ? (
+            <img src={image} alt="Preview" className = "image" />
+          ) : (
+            <p style={{ color: '#1a1818ff' }}>No image uploaded</p>
+          )}
+          
+      </div>
       <div className="bottomContainer">
         <h2>Description: {description}</h2>
         <h2>Date: {date}</h2>

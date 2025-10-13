@@ -27,6 +27,7 @@ const Document = () => {
           description={card.description}
           date={card.date}
           to ={card.to}
+          image = {card.image}
         />
       ))}
     </div>

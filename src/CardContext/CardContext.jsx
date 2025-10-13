@@ -11,6 +11,7 @@ export const CardProvider = ({ children }) =>{
             description: "Monthly financial summary.",
             date: "2025-10-01",
             to: "/finance",
+            image: "",
         }
     ]);
 

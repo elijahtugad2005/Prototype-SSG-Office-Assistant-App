@@ -4,6 +4,7 @@ import styles from './Dashboard.module.css';
 
 
 function Dashboard (){
+   
     const { addCard } = useContext(CardContext);
 
     const [newCard , setNewCard] = useState({
@@ -11,6 +12,7 @@ function Dashboard (){
         accessLevel: "",
         description: "",
         date: "",
+        image: "",
         to: "",  
     })
 
@@ -19,6 +21,13 @@ function Dashboard (){
         setNewCard({...newCard, [name]: value});
     };
 
+    const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageURL = URL.createObjectURL(file);
+      setNewCard({ ...newCard, image: imageURL });
+    }
+  };
       
     const [success, setSuccess] = useState(false);
     
@@ -41,13 +50,15 @@ function Dashboard (){
 
     <div>
         <div className={styles.dashboardContainer}>
-        <h1>Admin Dashboard</h1>
+        <h1>AddCard Dashboard</h1>
         <form onSubmit={handleSubmit} className={styles.form}>
             <input name="title" value={newCard.title} onChange={handleChange} placeholder="Title" required />
             <input name="accessLevel" value={newCard.accessLevel} onChange={handleChange} placeholder="Access Level" required />
             <input name="description" value={newCard.description} onChange={handleChange} placeholder="Description" required />
             <input name="date" type="date" value={newCard.date} onChange={handleChange} required />
             <input name="to" value={newCard.to} onChange={handleChange} placeholder="Link path" required />
+            
+            <input type = "file" accept='image/*' onChange={handleImageUpload}/>
             <button type="submit">Add Card</button>
         </form>
 
