@@ -1,16 +1,100 @@
-# React + Vite
+# 🧑‍💼 Prototype: SSG Office Assistant App (Admin Dashboard)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📘 Overview
+The **SSG Office Assistant App** is a React-based admin dashboard designed to help student leaders efficiently manage and organize member data.  
+It allows administrators to **add**, **view**, **edit**, and **delete** member profiles that include personal and organizational information such as name, ID, address, position, and photo.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Current Progress (as of October 2025)
 
-## React Compiler
+### ✅ Phase 1: UI & Frontend Setup — *Completed*
+- Project initialized with **React.js (Vite)**.
+- Folder structure established (`components`, `styles`, etc.).
+- `Admin.jsx` and `Dashboard.jsx` pages created.
+- Connected styles using **vanilla CSS modules**.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### ✅ Phase 2: Member Management System — *Completed*
+- Added **Member Dashboard** page (`MemberDashboard.jsx`).
+- Integrated form inputs for:
+  - Full Name
+  - ID Number
+  - Address
+  - Position (dropdown)
+  - Photo upload and live preview
+- Implemented **Add Member** functionality using React `useState`.
 
-## Expanding the ESLint configuration
+### ✅ Phase 3: Member Listing & Card Layout — *Completed*
+- Created `Memberlist.jsx` component to dynamically display added members.
+- Styled member cards with name, ID, position, and uploaded photo.
+- Implemented responsive card layout using **Flexbox**.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### ✅ Phase 4: Edit & Delete Functionalities — *Completed*
+- Added ✏️ **Edit** and 🗑️ **Delete** buttons on each card.
+- Editing a member pre-fills the form for quick updates.
+- Delete confirmation ensures safe removal.
+- Updated state management logic for clean and bug-free re-rendering.
+
+---
+
+## 🔧 Technologies Used
+- **React.js (Vite)** — Component-based architecture
+- **JavaScript (ES6)** — Logic and interactivity
+- **HTML5 + Vanilla CSS** — Structure and styling
+- **React Hooks** — For handling component states (`useState`)
+- **Git + GitHub** — Version control and remote repository
+
+---
+
+## 🧱 Project Structure
+📂 Shirio/
+┣ 📁 src/
+┃ ┣ 📁 components/
+┃ ┃ ┣ 📜 Admin.jsx
+┃ ┃ ┣ 📜 Dashboard.jsx
+┃ ┃ ┣ 📜 MemberDashboard.jsx
+┃ ┃ ┗ 📜 Memberlist.jsx
+┃ ┣ 📁 styles/
+┃ ┃ ┗ 📜 memberdashboard.module.css
+┃ ┗ 📜 main.jsx
+┣ 📜 package.json
+┣ 📜 README.md
+┗ 📜 index.html
+
+yaml
+Copy code
+
+---
+
+## 🎯 Upcoming Features (Planned)
+- 🔐 **Authentication System** (Admin login before accessing dashboard)
+- ☁️ **Firebase Integration** (Store member data and photos online)
+- 📱 **Responsive Design Enhancements** for mobile screens
+- 🧩 **Search & Filter Members** by name or position
+- 📤 **Export Members List** (CSV or PDF report)
+
+---
+
+## 🖼️ Preview
+*(Screenshot preview to be added once UI is finalized)*
+
+---
+
+## 🧠 Developer Notes
+> The project demonstrates key React concepts such as component reusability, controlled forms, and state lifting between components.  
+> This will later evolve into a full **Student Government Office Management System**, integrating data storage, authentication, and member analytics.
+
+---
+
+## 🧑‍💻 Contributors
+- **Elijah Tugad** — Developer & Designer
+
+---
+
+## 📅 Last Updated
+**October 12, 2025**
+
+---
+
+## 💾 Repository
+👉 [GitHub Repository Link](https://github.com/elijahtugad2005/Prototype-SSG-Office-Assistant-App)

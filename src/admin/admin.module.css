@@ -1,23 +1,26 @@
 .container {
      display: flex;
     flex-direction: column; /* stack elements vertically */
-    align-items: center; 
+     
 }
 
 .pagetitle{
+    
     border: 2px solid black;
     border-radius: 1rem;
-    background-color: rgb(216, 190, 190);
-    width: 210px;
+    background-color: rgb(255, 255, 255);
+    width: 150px;
+    height: 40px;
     padding: 1rem 2rem;
     text-align: center;
     color: black;
+    
 }
 
 .pagetitle h1,
 .pagetitle h2 {
-    color: rgb(223, 0, 0);
-    font-size: 24px;
+    color: rgb(0, 0, 0);
+    font-size: 20px;
 }
 
 .dashboard{

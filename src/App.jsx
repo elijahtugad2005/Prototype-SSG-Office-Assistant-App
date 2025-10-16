@@ -1,11 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
 import { CardProvider } from './CardContext/CardContext.jsx';
 import AdminPage from './admin/admin.jsx';
-import Header from './Header/Header.jsx';
-import Sidebar from './Sidebar/Sidebar.jsx';
-import Document from './Document Page/Document.jsx';
+import Header from './components/Header/Header.jsx';
+import Sidebar from './components/Sidebar/Sidebar.jsx';
+import Document from './components/Document Page/Document.jsx';
 import styles from './App.module.css';
-import WorkinProgress from './WorkinProgress/WorkinProgress.jsx';
+import WorkinProgress from './components/WorkinProgress/WorkinProgress.jsx';
+import MemberDashboard from './components/MemberDashboard.jsx';
 function App() {
   return (
     <div className={styles.app}>
@@ -16,7 +17,7 @@ function App() {
           <CardProvider>
             
             <Routes>
-              <Route path="/" element={<Document />} />
+              <Route path="/" element={<MemberDashboard />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/finance" element={<WorkinProgress />} />
               <Route path="/reports" element={<WorkinProgress />} />

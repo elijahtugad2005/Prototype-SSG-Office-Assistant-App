@@ -1,6 +1,6 @@
-import Card from "../Card";
+import Card from "../../Card.jsx";
 import styles from "./Document.module.css"
-import { CardContext } from '../CardContext/CardContext.jsx';
+import { CardContext } from '../../CardContext/CardContext.jsx';
 import React, { useContext, useEffect} from 'react';
 const Document = () => {
 
@@ -18,7 +18,8 @@ const Document = () => {
   
 
   return (
-    <div className={styles.cardgrid}>
+    <>
+       <div className={styles.cardgrid}>
       {cards.map((card, index) => (
         <Card
           key={index}
@@ -31,6 +32,10 @@ const Document = () => {
         />
       ))}
     </div>
+
+      
+    </>
+   
   );
 };
 export default Document
