@@ -1,4 +1,4 @@
-# 🧑‍💼 Prototype: SSG Office Assistant App (Admin Dashboard)
+<img width="1051" height="616" alt="image" src="https://github.com/user-attachments/assets/5fa0be61-ca6f-439d-a078-a14cce7aaa40" /># 🧑‍💼 Prototype: SSG Office Assistant App (Admin Dashboard)
 
 ## 📘 Overview
 The **SSG Office Assistant App** is a React-based admin dashboard designed to help student leaders efficiently manage and organize member data.  
@@ -76,7 +76,8 @@ Copy code
 ---
 
 ## 🖼️ Preview
-*(Screenshot preview to be added once UI is finalized)*
+*![Logo](src/assets/preview.jpg)
+*
 
 ---
 
