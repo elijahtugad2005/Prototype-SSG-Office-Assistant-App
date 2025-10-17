@@ -36,23 +36,12 @@ import Memberslist from './Memberlist';
     };
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-
-        if(editIndex !== null){
-            const updated = [...members];
-            updated[editIndex] = member;
-            setMembers(updated);
-            setEditIndex(null);
-            alert('Member updated successfully!')
-        }
-        else{
-            
+          
+          e.preventDefault();
             setMembers((prev) => [...prev, member]);
             console.log("Member added :", member);
             alert(` ${member.name} addedd successfully!`);
 
-        }
-       
         //reset
 
         setMember({  name: "", id: "", address: "", position: "", photo: null })
@@ -60,20 +49,11 @@ import Memberslist from './Memberlist';
     };
     
 
-    const handleEdit = (index) => {
-        const selected = members[index];
-        setMember(selected);
-        setPreview(selected.photo ? URL.createObjectURL(selected.photo) : null);
-        setEditIndex(index);
-    }
-    const handleDelete = (index) => {
-    if (window.confirm('Are you sure you want to delete this member?')) {
-      const filtered = members.filter((_, i) => i !== index);
-      setMembers(filtered);
-    }
-  };
+
     
-    return (  <div className={styles.container}>
+    return (  
+    <>
+    <div className={styles.container}>
       <h1 className={styles.title}>Admin — Add Member</h1>
 
       <form onSubmit={handleSubmit} className={styles.form}>
@@ -123,11 +103,15 @@ import Memberslist from './Memberlist';
           <img src={preview} alt="Preview" className={styles.preview} />
         )}
 
-        <button type="submit">{editIndex !== null ? 'Update Member ' : 'Add Member'}</button>
+      <button type ="submit"> Add Member </button>
       </form>
-
-       <Memberslist members={ members } onEdit ={handleEdit} onDelete={handleDelete} />
+        
+         <div className={styles.memberListWrapper}>
+            <Memberslist members={members} setMembers={setMembers} />
+          </div>
     </div>
+        
+  </>
   );
 }
 export default MemberDashboard

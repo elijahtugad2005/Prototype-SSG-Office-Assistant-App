@@ -1,66 +1,155 @@
-.listContainer {
+/* ================================
+   MEMBERLIST.MODULE.CSS
+   A modern, minimalist design for Member Cards
+   with responsive grid layout and hover animations
+   ================================ */
+
+/* ---------- GLOBAL CONTAINER ---------- */
+.memberListContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive card grid */
+  gap: 1.5rem; /* Space between cards */
+  padding: 2rem; /* Outer spacing */ /* Centers cards horizontally */
+  align-items: start;
+  margin-top: 1rem;
   width: 100%;
-  max-width: 1000px;
+  margin-inline: auto;
+  background-color: #4c1515; /* Matches your body color */
+  font-family: Arial, sans-serif; /* Base body font */
+  box-sizing: border-box;
 }
 
-.card {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.2s ease;
+/* ---------- CARD STYLING ---------- */
+.memberCard {
+  width: 300px;
+  background-color: #fff; /* Clean white background for contrast */
+  border-radius: 1rem; /* Smooth round corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Soft depth shadow */
+  padding: 1.5rem;
+  text-align: center; /* Centers text and photo */
+  transition: transform 0.25s ease, box-shadow 0.25s ease; /* Smooth hover animation */
 }
 
-.card:hover {
-  transform: translateY(-5px);
+/* Hover effect: card gently lifts when hovered */
+.memberCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
 }
 
-.imageWrapper {
+/* ---------- PROFILE IMAGE ---------- */
+.memberPhoto {
   width: 100px;
   height: 100px;
-  border-radius: 50%;
-  overflow: hidden;
+  border-radius: 50%; /* Makes photo circular */
+  object-fit: cover; /* Ensures image fills space cleanly */
   margin-bottom: 1rem;
-  border: 2px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: 3px solid #fe5c03; /* Accent ring from sidebar color */
 }
 
-.photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+/* ---------- TEXT CONTENT ---------- */
+.memberName {
+  font-family: 'Bebas Neue', sans-serif; /* For display names later */
+  font-size: 1.4rem;
+  color: #820000; /* Header tone for visual link */
+  letter-spacing: 1px;
+  margin-bottom: 0.3rem;
 }
 
-.noPhoto {
-  color: #aaa;
+.memberPosition {
+  font-size: 1rem;
+  color: #000000; /* Neutral readable tone */
+  margin-bottom: 0.5rem;
+}
+
+.memberID {
   font-size: 0.9rem;
+  color: #ee0d0d; /* Subtle secondary info color */
 }
 
-.info {
-  text-align: center;
+/* ---------- BUTTON SECTION ---------- */
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
-.info h3 {
-  margin: 0.3rem 0;
-  color: #222;
+/* Base style for buttons (minimalist & pill-like) */
+.memberButton {
+  background-color: transparent; /* Flat by default */
+  border: 2px solid #fe5c03; /* Accent border color */
+  color: #fe5c03; /* Text color matches border */
+  padding: 0.4rem 1rem;
+  border-radius: 50px; /* Rounded pill shape */
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Smooth hover transition */
 }
 
-.info p {
-  margin: 0.2rem 0;
-  color: #555;
+.cardButtons button{
+   background-color: transparent; /* Flat by default */
+  border: 2px solid #fe5c03; /* Accent border color */
+  color: #fe5c03; /* Text color matches border */
+  padding: 0.5rem 1rem;
+  border-radius: 50px; /* Rounded pill shape */
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0.5rem;
 }
 
-.empty {
-  color: #999;
-  text-align: center;
-  font-style: italic;
+/* Hover state: fills with color */
+.cardButtons button:hover {
+  background-color: #fe5c03;
+  color: #000000;
+  transform: translateY(-2px); /* Subtle lift */
+}
+
+/* Optional: distinct delete button variation */
+.deleteButton {
+  border-color: #820000;
+  color: #820000;
+}
+
+.deleteButton:hover {
+  background-color: #820000;
+  color: #fff;
+}
+
+/* ---------- RESPONSIVENESS ---------- */
+/* Tablet view adjustments */
+@media (max-width: 768px) {
+  .memberListContainer {
+
+   grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .memberCard {
+    padding: 1rem;
+  }
+
+  .memberName {
+    font-size: 1.2rem;
+  }
+}
+
+/* Mobile view adjustments */
+@media (max-width: 480px) {
+  .memberListContainer {
+    grid-template-columns: 1fr; /* Stack cards in one column */
+  }
+
+  .memberPhoto {
+    width: 80px;
+    height: 80px;
+  }
+
+  .memberButton {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+  }
 }

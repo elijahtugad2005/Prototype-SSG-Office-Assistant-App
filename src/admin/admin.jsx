@@ -7,9 +7,6 @@ function admin (){
 
     return (
 
-     
-
-
 
         <div className={styles.container}>
            
