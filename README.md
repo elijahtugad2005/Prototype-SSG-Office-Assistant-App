@@ -76,7 +76,9 @@ Copy code
 ---
 
 ## 🖼️ Preview
-*(Screenshot preview to be added once UI is finalized)*
+*![Logo](src/assets/preview.jpg)
+*
+<img width="1051" height="616" alt="image" src="https://github.com/user-attachments/assets/5fa0be61-ca6f-439d-a078-a14cce7aaa40" />
 
 ---
 
