@@ -4,12 +4,14 @@ import { db } from "../firebase/firebaseConfig";
 import { doc, updateDoc, deleteDoc } from "firebase/firestore";
 
 export default function Memberlist({ members = [], setMembers }) {
-  const [editingId, setEditingId] = useState(null);
+  // 🐛 Changed 'editingId' to 'editingDocId' to clearly indicate it holds the Firestore document ID.
+  const [editingDocId, setEditingDocId] = useState(null); 
   const [editedMember, setEditedMember] = useState({});
 
   // 🔧 Begin Edit
   const handleEditClick = (member) => {
-    setEditingId(member.id);
+    // 🐛 Ensure we're storing the Firestore's unique 'docId' for editing identification.
+    setEditingDocId(member.docId); 
     setEditedMember({ ...member });
   };
 
@@ -20,9 +22,11 @@ export default function Memberlist({ members = [], setMembers }) {
   };
 
   // 💾 Save to Firestore and local state
-  const handleSave = async (id) => {
+  // 🐛 The parameter 'docIdToUpdate' now correctly refers to the Firestore document ID.
+  const handleSave = async (docIdToUpdate) => { 
     try {
-      const memberRef = doc(db, "members", id);
+      // 🐛 Using 'docIdToUpdate' for the Firestore document reference.
+      const memberRef = doc(db, "members", docIdToUpdate); 
       await updateDoc(memberRef, {
         name: editedMember.name || "",
         address: editedMember.address || "",
@@ -30,10 +34,11 @@ export default function Memberlist({ members = [], setMembers }) {
       });
 
       const updatedMembers = members.map((m) =>
-        m.id === id ? { ...m, ...editedMember } : m
+        // 🐛 Update the local state by comparing against the Firestore 'docId'.
+        m.docId === docIdToUpdate ? { ...m, ...editedMember } : m 
       );
       setMembers(updatedMembers);
-      setEditingId(null);
+      setEditingDocId(null); // Reset editing state after saving
       alert(`✅ ${editedMember.name} updated successfully!`);
     } catch (error) {
       console.error("🔥 Error updating member:", error);
@@ -43,16 +48,23 @@ export default function Memberlist({ members = [], setMembers }) {
 
   // ❌ Cancel editing
   const handleCancel = () => {
-    setEditingId(null);
+    setEditingDocId(null); // Reset editing state
   };
 
   // 🗑️ Delete member from Firestore and local state
-  const handleDelete = async (id) => {
-    if (!id) return alert("Invalid member ID");
+  // 🐛 The parameter 'docIdToDelete' correctly refers to the Firestore document ID.
+  const handleDelete = async (docIdToDelete) => { 
+    // 🐛 Check if 'docIdToDelete' is valid before proceeding.
+    if (!docIdToDelete) {
+        console.error("Attempted to delete with an invalid docIdToDelete:", docIdToDelete);
+        return alert("Invalid member ID for deletion. Please refresh and try again.");
+    }
     if (window.confirm("Are you sure you want to delete this member?")) {
       try {
-        await deleteDoc(doc(db, "members", id));
-        setMembers(members.filter((m) => m.id !== id));
+        // 🐛 Using 'docIdToDelete' for the Firestore document reference.
+        await deleteDoc(doc(db, "members", docIdToDelete)); 
+        // 🐛 Filter the local state by comparing against the Firestore 'docId'.
+        setMembers(members.filter((m) => m.docId !== docIdToDelete)); 
         alert("🗑️ Member deleted successfully!");
       } catch (error) {
         console.error("🔥 Error deleting member:", error);
@@ -70,8 +82,10 @@ export default function Memberlist({ members = [], setMembers }) {
           <p>No members added yet.</p>
         ) : (
           members.map((member) => (
-            <div key={member.id} className={styles.memberCard}>
-              {editingId === member.id ? (
+            // 🐛 Crucially, use 'member.docId' as the React key. This fixes the "duplicate key" warning.
+            <div key={member.docId} className={styles.memberCard}> 
+              {/* 🐛 Compare against 'editingDocId' to determine if this card is being edited. */}
+              {editingDocId === member.docId ? ( 
                 // Inline Edit Form
                 <div className={styles.editForm}>
                   <input
@@ -98,7 +112,8 @@ export default function Memberlist({ members = [], setMembers }) {
                     <option>Member</option>
                   </select>
                   <div className={styles.inlineButtons}>
-                    <button onClick={() => handleSave(member.id)}>💾 Save</button>
+                    {/* 🐛 Pass 'member.docId' to handleSave. */}
+                    <button onClick={() => handleSave(member.docId)}>💾 Save</button> 
                     <button onClick={handleCancel}>❌ Cancel</button>
                   </div>
                 </div>
@@ -120,12 +135,15 @@ export default function Memberlist({ members = [], setMembers }) {
                   )}
                   <h3>{member.name}</h3>
                   <p><strong>{member.position}</strong></p>
-                  <p>ID: {member.studentId}</p>
+                  {/* Display the user-entered 'id' (studentId in your case) */}
+                  <p>ID: {member.id}</p> 
                   <p>{member.address}</p>
 
                   <div className={styles.cardButtons}>
-                    <button onClick={() => handleEditClick(member)}>✏️ Edit</button>
-                    <button onClick={() => handleDelete(member.id)}>🗑️ Delete</button>
+                    {/* 🐛 Pass the entire 'member' object to handleEditClick, which internally extracts 'docId'. */}
+                    <button onClick={() => handleEditClick(member)}>✏️ Edit</button> 
+                    {/* 🐛 Pass 'member.docId' to handleDelete. */}
+                    <button onClick={() => handleDelete(member.docId)}>🗑️ Delete</button> 
                   </div>
                 </>
               )}

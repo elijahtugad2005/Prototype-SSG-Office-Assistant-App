@@ -1,128 +1,99 @@
-/* ================================
-   MEMBERLIST.MODULE.CSS
-   A modern, minimalist design for Member Cards
-   with responsive grid layout and hover animations
-   ================================ */
+/* MEMBERLIST.MODULE.CSS */
+/* A modern, minimalist design for Member Cards
+   with responsive grid layout and hover animations */
 
-/* ---------- GLOBAL CONTAINER ---------- */
 .memberListContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive card grid */
-  gap: 1.5rem; /* Space between cards */
-  padding: 2rem; /* Outer spacing */ /* Centers cards horizontally */
+  /* Responsive grid for member cards */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  /* Explicitly setting gap between grid items (your member cards) */
+  gap: 5rem; 
+  padding: 1rem;
   align-items: start;
   margin-top: 1rem;
   width: 100%;
   margin-inline: auto;
-  background-color: #4c1515; /* Matches your body color */
-  font-family: Arial, sans-serif; /* Base body font */
+  background-color: #4c1515;
+  font-family: Arial, sans-serif;
   box-sizing: border-box;
 }
 
-/* ---------- CARD STYLING ---------- */
+/* CARD STYLING */
 .memberCard {
-  width: 300px;
-  background-color: #fff; /* Clean white background for contrast */
-  border-radius: 1rem; /* Smooth round corners */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Soft depth shadow */
+  /* Changed to 100% to ensure card fills its grid column, allowing 'gap' to work effectively */
+  width: 100%; 
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   padding: 1.5rem;
-  text-align: center; /* Centers text and photo */
-  transition: transform 0.25s ease, box-shadow 0.25s ease; /* Smooth hover animation */
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* Hover effect: card gently lifts when hovered */
 .memberCard:hover {
   transform: translateY(-6px);
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
 }
 
-/* ---------- PROFILE IMAGE ---------- */
+/* PROFILE IMAGE */
 .memberPhoto {
   width: 100px;
   height: 100px;
-  border-radius: 50%; /* Makes photo circular */
-  object-fit: cover; /* Ensures image fills space cleanly */
+  border-radius: 50%;
+  object-fit: cover;
   margin-bottom: 1rem;
-  border: 3px solid #fe5c03; /* Accent ring from sidebar color */
+  border: 3px solid #fe5c03;
 }
 
-/* ---------- TEXT CONTENT ---------- */
+/* TEXT CONTENT */
 .memberName {
-  font-family: 'Bebas Neue', sans-serif; /* For display names later */
+  font-family: 'Bebas Neue', sans-serif;
   font-size: 1.4rem;
-  color: #820000; /* Header tone for visual link */
+  color: #820000;
   letter-spacing: 1px;
   margin-bottom: 0.3rem;
 }
 
 .memberPosition {
   font-size: 1rem;
-  color: #000000; /* Neutral readable tone */
+  color: #000000;
   margin-bottom: 0.5rem;
 }
 
 .memberID {
   font-size: 0.9rem;
-  color: #ee0d0d; /* Subtle secondary info color */
+  color: #ee0d0d;
 }
 
-/* ---------- BUTTON SECTION ---------- */
-.buttonGroup {
+/* BUTTON SECTION */
+.cardButtons {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 1rem; /* Added gap between the buttons within the card */
   margin-top: 1rem;
 }
 
-/* Base style for buttons (minimalist & pill-like) */
-.memberButton {
-  background-color: transparent; /* Flat by default */
-  border: 2px solid #fe5c03; /* Accent border color */
-  color: #fe5c03; /* Text color matches border */
-  padding: 0.4rem 1rem;
-  border-radius: 50px; /* Rounded pill shape */
-  font-size: 0.9rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease; /* Smooth hover transition */
-}
-
 .cardButtons button{
-   background-color: transparent; /* Flat by default */
-  border: 2px solid #fe5c03; /* Accent border color */
-  color: #fe5c03; /* Text color matches border */
+  background-color: transparent;
+  border: 2px solid #fe5c03;
+  color: #fe5c03;
   padding: 0.5rem 1rem;
-  border-radius: 50px; /* Rounded pill shape */
+  border-radius: 50px;
   font-size: 0.9rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin: 0.5rem;
 }
 
-/* Hover state: fills with color */
 .cardButtons button:hover {
   background-color: #fe5c03;
   color: #000000;
-  transform: translateY(-2px); /* Subtle lift */
+  transform: translateY(-2px);
 }
 
-/* Optional: distinct delete button variation */
-.deleteButton {
-  border-color: #820000;
-  color: #820000;
-}
-
-.deleteButton:hover {
-  background-color: #820000;
-  color: #fff;
-}
-
-/* ---------- RESPONSIVENESS ---------- */
-/* Tablet view adjustments */
+/* RESPONSIVENESS */
 @media (max-width: 768px) {
   .memberListContainer {
-
    grid-template-columns: 1fr;
     gap: 1rem;
     padding: 1rem;
@@ -137,10 +108,9 @@
   }
 }
 
-/* Mobile view adjustments */
 @media (max-width: 480px) {
   .memberListContainer {
-    grid-template-columns: 1fr; /* Stack cards in one column */
+    grid-template-columns: 1fr;
   }
 
   .memberPhoto {
@@ -148,7 +118,7 @@
     height: 80px;
   }
 
-  .memberButton {
+  .cardButtons button { /* Adjusted selector for consistency */
     padding: 0.3rem 0.8rem;
     font-size: 0.8rem;
   }
