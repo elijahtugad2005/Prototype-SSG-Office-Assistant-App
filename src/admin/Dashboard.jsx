@@ -50,10 +50,16 @@ function Dashboard (){
 
     <div>
         <div className={styles.dashboardContainer}>
-        <h1>AddCard Dashboard</h1>
+          <div className = {styles.title}> <h1>ADMIN - ADD CARD</h1> </div>
         <form onSubmit={handleSubmit} className={styles.form}>
             <input name="title" value={newCard.title} onChange={handleChange} placeholder="Title" required />
-            <input name="accessLevel" value={newCard.accessLevel} onChange={handleChange} placeholder="Access Level" required />
+            <select name="accessLevel" value={newCard.accessLevel} onChange={handleChange} required >
+              <option value =""> Select - Access</option>
+              <option value = "Public">Public</option>
+              <option value = "Confidential">Confidential</option>
+              <option value = "In Progress">In Progress</option>
+              <option value = "Internal Use">Internal Use Only </option>
+             </select>
             <input name="description" value={newCard.description} onChange={handleChange} placeholder="Description" required />
             <input name="date" type="date" value={newCard.date} onChange={handleChange} required />
             <input name="to" value={newCard.to} onChange={handleChange} placeholder="Link path" required />

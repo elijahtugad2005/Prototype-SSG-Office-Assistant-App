@@ -28,3 +28,9 @@
     margin-top: 2rem;
     justify-content: center;
 }
+
+.members_container{
+    width: 100%;
+    background: #4c1515;
+      box-sizing: border-box;
+}

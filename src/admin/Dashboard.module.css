@@ -1,51 +1,76 @@
 .dashboardContainer h1{
-  color: black;
+  color: #fe5c03;
   text-align: center;
   margin-bottom: 1rem;
+  font-size: 2rem;
+  letter-spacing: 1px;
+  font-weight: bold;
 }
 
 .dashboardContainer {
-
-
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #f8f9fa;
   padding: 2rem;
-  width: 450px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-top: 5rem;
+  background: #4c1515; /* Deep maroon body background */
+  min-height: 50vh;
+  font-family: Arial, sans-serif;
+  color: #000000; /* Light text for contrast on dark background */
+  box-sizing: border-box;
+  width: 1000px;
+  margin-bottom: 2rem;
 }
 
 form {
+  background-color: #5a1a1a; /* Slightly lighter maroon for visual layering */
+  padding: 1.2rem; /* Reduced padding for compactness */
+  border-radius: 0.8rem; /* Softer edges for professional look */
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+  width: 100%;
+  max-width: 420px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  width: 300px;
+  gap: 1rem; /* Balanced spacing between elements */
+  border: 1px solid rgba(254, 92, 3, 0.2)
 }
 
 input {
   justify-content: space-evenly;
-  width: 100%;
-  padding: 0.1rem;
-  margin: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  padding: 1rem;
+  border: 1px solid #7a2a2a; /* Subtle border tone */
+  border-radius: 0.5rem; /* Matches photo corners */
+  background-color: #732020; /* Dark input background */
+  color: #f1f1f1; /* Readable light text */
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  font-size: larger;
 }
 
+.form select {
+  padding: 1rem; /* Slightly larger for comfort */
+  border: 1px solid #7a2a2a; /* Subtle border tone */
+  border-radius: 0.5rem; /* Matches photo corners */
+  background-color: #732020; /* Dark input background */
+  color: #f1f1f1; /* Readable light text */
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+
 button {
-  justify-content: center;
-  background-color: #007bff;
-  color: white;
-  padding: 0.7rem;
+  background-color: #fe5c03; /* Accent orange for emphasis */
+  color: #000000;
   border: none;
-  border-radius: 5px;
+  padding: 0.9rem;
+  border-radius: 50px; /* Pill shape for modern aesthetic */
+  font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 button:hover {
-  background-color: #0056b3;
+ background-color: #ff7035;
+  transform: translateY(-2px);
 }
 
 

@@ -1,58 +1,78 @@
-import styles from './memberdashboard.module.css'
-import React , { useState } from 'react'
+import styles from './memberdashboard.module.css';
+import React, { useState, useEffect } from 'react';
 import Memberslist from './Memberlist';
+import { db } from "../firebase/firebaseConfig";
+import { collection, addDoc, onSnapshot } from "firebase/firestore";
 
+function MemberDashboard() {
+  const [member, setMember] = useState({
+    name: "",
+    id: "",
+    address: "",
+    position: "",
+    photo: null,
+  });
 
- function MemberDashboard(){
+  const [preview, setPreview] = useState(null);
+  const [members, setMembers] = useState([]);
 
-    const [member, setMember ] = useState({
-        name: "",
-        id: "",
-        address: "",
-        position: "",
-        photo: "",
-
+  // ✅ Load Firestore members dynamically
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "members"), (snapshot) => {
+      const membersData = snapshot.docs.map((doc) => ({
+        docId: doc.id,
+        ...doc.data(),
+      }));
+      setMembers(membersData);
     });
+    return () => unsubscribe();
+  }, []);
 
-    const [preview, setPreview] = useState(null);
-    const [members , setMembers] = useState([]);
-    const [editIndex, setEditIndex] = useState ([null]);
+  // ✅ Handle input fields
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setMember((prev) => ({ ...prev, [name]: value }));
+  };
 
-    //handles input
-    const handleChange = (e) => {
-        const {name, value } = e.target;
-        setMember({...member, [name]: value});
+  // ✅ Handle photo upload preview
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setMember((prev) => ({ ...prev, photo: file }));
+      setPreview(URL.createObjectURL(file));
+    }
+  };
 
-    };
+  // ✅ Submit to Firestore
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    //handel photo
+    console.log("📦 Final data being saved:", member);
 
-    const handlePhotoChange = (e) =>{
-        const file = e.target.files[0]
-        if(file){
-            setMember({...member, photo: file});
-            setPreview(URL.createObjectURL(file));
-        }
-    };
+    try {
+      await addDoc(collection(db, "members"), {
+        name: member.name || "",
+        id: member.id || "",
+        address: member.address || "",
+        position: member.position || "",
+        photoPath: member.photo
+          ? `/studentpics/${member.photo.name}`
+          : "/studentpics/default.png",
+        createdAt: new Date(),
+      });
 
-    const handleSubmit = (e) => {
-          
-          e.preventDefault();
-            setMembers((prev) => [...prev, member]);
-            console.log("Member added :", member);
-            alert(` ${member.name} addedd successfully!`);
+      alert(`${member.name} added successfully!`);
 
-        //reset
+      // Reset form
+      setMember({ name: "", id: "", address: "", position: "", photo: null });
+      setPreview(null);
+    } catch (error) {
+      console.error("❌ Error adding member:", error);
+      alert("Error adding member. Check console for details.");
+    }
+  };
 
-        setMember({  name: "", id: "", address: "", position: "", photo: null })
-        setPreview(null);
-    };
-    
-
-
-    
-    return (  
-    <>
+  return (
     <div className={styles.container}>
       <h1 className={styles.title}>Admin — Add Member</h1>
 
@@ -61,7 +81,7 @@ import Memberslist from './Memberlist';
           type="text"
           name="name"
           placeholder="Full Name"
-          value={member.name}
+          value={member.name ?? ""}
           onChange={handleChange}
           required
         />
@@ -70,7 +90,7 @@ import Memberslist from './Memberlist';
           type="text"
           name="id"
           placeholder="ID Number"
-          value={member.id}
+          value={member.id ?? ""}
           onChange={handleChange}
           required
         />
@@ -79,13 +99,13 @@ import Memberslist from './Memberlist';
           type="text"
           name="address"
           placeholder="Address"
-          value={member.address}
+          value={member.address ?? ""}
           onChange={handleChange}
         />
 
         <select
           name="position"
-          value={member.position}
+          value={member.position ?? ""}
           onChange={handleChange}
           required
         >
@@ -99,19 +119,16 @@ import Memberslist from './Memberlist';
 
         <input type="file" accept="image/*" onChange={handlePhotoChange} />
 
-        {preview && (
-          <img src={preview} alt="Preview" className={styles.preview} />
-        )}
+        {preview && <img src={preview} alt="Preview" className={styles.preview} />}
 
-      <button type ="submit"> Add Member </button>
+        <button type="submit">Add Member</button>
       </form>
-        
-         <div className={styles.memberListWrapper}>
-            <Memberslist members={members} setMembers={setMembers} />
-          </div>
+
+      <div className={styles.memberListWrapper}>
+        <Memberslist members={members} setMembers={setMembers} />
+      </div>
     </div>
-        
-  </>
   );
 }
-export default MemberDashboard
+
+export default MemberDashboard;

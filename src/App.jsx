@@ -7,6 +7,8 @@ import Document from './components/Document Page/Document.jsx';
 import styles from './App.module.css';
 import WorkinProgress from './components/WorkinProgress/WorkinProgress.jsx';
 import MemberDashboard from './components/MemberDashboard.jsx';
+import TestFirebase from './components/TestFirebase.jsx';
+
 function App() {
   return (
     <div className={styles.app}>
@@ -17,7 +19,7 @@ function App() {
           <CardProvider>
             
             <Routes>
-              <Route path="/" element={<MemberDashboard />} />
+              <Route path="/" element={<TestFirebase />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/finance" element={<WorkinProgress />} />
               <Route path="/reports" element={<WorkinProgress />} />
