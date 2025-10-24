@@ -8,7 +8,8 @@ import styles from './App.module.css';
 import WorkinProgress from './components/WorkinProgress/WorkinProgress.jsx';
 import MemberDashboard from './components/MemberDashboard.jsx';
 import TestFirebase from './components/TestFirebase.jsx';
-
+import Loginpage from './components/Login-Page/loginpage.jsx';
+import Homepage from './Homepage/Homepage.jsx';
 function App() {
   return (
     <div className={styles.app}>
@@ -19,7 +20,7 @@ function App() {
           <CardProvider>
             
             <Routes>
-              <Route path="/" element={<TestFirebase />} />
+              <Route path="/" element={<Homepage />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/finance" element={<WorkinProgress />} />
               <Route path="/reports" element={<WorkinProgress />} />
