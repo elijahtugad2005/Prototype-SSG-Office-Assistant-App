@@ -94,9 +94,6 @@ Copy code
 ---
 
 ## 📅 Last Updated
-**October 12, 2025**
+**October 26, 2025**
 
 ---
-
-## 💾 Repository
-👉 [GitHub Repository Link](https://github.com/elijahtugad2005/Prototype-SSG-Office-Assistant-App)
