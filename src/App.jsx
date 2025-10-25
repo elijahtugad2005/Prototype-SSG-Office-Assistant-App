@@ -10,6 +10,7 @@ import MemberDashboard from './components/MemberDashboard.jsx';
 import TestFirebase from './components/TestFirebase.jsx';
 import Loginpage from './components/Login-Page/loginpage.jsx';
 import Homepage from './Homepage/Homepage.jsx';
+import Order from './components/Order/order.jsx';
 function App() {
   return (
     <div className={styles.app}>
@@ -20,7 +21,7 @@ function App() {
           <CardProvider>
             
             <Routes>
-              <Route path="/" element={<Homepage />} />
+              <Route path="/" element={<Order />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/finance" element={<WorkinProgress />} />
               <Route path="/reports" element={<WorkinProgress />} />

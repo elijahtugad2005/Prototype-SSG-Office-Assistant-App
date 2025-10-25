@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styles from './admin.module.css';
 import Dashboard from './Dashboard';
 import MemberDashboard from '../components/MemberDashboard';
-
+import ProductManagement from '../components/ProductManagement/ProductManagement';
 
 function admin (){
 
@@ -23,6 +23,9 @@ function admin (){
                 <MemberDashboard />
             </div>
 
+            <div>
+                <ProductManagement></ProductManagement>
+            </div>
         </div>
         </>
         
