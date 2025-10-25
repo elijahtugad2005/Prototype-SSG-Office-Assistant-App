@@ -3,6 +3,7 @@ import styles from './admin.module.css';
 import Dashboard from './Dashboard';
 import MemberDashboard from '../components/MemberDashboard';
 import ProductManagement from '../components/ProductManagement/ProductManagement';
+import Data from '../components/Data/Data';
 
 function admin (){
 
@@ -25,6 +26,10 @@ function admin (){
 
             <div>
                 <ProductManagement></ProductManagement>
+            </div>
+
+            <div>
+                <Data/>
             </div>
         </div>
         </>

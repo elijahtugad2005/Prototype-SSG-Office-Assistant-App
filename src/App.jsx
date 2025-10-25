@@ -21,11 +21,12 @@ function App() {
           <CardProvider>
             
             <Routes>
-              <Route path="/" element={<Order />} />
+              <Route path="/" element={<Homepage />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/finance" element={<WorkinProgress />} />
               <Route path="/reports" element={<WorkinProgress />} />
               <Route path="/announcement" element={<WorkinProgress />} />
+              <Route path="/order" element = {<Order/>}/>
             </Routes>
 
           </CardProvider>

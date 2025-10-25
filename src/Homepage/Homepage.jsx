@@ -1,35 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { db } from "../firebase/firebaseConfig";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
-
+import { collection, onSnapshot } from "firebase/firestore";
+import { useNavigate } from 'react-router-dom';
+import Order from '../components/Order/order';
 function Homepage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-
-  const [submitStatus, setSubmitStatus] = useState('');
-  const [officers, setOfficers] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [officers, setOfficers] = useState([]);
+  const navigate = useNavigate();
 
-  // ✅ Fetch officers from Firebase
+  // ✅ Fetch products from Firebase
   useEffect(() => {
-    // Query only members with officer positions (President, VP, Secretary, Treasurer)
-    const officerPositions = ["President", "Vice President", "Secretary", "Treasurer"];
-    
-    const q = query(
-      collection(db, "members"),
-      where("position", "in", officerPositions)
-    );
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const officersData = snapshot.docs.map((doc) => ({
-        docId: doc.id,
+    const unsubscribe = onSnapshot(collection(db, "products"), (snapshot) => {
+      const productsData = snapshot.docs.map((doc) => ({
+        productId: doc.id,
         ...doc.data(),
       }));
+      setProducts(productsData);
+      setLoading(false);
+    }, (error) => {
+      console.error("Error fetching products:", error);
+      setLoading(false);
+    });
 
-      // Sort officers by position hierarchy
+    return () => unsubscribe();
+  }, []);
+
+  // ✅ Fetch officers from Firebase (for "Meet Our Team" section)
+  useEffect(() => {
+    const officerPositions = ["President", "Vice President", "Secretary", "Treasurer"];
+    
+    const unsubscribe = onSnapshot(collection(db, "members"), (snapshot) => {
+      const officersData = snapshot.docs
+        .map((doc) => ({
+          docId: doc.id,
+          ...doc.data(),
+        }))
+        .filter(member => officerPositions.includes(member.position));
+
+      // Sort by position hierarchy
       const positionOrder = {
         "President": 1,
         "Vice President": 2,
@@ -42,31 +51,25 @@ function Homepage() {
       });
 
       setOfficers(officersData);
-      setLoading(false);
-    }, (error) => {
-      console.error("Error fetching officers:", error);
-      setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  const handleSubmit = () => {
-    if (formData.name && formData.email && formData.message) {
-      setSubmitStatus('Message sent successfully! We will get back to you soon.');
-      setFormData({ name: '', email: '', message: '' });
-      setTimeout(() => setSubmitStatus(''), 3000);
-    }
-  };
-
-  const handleChange = (field, value) => {
-    setFormData({
-      ...formData,
-      [field]: value
-    });
+  const handleOrderNow = (product) => {
+    // Navigate to Order page with product details
+    navigate('/order', { });
   };
 
   // Simple SVG Icons
+  const ShoppingBagIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <path d="M16 10a4 4 0 01-8 0"/>
+    </svg>
+  );
+
   const FacebookIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -85,26 +88,6 @@ function Homepage() {
     </svg>
   );
 
-  const MailIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <rect x="2" y="4" width="20" height="16" rx="2"/>
-      <path d="M22 7l-10 7L2 7"/>
-    </svg>
-  );
-
-  const PhoneIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
-    </svg>
-  );
-
-  const MapPinIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
-      <circle cx="12" cy="10" r="3"/>
-    </svg>
-  );
-
   return (
     <div style={styles.pageWrapper}>
       {/* Hero Section */}
@@ -114,30 +97,135 @@ function Homepage() {
           <h1 style={styles.heroTitle}>Welcome to Shirio</h1>
           <h2 style={styles.heroSubtitle}>Student Government Made Easier</h2>
           <p style={styles.heroDescription}>
-            Shirio is built to bridge the gap between student leaders and their communities. 
-            Our platform empowers transparency, simplifies governance, and fosters meaningful 
-            engagement. With tools designed for efficiency and collaboration, we're transforming 
-            how student governments operate—making leadership accessible, accountable, and impactful.
+            Order your official lanyards and uniforms online. Fast, secure, and convenient 
+            shopping experience for all students. Browse our products and place your order today!
           </p>
         </div>
       </section>
 
-      {/* Officers Section */}
-      <section style={styles.officersSection}>
-        <h2 style={styles.sectionTitle}>Meet Our Officers</h2>
+      {/* Products Section */}
+      <section style={styles.productsSection}>
+        <h2 style={styles.sectionTitle}>Our Products</h2>
         <p style={styles.sectionSubtitle}>
-          Dedicated leaders committed to serving our student community
+          Browse our collection of official lanyards and uniforms
         </p>
         
         {loading ? (
           <div style={styles.loadingContainer}>
-            <p style={styles.loadingText}>Loading officers...</p>
+            <p style={styles.loadingText}>Loading products...</p>
           </div>
-        ) : officers.length === 0 ? (
-          <div style={styles.noOfficersContainer}>
-            <p style={styles.noOfficersText}>No officers added yet.</p>
+        ) : products.length === 0 ? (
+          <div style={styles.noProductsContainer}>
+            <p style={styles.noProductsText}>No products available at the moment. Check back soon!</p>
           </div>
         ) : (
+          <div style={styles.productsGrid}>
+            {products.map((product) => (
+              <div 
+                key={product.productId} 
+                style={styles.productCard}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px)';
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(254, 92, 3, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+                }}
+              >
+                <div style={styles.productImageWrapper}>
+                  <img 
+                    src={product.imageUrl || 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&h=400&fit=crop'}
+                    alt={product.productName}
+                    style={styles.productImage}
+                    onError={(e) => {
+                      e.target.src = 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&h=400&fit=crop';
+                    }}
+                  />
+                  {product.stockAvailable <= 10 && product.stockAvailable > 0 && (
+                    <div style={styles.lowStockBadge}>Low Stock!</div>
+                  )}
+                  {product.stockAvailable === 0 && (
+                    <div style={styles.outOfStockBadge}>Out of Stock</div>
+                  )}
+                </div>
+                
+                <div style={styles.productInfo}>
+                  <h3 style={styles.productName}>{product.productName}</h3>
+                  <p style={styles.productDescription}>{product.description}</p>
+                  
+                  <div style={styles.productDetails}>
+                    <div style={styles.priceContainer}>
+                      <span style={styles.priceLabel}>Price:</span>
+                      <span style={styles.price}>₱{product.price?.toFixed(2)}</span>
+                    </div>
+                    
+                    <div style={styles.stockContainer}>
+                      <span style={styles.stockLabel}>Stock:</span>
+                      <span style={styles.stock}>{product.stockAvailable || 0} available</span>
+                    </div>
+                  </div>
+
+                  {product.sizeOptions && product.sizeOptions.length > 0 && (
+                    <div style={styles.attributeContainer}>
+                      <span style={styles.attributeLabel}>Sizes:</span>
+                      <div style={styles.attributeTags}>
+                        {product.sizeOptions.map((size, idx) => (
+                          <span key={idx} style={styles.tag}>{size}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {product.colorVariations && product.colorVariations.length > 0 && (
+                    <div style={styles.attributeContainer}>
+                      <span style={styles.attributeLabel}>Colors:</span>
+                      <div style={styles.attributeTags}>
+                        {product.colorVariations.map((color, idx) => (
+                          <span key={idx} style={styles.tag}>{color}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <button 
+                    onClick={() => handleOrderNow(product)}
+                    disabled={product.stockAvailable === 0}
+                    style={{
+                      ...styles.orderButton,
+                      ...(product.stockAvailable === 0 ? styles.orderButtonDisabled : {})
+                    }}
+                    onMouseEnter={(e) => {
+                      if (product.stockAvailable > 0) {
+                        e.currentTarget.style.backgroundColor = '#ff7035';
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (product.stockAvailable > 0) {
+                        e.currentTarget.style.backgroundColor = '#fe5c03';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                      }
+                    }}
+                  >
+                    <ShoppingBagIcon />
+                    <span>{product.stockAvailable === 0 ? 'Out of Stock' : 'Order Now'}</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Officers Section */}
+      {officers.length > 0 && (
+        <section style={styles.officersSection}>
+          <h2 style={styles.sectionTitle}>Meet Our Officers</h2>
+          <p style={styles.sectionSubtitle}>
+            Dedicated leaders committed to serving our student community
+          </p>
+          
           <div style={styles.officersGrid}>
             {officers.map((officer) => (
               <div 
@@ -159,7 +247,7 @@ function Homepage() {
                         ? officer.photoPath.startsWith('/studentpics/')
                           ? officer.photoPath
                           : `/studentpics/${officer.photoPath}`
-                        : '/studentpics/default.jpg'
+                        : 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=400&h=400&fit=crop'
                     }
                     alt={officer.name}
                     style={styles.officerImage}
@@ -170,148 +258,27 @@ function Homepage() {
                 </div>
                 <h3 style={styles.officerName}>{officer.name}</h3>
                 <p style={styles.officerPosition}>{officer.position}</p>
-                {officer.address && (
-                  <p style={styles.officerAddress}>{officer.address}</p>
-                )}
                 <div style={styles.socialLinks}>
-                  <a 
-                    href={officer.facebook || "#"} 
-                    style={styles.socialLink}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#fe5c03';
-                      e.currentTarget.style.transform = 'scale(1.1)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'rgba(254, 92, 3, 0.2)';
-                      e.currentTarget.style.transform = 'scale(1)';
-                    }}
-                  >
+                  <a href={officer.facebook || "#"} style={styles.socialLink}>
                     <FacebookIcon />
                   </a>
-                  <a 
-                    href={officer.twitter || "#"} 
-                    style={styles.socialLink}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#fe5c03';
-                      e.currentTarget.style.transform = 'scale(1.1)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'rgba(254, 92, 3, 0.2)';
-                      e.currentTarget.style.transform = 'scale(1)';
-                    }}
-                  >
+                  <a href={officer.twitter || "#"} style={styles.socialLink}>
                     <TwitterIcon />
                   </a>
-                  <a 
-                    href={officer.instagram || "#"} 
-                    style={styles.socialLink}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#fe5c03';
-                      e.currentTarget.style.transform = 'scale(1.1)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'rgba(254, 92, 3, 0.2)';
-                      e.currentTarget.style.transform = 'scale(1)';
-                    }}
-                  >
+                  <a href={officer.instagram || "#"} style={styles.socialLink}>
                     <InstagramIcon />
                   </a>
                 </div>
               </div>
             ))}
           </div>
-        )}
-      </section>
-
-      {/* Contact Section */}
-      <section style={styles.contactSection}>
-        <div style={styles.contactContainer}>
-          <div style={styles.contactInfo}>
-            <h2 style={styles.contactTitle}>Get in Touch</h2>
-            <p style={styles.contactDescription}>
-              Have questions or suggestions? We'd love to hear from you. 
-              Reach out to us and we'll respond as soon as possible.
-            </p>
-            <div style={styles.contactDetails}>
-              <div style={styles.contactItem}>
-                <div style={styles.contactIcon}>
-                  <MailIcon />
-                </div>
-                <div>
-                  <h4 style={styles.contactItemTitle}>Email</h4>
-                  <p style={styles.contactItemText}>ssg@shirio.edu</p>
-                </div>
-              </div>
-              <div style={styles.contactItem}>
-                <div style={styles.contactIcon}>
-                  <PhoneIcon />
-                </div>
-                <div>
-                  <h4 style={styles.contactItemTitle}>Phone</h4>
-                  <p style={styles.contactItemText}>+63 123 456 7890</p>
-                </div>
-              </div>
-              <div style={styles.contactItem}>
-                <div style={styles.contactIcon}>
-                  <MapPinIcon />
-                </div>
-                <div>
-                  <h4 style={styles.contactItemTitle}>Office</h4>
-                  <p style={styles.contactItemText}>Student Center, 2nd Floor</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div style={styles.contactFormWrapper}>
-            <div style={styles.contactForm}>
-              <input
-                type="text"
-                placeholder="Your Name"
-                value={formData.name}
-                onChange={(e) => handleChange('name', e.target.value)}
-                style={styles.formInput}
-              />
-              <input
-                type="email"
-                placeholder="Your Email"
-                value={formData.email}
-                onChange={(e) => handleChange('email', e.target.value)}
-                style={styles.formInput}
-              />
-              <textarea
-                placeholder="Your Message"
-                value={formData.message}
-                onChange={(e) => handleChange('message', e.target.value)}
-                rows="5"
-                style={{...styles.formInput, ...styles.formTextarea}}
-              />
-              <button 
-                onClick={handleSubmit} 
-                style={styles.submitButton}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#ff7035';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#fe5c03';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-              >
-                Send Message
-              </button>
-              {submitStatus && (
-                <p style={styles.successMessage}>{submitStatus}</p>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Footer */}
       <footer style={styles.footer}>
         <p style={styles.footerText}>
-          © 2025 Shirio. All rights reserved. | Building transparent governance together.
+          © 2025 Shirio. All rights reserved. | Official Student Government E-Commerce Platform
         </p>
       </footer>
     </div>
@@ -326,7 +293,7 @@ const styles = {
   },
   heroSection: {
     position: 'relative',
-    height: '100vh',
+    height: '70vh',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -351,7 +318,7 @@ const styles = {
     maxWidth: '900px',
   },
   heroTitle: {
-    fontSize: '4rem',
+    fontSize: '3.5rem',
     color: '#fe5c03',
     marginBottom: '1rem',
     fontWeight: 'bold',
@@ -359,19 +326,19 @@ const styles = {
     textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
   },
   heroSubtitle: {
-    fontSize: '1.8rem',
+    fontSize: '1.6rem',
     color: '#f1f1f1',
-    marginBottom: '2rem',
+    marginBottom: '1.5rem',
     fontWeight: '300',
   },
   heroDescription: {
     fontSize: '1.1rem',
     color: '#e0e0e0',
     lineHeight: '1.8',
-    maxWidth: '800px',
+    maxWidth: '700px',
     margin: '0 auto',
   },
-  officersSection: {
+  productsSection: {
     padding: '5rem 2rem',
     backgroundColor: '#5a1a1a',
   },
@@ -396,17 +363,167 @@ const styles = {
     color: '#fe5c03',
     fontSize: '1.2rem',
   },
-  noOfficersContainer: {
+  noProductsContainer: {
     textAlign: 'center',
     padding: '3rem',
   },
-  noOfficersText: {
+  noProductsText: {
     color: '#c0c0c0',
     fontSize: '1.1rem',
   },
+  productsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+    gap: '2rem',
+    maxWidth: '1400px',
+    margin: '0 auto',
+  },
+  productCard: {
+    backgroundColor: '#732020',
+    borderRadius: '1rem',
+    overflow: 'hidden',
+    border: '1px solid rgba(254, 92, 3, 0.2)',
+    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+  },
+  productImageWrapper: {
+    position: 'relative',
+    width: '100%',
+    height: '250px',
+    overflow: 'hidden',
+    backgroundColor: '#8a2a2a',
+  },
+  productImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  },
+  lowStockBadge: {
+    position: 'absolute',
+    top: '1rem',
+    right: '1rem',
+    backgroundColor: '#ff9800',
+    color: '#000',
+    padding: '0.4rem 0.8rem',
+    borderRadius: '20px',
+    fontSize: '0.85rem',
+    fontWeight: 'bold',
+  },
+  outOfStockBadge: {
+    position: 'absolute',
+    top: '1rem',
+    right: '1rem',
+    backgroundColor: '#f44336',
+    color: '#fff',
+    padding: '0.4rem 0.8rem',
+    borderRadius: '20px',
+    fontSize: '0.85rem',
+    fontWeight: 'bold',
+  },
+  productInfo: {
+    padding: '1.5rem',
+  },
+  productName: {
+    fontSize: '1.5rem',
+    color: '#f1f1f1',
+    marginBottom: '0.5rem',
+    fontWeight: 'bold',
+  },
+  productDescription: {
+    fontSize: '0.95rem',
+    color: '#c0c0c0',
+    marginBottom: '1rem',
+    lineHeight: '1.5',
+  },
+  productDetails: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '1rem',
+    paddingBottom: '1rem',
+    borderBottom: '1px solid rgba(254, 92, 3, 0.2)',
+  },
+  priceContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  priceLabel: {
+    fontSize: '0.85rem',
+    color: '#c0c0c0',
+    marginBottom: '0.2rem',
+  },
+  price: {
+    fontSize: '1.5rem',
+    color: '#fe5c03',
+    fontWeight: 'bold',
+  },
+  stockContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+  },
+  stockLabel: {
+    fontSize: '0.85rem',
+    color: '#c0c0c0',
+    marginBottom: '0.2rem',
+  },
+  stock: {
+    fontSize: '1rem',
+    color: '#f1f1f1',
+    fontWeight: '500',
+  },
+  attributeContainer: {
+    marginBottom: '0.8rem',
+  },
+  attributeLabel: {
+    fontSize: '0.9rem',
+    color: '#fe5c03',
+    fontWeight: '600',
+    display: 'block',
+    marginBottom: '0.4rem',
+  },
+  attributeTags: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.5rem',
+  },
+  tag: {
+    backgroundColor: 'rgba(254, 92, 3, 0.2)',
+    color: '#f1f1f1',
+    padding: '0.3rem 0.7rem',
+    borderRadius: '15px',
+    fontSize: '0.85rem',
+    border: '1px solid rgba(254, 92, 3, 0.3)',
+  },
+  orderButton: {
+    width: '100%',
+    backgroundColor: '#fe5c03',
+    color: '#000',
+    border: 'none',
+    padding: '1rem',
+    borderRadius: '50px',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    marginTop: '1rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+  },
+  orderButtonDisabled: {
+    backgroundColor: '#5a1a1a',
+    color: '#7a2a2a',
+    cursor: 'not-allowed',
+    border: '1px solid #7a2a2a',
+  },
+  officersSection: {
+    padding: '5rem 2rem',
+    backgroundColor: '#4c1515',
+  },
   officersGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
     gap: '2rem',
     maxWidth: '1200px',
     margin: '0 auto',
@@ -418,12 +535,11 @@ const styles = {
     textAlign: 'center',
     border: '1px solid rgba(254, 92, 3, 0.2)',
     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-    cursor: 'pointer',
   },
   officerImageWrapper: {
-    width: '150px',
-    height: '150px',
-    margin: '0 auto 1.5rem',
+    width: '120px',
+    height: '120px',
+    margin: '0 auto 1.2rem',
     borderRadius: '50%',
     overflow: 'hidden',
     border: '3px solid #fe5c03',
@@ -435,31 +551,25 @@ const styles = {
     objectFit: 'cover',
   },
   officerName: {
-    fontSize: '1.4rem',
+    fontSize: '1.2rem',
     color: '#f1f1f1',
-    marginBottom: '0.5rem',
+    marginBottom: '0.4rem',
     fontWeight: 'bold',
   },
   officerPosition: {
-    fontSize: '1rem',
+    fontSize: '0.95rem',
     color: '#fe5c03',
-    marginBottom: '0.5rem',
+    marginBottom: '1rem',
     fontWeight: '500',
-  },
-  officerAddress: {
-    fontSize: '0.9rem',
-    color: '#c0c0c0',
-    marginBottom: '1.5rem',
-    fontStyle: 'italic',
   },
   socialLinks: {
     display: 'flex',
     justifyContent: 'center',
-    gap: '1rem',
+    gap: '0.8rem',
   },
   socialLink: {
     color: '#f1f1f1',
-    padding: '0.5rem',
+    padding: '0.4rem',
     borderRadius: '50%',
     backgroundColor: 'rgba(254, 92, 3, 0.2)',
     transition: 'all 0.3s ease',
@@ -468,98 +578,6 @@ const styles = {
     justifyContent: 'center',
     textDecoration: 'none',
     cursor: 'pointer',
-  },
-  contactSection: {
-    padding: '5rem 2rem',
-    backgroundColor: '#4c1515',
-  },
-  contactContainer: {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-    gap: '3rem',
-  },
-  contactInfo: {
-    color: '#f1f1f1',
-  },
-  contactTitle: {
-    fontSize: '2.5rem',
-    color: '#fe5c03',
-    marginBottom: '1rem',
-    fontWeight: 'bold',
-  },
-  contactDescription: {
-    fontSize: '1.1rem',
-    lineHeight: '1.8',
-    marginBottom: '2rem',
-    color: '#c0c0c0',
-  },
-  contactDetails: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1.5rem',
-  },
-  contactItem: {
-    display: 'flex',
-    gap: '1rem',
-    alignItems: 'flex-start',
-  },
-  contactIcon: {
-    color: '#fe5c03',
-    marginTop: '0.2rem',
-  },
-  contactItemTitle: {
-    fontSize: '1.1rem',
-    color: '#fe5c03',
-    marginBottom: '0.3rem',
-  },
-  contactItemText: {
-    fontSize: '1rem',
-    color: '#c0c0c0',
-  },
-  contactFormWrapper: {
-    backgroundColor: '#5a1a1a',
-    padding: '2rem',
-    borderRadius: '1rem',
-    border: '1px solid rgba(254, 92, 3, 0.2)',
-  },
-  contactForm: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem',
-  },
-  formInput: {
-    padding: '1rem',
-    border: '1px solid #7a2a2a',
-    borderRadius: '0.5rem',
-    backgroundColor: '#732020',
-    color: '#f1f1f1',
-    fontSize: '1rem',
-    fontFamily: 'Arial, sans-serif',
-    outline: 'none',
-  },
-  formTextarea: {
-    resize: 'vertical',
-    minHeight: '120px',
-    fontFamily: 'Arial, sans-serif',
-  },
-  submitButton: {
-    backgroundColor: '#fe5c03',
-    color: '#000000',
-    border: 'none',
-    padding: '1rem',
-    borderRadius: '50px',
-    fontSize: '1rem',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-  },
-  successMessage: {
-    color: '#4ade80',
-    textAlign: 'center',
-    marginTop: '0.5rem',
-    fontSize: '0.95rem',
   },
   footer: {
     backgroundColor: '#3a1010',
