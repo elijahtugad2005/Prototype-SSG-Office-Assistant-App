@@ -25,6 +25,7 @@ function Order() {
     address: '',
     email: '',
     phoneNumber: '',
+    schoolID:'',
     
     // Product Selection
     productId: selectedProduct?.productId || '',
@@ -113,6 +114,7 @@ function Order() {
     if (!formData.section) newErrors.section = 'Section is required';
     if (!formData.address.trim()) newErrors.address = 'Address is required';
     if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.schoolID.trim()) newErrors.schoolID ='School ID is required'
     if (!formData.phoneNumber.trim()) newErrors.phoneNumber = 'Phone number is required';
     
     // Email validation
@@ -202,6 +204,7 @@ function Order() {
           address: formData.address,
           email: formData.email,
           phoneNumber: formData.phoneNumber,
+          schoolID: formData.schoolID,
         },
         
         // Product Information
@@ -260,6 +263,7 @@ function Order() {
       section: '',
       address: '',
       email: '',
+      schoolID: '',
       phoneNumber: '',
       productId: '',
       productName: '',
@@ -342,10 +346,24 @@ function Order() {
                 name="fullName"
                 value={formData.fullName}
                 onChange={handleChange}
-                placeholder="Juan Dela Cruz"
+                placeholder="Elijah Glenn malake et- oops"
                 style={{...styles.input, ...(errors.fullName ? styles.inputError : {})}}
               />
               {errors.fullName && <span style={styles.errorText}>{errors.fullName}</span>}
+            </div>
+
+
+            <div style={styles.formGroup}>
+              <label style={styles.label}>School ID *</label>
+              <input
+                type="text"
+                name="fullName"
+                value={formData.schoolID}
+                onChange={handleChange}
+                placeholder="8304433"
+                style={{...styles.input, ...(errors.schoolID ? styles.inputError : {})}}
+              />
+              {errors.schoolId && <span style={styles.errorText}>{errors.schoolID}</span>}
             </div>
 
             <div style={styles.formRow}>
@@ -634,7 +652,7 @@ const styles = {
   },
   formWrapper: {
     maxWidth: '800px',
-    margin: '0 auto',
+    margin: '0 auto ',
     backgroundColor: '#5a1a1a',
     borderRadius: '1rem',
     padding: '2.5rem',
@@ -657,7 +675,9 @@ const styles = {
   form: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '2rem',
+    gap: '2rem' ,
+    maxWidth : '560px',
+      margin: '0 auto', 
   },
   section: {
     backgroundColor: '#732020',
