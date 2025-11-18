@@ -91,6 +91,11 @@ Copy code
 ## 🧑‍💻 Contributors
 - **Elijah Tugad** — Developer & Designer
 
+# My Awesome Project
+
+Welcome! To learn more about setting up the project, see our 
+[**Installation Guide**](Tutorial.md).
+
 ---
 
 ## 📅 Last Updated
