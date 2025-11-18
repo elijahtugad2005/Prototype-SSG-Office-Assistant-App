@@ -11,6 +11,8 @@ import TestFirebase from './components/TestFirebase.jsx';
 import Loginpage from './components/Login-Page/loginpage.jsx';
 import Homepage from './Homepage/Homepage.jsx';
 import Order from './components/Order/order.jsx';
+import Announcement from './components/Announcement.jsx';
+import ClassUpload from './components/ClassUpload.jsx';
 function App() {
   return (
     <div className={styles.app}>
@@ -24,8 +26,8 @@ function App() {
               <Route path="/" element={<Homepage />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/finance" element={<WorkinProgress />} />
-              <Route path="/reports" element={<WorkinProgress />} />
-              <Route path="/announcement" element={<WorkinProgress />} />
+              <Route path="/reports" element={<ClassUpload />} />
+              <Route path="/announcement" element={<Announcement />} />
               <Route path="/order" element = {<Order/>}/>
             </Routes>
 

@@ -97,8 +97,9 @@ function Homepage() {
           <h1 style={styles.heroTitle}>Welcome to Shirio</h1>
           <h2 style={styles.heroSubtitle}>Student Government Made Easier</h2>
           <p style={styles.heroDescription}>
-            Order your official lanyards and uniforms online. Fast, secure, and convenient 
-            shopping experience for all students. Browse our products and place your order today!
+            A New Innovation  to Learn, Collaborate, and Serve the students of Cebu Technological University - Daanbantayan Campus
+            .A project dedicating itself to create system that help students government to Track,Engage and Plan for University Activities and Events.
+            We Provide Commerce, Public Informations and Communication. The New Age of Starts Now
           </p>
         </div>
       </section>

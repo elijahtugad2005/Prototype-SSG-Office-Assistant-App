@@ -13,17 +13,19 @@
     border: 2px solid black;
     border-radius: 1rem;
     background-color: rgb(255, 255, 255);
-    width: 150px;
-    height: 40px;
-    padding: 1rem 2rem;
-    text-align: center;
+    width: 500px;
+    height:40px;
+    padding: 0.5rem 1rem;
+    text-align:center   ;
     color: black;
+    margin: 0;
+    right: 50%;
 }
 
 .pagetitle h1,
 .pagetitle h2 {
     color: rgb(0, 0, 0);
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .dashboard {
