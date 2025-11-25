@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { db } from "../firebase/firebaseConfig";
 import { collection, onSnapshot } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
-import Order from '../components/Order/order';
 function Homepage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [officers, setOfficers] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
   const navigate = useNavigate();
+  const [expandedID, setExpandedId]= useState(null);
 
+
+  /*FIREBASE*/
+  
   // ✅ Fetch products from Firebase
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "products"), (snapshot) => {
@@ -90,10 +94,11 @@ function Homepage() {
 
   return (
     <div style={styles.pageWrapper}>
-      {/* Hero Section */}
+      {/* Hero Section */}  
       <section style={styles.heroSection}>
         <div style={styles.heroOverlay}></div>
         <div style={styles.heroContent}>
+        
           <h1 style={styles.heroTitle}>Welcome to Shirio</h1>
           <h2 style={styles.heroSubtitle}>Student Government Made Easier</h2>
           <p style={styles.heroDescription}>
@@ -219,6 +224,79 @@ function Homepage() {
         )}
       </section>
 
+        {/*AnnounceMent*/}
+          
+          <section style={styles.announcementsWrapper}>
+              <h3 style={styles.sectionTitle}>All Announcements</h3>
+              
+              {announcements.length === 0 ? (
+                <div style={styles.emptyState}>
+                  <p style={styles.emptyText}>No announcements yet. Create your first one above!</p>
+                </div>
+              ) : (
+                <div style={styles.announcementsList}>
+                  {announcements.map((announcement) => (
+                    <div key={announcement.id} style={styles.announcementCard}>
+                      <div 
+                        style={styles.announcementHeader}
+                        onClick={() => setExpandedId(expandedId === announcement.id ? null : announcement.id)}
+                      >
+                        <div style={styles.announcementHeaderLeft}>
+                          <h4 style={styles.announcementTitle}>{announcement.title}</h4>
+                          <div style={styles.announcementMeta}>
+                            <span 
+                              style={{
+                                ...styles.categoryBadge,
+                                backgroundColor: getCategoryColor(announcement.category)
+                              }}
+                            >
+                              {announcement.category}
+                            </span>
+                            <span style={styles.announcementDate}>
+                              📅 {formatDate(announcement.eventDate)} at {announcement.eventTime}
+                            </span>
+                          </div>
+                        </div>
+                        <div style={styles.expandIcon}>
+                          {expandedId === announcement.id ? '▲' : '▼'}
+                        </div>
+                      </div>
+
+
+                                              {/* ADD THIS BLOCK */}
+                          {announcement.imageUrl && (
+                              <div style={styles.announcementImageWrapper}>
+                                  <img 
+                                      src={announcement.imageUrl}
+                                      alt={announcement.title}
+                                      style={styles.announcementImage}
+                                      onError={(e) => {
+                                          e.target.src = '/AnnouncementPic/default.jpg';
+                                      }}
+                                  />
+                              </div>
+                          )}
+
+                      {expandedId === announcement.id && (
+                        <div style={styles.announcementBody}>
+                          <div style={styles.announcementDetail}>
+                            <strong style={styles.detailLabel}>Description:</strong>
+                            <p style={styles.detailValue}>{announcement.description}</p>
+                          </div>
+
+                          <div style={styles.announcementDetail}>
+                            <strong style={styles.detailLabel}>Venue:</strong>
+                            <p style={styles.detailValue}>📍 {announcement.venue}</p>
+                          </div>
+                          
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+
       {/* Officers Section */}
       {officers.length > 0 && (
         <section style={styles.officersSection}>
@@ -242,31 +320,40 @@ function Homepage() {
                 }}
               >
                 <div style={styles.officerImageWrapper}>
-                  <img 
-                    src={
-                      officer.photoPath 
-                        ? officer.photoPath.startsWith('/studentpics/')
-                          ? officer.photoPath
-                          : `/studentpics/${officer.photoPath}`
-                        : 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=400&h=400&fit=crop'
-                    }
-                    alt={officer.name}
-                    style={styles.officerImage}
-                    onError={(e) => {
-                      e.target.src = 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=400&h=400&fit=crop';
-                    }}
-                  />
+                 <img 
+                            // 🌟 MODIFIED LOGIC: Check for and use the Base64 string first
+                            src={
+                                officer.image64 ? officer.image64 // Use Base64 data directly as the source
+                                    : 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=400&h=400&fit=crop' // Fallback image
+                            }
+                            alt={officer.name}
+                            style={styles.officerImage}
+                            onError={(e) => {
+                                // If Base64 somehow fails (rare), fall back to the default image
+                                e.target.src = 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=400&h=400&fit=crop';
+                            }}
+                        />
                 </div>
+
+
+
+
                 <h3 style={styles.officerName}>{officer.name}</h3>
                 <p style={styles.officerPosition}>{officer.position}</p>
+                              
+                {/* 🌟 NEW: Description Display */}
+                <p style={styles.officerDescription}>
+                        {officer.description || 'No description available.'}
+                    </p>
+                
                 <div style={styles.socialLinks}>
-                  <a href={officer.facebook || "#"} style={styles.socialLink}>
+                  <a href={officer.facebookLink || "#"} style={styles.socialLink}>
                     <FacebookIcon />
                   </a>
-                  <a href={officer.twitter || "#"} style={styles.socialLink}>
+                  <a href={officer.twitterLink || "#"} style={styles.socialLink}>
                     <TwitterIcon />
                   </a>
-                  <a href={officer.instagram || "#"} style={styles.socialLink}>
+                  <a href={officer.instagramLink || "#"} style={styles.socialLink}>
                     <InstagramIcon />
                   </a>
                 </div>
@@ -289,7 +376,7 @@ function Homepage() {
 const styles = {
   pageWrapper: {
     width: '100%',
-    backgroundColor: '#4c1515',
+    backgroundColor: '#4c151534',
     minHeight: '100vh',
   },
   heroSection: {
@@ -298,11 +385,13 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundImage: 'url(https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920&h=1080&fit=crop)',
+    backgroundImage: 'url(images/heroimage.jpg)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    backgroundAttachment: 'fixed',
+    backgroundAttachment: 'scroll',
+    marginBottom: '20px'
   },
+ 
   heroOverlay: {
     position: 'absolute',
     top: 0,
@@ -338,10 +427,12 @@ const styles = {
     lineHeight: '1.8',
     maxWidth: '700px',
     margin: '0 auto',
+    fontFamily: 'Arial, san-serif',
   },
   productsSection: {
     padding: '5rem 2rem',
     backgroundColor: '#5a1a1a',
+    marginBottom: '10px'
   },
   sectionTitle: {
     fontSize: '2.5rem',
@@ -518,6 +609,162 @@ const styles = {
     cursor: 'not-allowed',
     border: '1px solid #7a2a2a',
   },
+
+
+  announcementsWrapper: {
+  backgroundColor: '#5a1a1a',
+  borderRadius: '1rem',
+  padding: '2rem',
+  border: '1px solid rgba(254, 92, 3, 0.2)',
+  boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+  marginBottom: '10px',
+},
+sectionTitle: {
+  fontSize: '1.5rem',
+  color: '#fe5c03',
+  marginBottom: '1.5rem',
+  fontWeight: 'bold',
+  borderBottom: '2px solid rgba(254, 92, 3, 0.3)',
+  paddingBottom: '0.5rem',
+},
+emptyState: {
+  textAlign: 'center',
+  padding: '3rem',
+  backgroundColor: '#732020',
+  borderRadius: '0.8rem',
+  border: '1px solid rgba(254, 92, 3, 0.1)',
+},
+emptyText: {
+  color: '#c0c0c0',
+  fontSize: '1.1rem',
+},
+announcementsList: {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1.5rem',
+},
+announcementCard: {
+  backgroundColor: '#732020',
+  borderRadius: '1rem',
+  border: '1px solid rgba(254, 92, 3, 0.2)',
+  overflow: 'hidden',
+  transition: 'all 0.3s ease',
+  boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+},
+announcementHeader: {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '1.5rem',
+  cursor: 'pointer',
+  transition: 'background-color 0.3s ease',
+  borderBottom: '1px solid rgba(254, 92, 3, 0.1)',
+},
+announcementHeaderLeft: {
+  flex: 1,
+},
+announcementTitle: {
+  fontSize: '1.4rem',
+  color: '#f1f1f1',
+  marginBottom: '0.8rem',
+  fontWeight: 'bold',
+},
+announcementMeta: {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '1rem',
+  flexWrap: 'wrap',
+},
+categoryBadge: {
+  padding: '0.4rem 1rem',
+  borderRadius: '20px',
+  fontSize: '0.85rem',
+  fontWeight: 'bold',
+  color: '#fff',
+  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+},
+announcementDate: {
+  fontSize: '0.95rem',
+  color: '#c0c0c0',
+  fontWeight: '500',
+},
+expandIcon: {
+  fontSize: '1.3rem',
+  color: '#fe5c03',
+  marginLeft: '1rem',
+  transition: 'transform 0.3s ease',
+},
+announcementImageWrapper: {
+  width: '100%',
+  height: '300px',
+  overflow: 'hidden',
+  backgroundColor: '#8a2a2a',
+  position: 'relative',
+},
+announcementImage: {
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  transition: 'transform 0.3s ease',
+},
+announcementBody: {
+  padding: '1.5rem',
+  backgroundColor: '#8a2a2a',
+  borderTop: '2px solid rgba(254, 92, 3, 0.2)',
+},
+announcementDetail: {
+  marginBottom: '1.5rem',
+  padding: '1rem',
+  backgroundColor: '#9a3a3a',
+  borderRadius: '0.5rem',
+  borderLeft: '4px solid #fe5c03',
+},
+detailLabel: {
+  color: '#fe5c03',
+  fontSize: '1rem',
+  display: 'block',
+  marginBottom: '0.5rem',
+  fontWeight: '700',
+  textTransform: 'uppercase',
+  letterSpacing: '0.5px',
+},
+detailValue: {
+  color: '#f1f1f1',
+  fontSize: '1rem',
+  lineHeight: '1.7',
+  margin: 0,
+},
+announcementActions: {
+  display: 'flex',
+  gap: '1rem',
+  marginTop: '1.5rem',
+  paddingTop: '1.5rem',
+  borderTop: '1px solid rgba(254, 92, 3, 0.2)',
+},
+editButton: {
+  flex: 1,
+  padding: '0.9rem',
+  backgroundColor: '#fe5c03',
+  color: '#000',
+  border: 'none',
+  borderRadius: '50px',
+  fontSize: '0.95rem',
+  fontWeight: 'bold',
+  cursor: 'pointer',
+  transition: 'all 0.3s ease',
+},
+deleteButton: {
+  flex: 1,
+  padding: '0.9rem',
+  backgroundColor: '#f44336',
+  color: '#fff',
+  border: 'none',
+  borderRadius: '50px',
+  fontSize: '0.95rem',
+  fontWeight: 'bold',
+  cursor: 'pointer',
+  transition: 'all 0.3s ease',
+},
   officersSection: {
     padding: '5rem 2rem',
     backgroundColor: '#4c1515',
@@ -589,6 +836,17 @@ const styles = {
     color: '#c0c0c0',
     fontSize: '0.95rem',
   },
+
+  officerDescription: {
+        fontSize: '0.9em',
+        color: '#ffe5e5ff',
+        margin: '10px 0 15px',
+        lineHeight: '1.4em', // Defines line height
+        maxHeight: '4.2em', // Limits height to approx. 3 lines (1.4em * 3)
+        overflow: 'hidden', // Crops text if it exceeds maxHeight
+        textAlign: 'center',
+        padding: '0 15px',
+    },
 };
 
 export default Homepage;

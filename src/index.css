@@ -1,6 +1,13 @@
 
 
-
+/* src/App.css */
+@font-face {
+  font-family: 'BebasNeue'; /* Choose a unique name */
+  src: url('./assets/fonts/BEBASNEUE-REGULAR.OTF') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  /* Add separate @font-face blocks for Bold, Italic, etc. */
+}
 
 .cardContainer{
   background-color: white;
@@ -60,6 +67,11 @@
 }
 
 
+p {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  color: wh;
+}
 
 .cardContainer:hover .previewContainer {
   transform: scale(1.02);

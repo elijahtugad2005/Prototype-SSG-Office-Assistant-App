@@ -4,153 +4,197 @@ import { db } from "../firebase/firebaseConfig";
 import { doc, updateDoc, deleteDoc } from "firebase/firestore";
 
 export default function Memberlist({ members = [], setMembers }) {
-  // 🐛 Changed 'editingId' to 'editingDocId' to clearly indicate it holds the Firestore document ID.
-  const [editingDocId, setEditingDocId] = useState(null); 
-  const [editedMember, setEditedMember] = useState({});
+  // State to track the Firestore document ID of the member being edited
+  const [editingDocId, setEditingDocId] = useState(null); 
+  const [editedMember, setEditedMember] = useState({});
 
-  // 🔧 Begin Edit
-  const handleEditClick = (member) => {
-    // 🐛 Ensure we're storing the Firestore's unique 'docId' for editing identification.
-    setEditingDocId(member.docId); 
-    setEditedMember({ ...member });
-  };
+  // 🔧 Begin Edit: Stores the docId and a copy of the member's data
+  const handleEditClick = (member) => {
+    setEditingDocId(member.docId); 
+    setEditedMember({ ...member });
+  };
 
-  // 🔧 Handle edit changes
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    setEditedMember({ ...editedMember, [name]: value });
-  };
+  // 🔧 Handle edit changes: Updates the local editedMember state
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditedMember({ ...editedMember, [name]: value });
+  };
 
-  // 💾 Save to Firestore and local state
-  // 🐛 The parameter 'docIdToUpdate' now correctly refers to the Firestore document ID.
-  const handleSave = async (docIdToUpdate) => { 
-    try {
-      // 🐛 Using 'docIdToUpdate' for the Firestore document reference.
-      const memberRef = doc(db, "members", docIdToUpdate); 
-      await updateDoc(memberRef, {
-        name: editedMember.name || "",
-        address: editedMember.address || "",
-        position: editedMember.position || "",
-      });
+  // 💾 Save to Firestore and local state
+  const handleSave = async (docIdToUpdate) => { 
+    try {
+      const memberRef = doc(db, "members", docIdToUpdate); 
+      
+      // Data to be updated in Firestore
+      const updateData = {
+        name: editedMember.name || "",
+        id: editedMember.id || "", // Ensure ID is editable
+        address: editedMember.address || "",
+        position: editedMember.position || "",
+        description: editedMember.description || "", // ✅ NEW: Description
+        facebookLink: editedMember.facebookLink || "", // ✅ NEW: Social links
+        instagramLink: editedMember.instagramLink || "",
+        twitterLink: editedMember.twitterLink || "",
+        // Note: image64 is typically not updated here, as file inputs require re-upload
+        // If image64 was accidentally cleared, it should be kept if not re-uploaded.
+      };
+      
+      await updateDoc(memberRef, updateData);
 
-      const updatedMembers = members.map((m) =>
-        // 🐛 Update the local state by comparing against the Firestore 'docId'.
-        m.docId === docIdToUpdate ? { ...m, ...editedMember } : m 
-      );
-      setMembers(updatedMembers);
-      setEditingDocId(null); // Reset editing state after saving
-      alert(`✅ ${editedMember.name} updated successfully!`);
-    } catch (error) {
-      console.error("🔥 Error updating member:", error);
-      alert("Error updating member. Please check the console.");
-    }
-  };
+      // Update the local state using the new data
+      const updatedMembers = members.map((m) =>
+        m.docId === docIdToUpdate ? { ...m, ...updateData } : m 
+      );
+      setMembers(updatedMembers);
+      setEditingDocId(null); 
+      alert(`✅ ${editedMember.name} updated successfully!`);
+    } catch (error) {
+      console.error("🔥 Error updating member:", error);
+      alert("Error updating member. Please check the console.");
+    }
+  };
 
-  // ❌ Cancel editing
-  const handleCancel = () => {
-    setEditingDocId(null); // Reset editing state
-  };
+  // ❌ Cancel editing
+  const handleCancel = () => {
+    setEditingDocId(null);
+  };
 
-  // 🗑️ Delete member from Firestore and local state
-  // 🐛 The parameter 'docIdToDelete' correctly refers to the Firestore document ID.
-  const handleDelete = async (docIdToDelete) => { 
-    // 🐛 Check if 'docIdToDelete' is valid before proceeding.
-    if (!docIdToDelete) {
-        console.error("Attempted to delete with an invalid docIdToDelete:", docIdToDelete);
-        return alert("Invalid member ID for deletion. Please refresh and try again.");
-    }
-    if (window.confirm("Are you sure you want to delete this member?")) {
-      try {
-        // 🐛 Using 'docIdToDelete' for the Firestore document reference.
-        await deleteDoc(doc(db, "members", docIdToDelete)); 
-        // 🐛 Filter the local state by comparing against the Firestore 'docId'.
-        setMembers(members.filter((m) => m.docId !== docIdToDelete)); 
-        alert("🗑️ Member deleted successfully!");
-      } catch (error) {
-        console.error("🔥 Error deleting member:", error);
-        alert("Error deleting member. Please check the console.");
-      }
-    }
-  };
+  // 🗑️ Delete member from Firestore and local state
+  const handleDelete = async (docIdToDelete) => { 
+    if (!docIdToDelete) {
+        console.error("Attempted to delete with an invalid docIdToDelete:", docIdToDelete);
+        return alert("Invalid member ID for deletion. Please refresh and try again.");
+    }
+    if (window.confirm("Are you sure you want to delete this member?")) {
+      try {
+        await deleteDoc(doc(db, "members", docIdToDelete)); 
+        setMembers(members.filter((m) => m.docId !== docIdToDelete)); 
+        alert("🗑️ Member deleted successfully!");
+      } catch (error) {
+        console.error("🔥 Error deleting member:", error);
+        alert("Error deleting member. Please check the console.");
+      }
+    }
+  };
 
-  // 🧱 Render
-  return (
-    <div className={styles.memberList}>
-      <h2>👥 Member List</h2>
-      <div className={styles.memberListContainer}>
-        {members.length === 0 ? (
-          <p>No members added yet.</p>
-        ) : (
-          members.map((member) => (
-            // 🐛 Crucially, use 'member.docId' as the React key. This fixes the "duplicate key" warning.
-            <div key={member.docId} className={styles.memberCard}> 
-              {/* 🐛 Compare against 'editingDocId' to determine if this card is being edited. */}
-              {editingDocId === member.docId ? ( 
-                // Inline Edit Form
-                <div className={styles.editForm}>
-                  <input
-                    type="text"
-                    name="name"
-                    value={editedMember.name || ""}
-                    onChange={handleEditChange}
-                  />
-                  <input
-                    type="text"
-                    name="address"
-                    value={editedMember.address || ""}
-                    onChange={handleEditChange}
-                  />
-                  <select
-                    name="position"
-                    value={editedMember.position || ""}
-                    onChange={handleEditChange}
-                  >
-                    <option>President</option>
-                    <option>Vice President</option>
-                    <option>Secretary</option>
-                    <option>Treasurer</option>
-                    <option>Member</option>
-                  </select>
-                  <div className={styles.inlineButtons}>
-                    {/* 🐛 Pass 'member.docId' to handleSave. */}
-                    <button onClick={() => handleSave(member.docId)}>💾 Save</button> 
-                    <button onClick={handleCancel}>❌ Cancel</button>
-                  </div>
-                </div>
-              ) : (
-                // Normal Card Display
-                <>
-                  {member.photoPath && (
-                    <img
-                      src={
-                        member.photoPath
-                          ? member.photoPath.startsWith("/studentpics/")
-                            ? member.photoPath
-                            : `/studentpics/${member.photoPath}`
-                          : "/studentpics/default.jpg"
-                      }
-                      alt={member.name}
-                      className={styles.memberPhoto}
+  // 🧱 Render
+  return (
+    <div className={styles.memberList}>
+      <h2>👥 Member List</h2>
+      <div className={styles.memberListContainer}>
+        {members.length === 0 ? (
+          <p>No members added yet.</p>
+        ) : (
+          members.map((member) => (
+            <div key={member.docId} className={styles.memberCard}> 
+              {editingDocId === member.docId ? ( 
+                // Inline Edit Form with NEW Fields
+                <div className={styles.editForm}>
+                    <label>Name:</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={editedMember.name || ""}
+                    onChange={handleEditChange}
+                  />
+                    <label>ID:</label>
+                    <input
+                    type="text"
+                    name="id"
+                    value={editedMember.id || ""}
+                    onChange={handleEditChange}
+                  />
+                    <label>Address:</label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={editedMember.address || ""}
+                    onChange={handleEditChange}
+                  />
+                    <label>Position:</label>
+                  <select
+                    name="position"
+                    value={editedMember.position || ""}
+                    onChange={handleEditChange}
+                  >
+                    <option value="">Select Position</option>
+                    <option>President</option>
+                    <option>Vice President</option>
+                    <option>Secretary</option>
+                    <option>Treasurer</option>
+                    <option>Member</option>
+                  </select>
+                    
+                    <label>Description:</label>
+                    <textarea // ✅ NEW: Description Input
+                        name="description"
+                        value={editedMember.description || ""}
+                        onChange={handleEditChange}
+                        rows="3"
                     />
-                  )}
-                  <h3>{member.name}</h3>
-                  <p><strong>{member.position}</strong></p>
-                  {/* Display the user-entered 'id' (studentId in your case) */}
-                  <p>ID: {member.id}</p> 
-                  <p>{member.address}</p>
 
-                  <div className={styles.cardButtons}>
-                    {/* 🐛 Pass the entire 'member' object to handleEditClick, which internally extracts 'docId'. */}
-                    <button onClick={() => handleEditClick(member)}>✏️ Edit</button> 
-                    {/* 🐛 Pass 'member.docId' to handleDelete. */}
-                    <button onClick={() => handleDelete(member.docId)}>🗑️ Delete</button> 
-                  </div>
-                </>
-              )}
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
+                    <label>Facebook Link:</label>
+                    <input // ✅ NEW: Facebook Link Input
+                        type="url"
+                        name="facebookLink"
+                        value={editedMember.facebookLink || ""}
+                        onChange={handleEditChange}
+                        placeholder="Facebook URL"
+                    />
+                    <label>Instagram Link:</label>
+                    <input // ✅ NEW: Instagram Link Input
+                        type="url"
+                        name="instagramLink"
+                        value={editedMember.instagramLink || ""}
+                        onChange={handleEditChange}
+                        placeholder="Instagram URL"
+                    />
+                    <label>Twitter Link:</label>
+                    <input // ✅ NEW: Twitter Link Input
+                        type="url"
+                        name="twitterLink"
+                        value={editedMember.twitterLink || ""}
+                        onChange={handleEditChange}
+                        placeholder="Twitter URL"
+                    />
+
+                  <div className={styles.inlineButtons}>
+                    <button onClick={() => handleSave(member.docId)}>💾 Save</button> 
+                    <button onClick={handleCancel}>❌ Cancel</button>
+                  </div>
+                </div>
+              ) : (
+                // Normal Card Display
+                <>
+                  {member.image64 && ( // ✅ Check for Base64 image
+                    <img
+                      src={member.image64}
+                      alt={member.name}
+                      className={styles.memberPhoto}
+                    />
+                  )}
+                  <h3>{member.name}</h3>
+                  <p><strong>{member.position}</strong></p>
+                  <p>ID: {member.id}</p> 
+                  <p>{member.address}</p>
+                    
+                    {/* Display new fields */}
+                    {member.description && <p className={styles.description}>{member.description.substring(0, 100)}...</p>}
+                    {member.facebookLink && <p className={styles.socialLink}>FB: <a href={member.facebookLink} target="_blank" rel="noopener noreferrer">Link</a></p>}
+                    {member.instagramLink && <p className={styles.socialLink}>IG: <a href={member.instagramLink} target="_blank" rel="noopener noreferrer">Link</a></p>}
+                    {member.twitterLink && <p className={styles.socialLink}>X/TW: <a href={member.twitterLink} target="_blank" rel="noopener noreferrer">Link</a></p>}
+
+
+                  <div className={styles.cardButtons}>
+                    <button onClick={() => handleEditClick(member)}>✏️ Edit</button> 
+                    <button onClick={() => handleDelete(member.docId)}>🗑️ Delete</button> 
+                  </div>
+                </>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
 }

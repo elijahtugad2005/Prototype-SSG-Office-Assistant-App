@@ -17,35 +17,97 @@ function Announcement() {
     eventDate: '',
     eventTime: '',
     category: 'General',
-    imagePath: '',
+    imageBase64: '',
   });
 //Image previewer 
 const [imagePreview, setImagePreview] = useState(null);
 const [selectedImage, setSelectedImage] = useState(null);
 
-const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        if (!file.type.startsWith('image/')) {
-            alert('Please select an image file');
-            return;
-        }
 
-        // Store file separately
-        setSelectedImage(file);
-        
-        // Update only the path in form
-        setAnnouncementForm(prev => ({
-            ...prev,
-            imagePath: `/AnnouncementPic/${file.name}`
-        }));
 
-        // Create preview
+
+
+
+// ========================================
+// 📸 1. Image Compression Utility
+// ========================================
+/**
+ * Compresses an image file using the Canvas API to generate a smaller 
+ * Base64 string (JPEG, quality 0.8, max width 1000px) below the 1MB limit.
+ * @param {File} file - The original image file selected by the user.
+ * @returns {Promise<string>} A promise that resolves with the compressed Base64 Data URL.
+ */
+const CompressImage = (file) => {
+    const maxWidth = 1000;
+    const quality = 0.8;
+    
+    return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onloadend = () => {
-            setImagePreview(reader.result);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // Calculate new dimensions, capping width at maxWidth
+                if (width > maxWidth) {
+                    height *= maxWidth / width;
+                    width = maxWidth;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Generate new Base64 string as JPEG with compression quality
+                const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+                
+                // Optional: Check size again and warn, though the compression should help
+                if (compressedBase64.length > 1024 * 1024) {
+                    console.warn("Image still large. Consider lower quality or smaller dimensions.");
+                }
+
+                resolve(compressedBase64);
+            };
+            img.onerror = reject;
+            img.src = event.target.result;
         };
+        reader.onerror = reject;
         reader.readAsDataURL(file);
+    });
+};
+
+const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    
+    if (!file) {
+      setAnnouncementForm(prev => ({ ...prev, imageBase64:""}))
+      setImagePreview(null)
+      return;
+    }
+
+    if(!file.type.startsWith('image/')){
+        alert('Please select an image file.');
+        return;
+    }
+
+    try {
+
+        const compressedBase64 = await CompressImage(file);
+
+        setAnnouncementForm((prev) => ({
+          ...prev,
+          imageBase64: compressedBase64
+        }));
+        setImagePreview(compressedBase64);
+    } catch (error){
+        console.error("Error processing image:", error);
+        alert("Failed to process image. Please try another file.");
+        setMember(prev => ({ ...prev, image64: ""}));
+        setImagePreview(null);
     }
 };
 
@@ -127,7 +189,7 @@ const handleImageChange = (e) => {
             eventDate: announcementForm.eventDate,
             eventTime: announcementForm.eventTime,
             category: announcementForm.category,
-            imageUrl: announcementForm.imagePath || '/AnnouncementPic/default.jpg',
+            imageBase64: announcementForm.imageBase64,
             createdAt: new Date().toISOString(),
         });
 
@@ -139,7 +201,7 @@ const handleImageChange = (e) => {
             eventDate: '',
             eventTime: '',
             category: 'General',     // ADD THIS
-            imagePath: '',       // ADD THIS
+            imageBase64: '',       // ADD THIS
         });
         setImagePreview(null); 
         setSelectedImage(null); // ADD THIS
@@ -159,9 +221,9 @@ const handleImageChange = (e) => {
       eventDate: announcement.eventDate,
       eventTime: announcement.eventTime,
       category: announcement.category,                              // ADD THIS
-      imagePath: announcement.imageUrl || '',  
+      imageBase64: announcement.imageBase64 || '',  
     });
-     setImagePreview(announcement.imageUrl);
+     setImagePreview(announcement.imageBase64);
      setSelectedImage(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -181,7 +243,7 @@ const handleImageChange = (e) => {
             eventDate: announcementForm.eventDate,
             eventTime: announcementForm.eventTime,
             category: announcementForm.category,
-            imageUrl: announcementForm.imagePath || '/AnnouncementPic/default.jpg',
+            imageBase64: announcementForm.imageBase64,
             updatedAt: new Date().toISOString(),
         };
 
@@ -195,7 +257,7 @@ const handleImageChange = (e) => {
             eventDate: '',
             eventTime: '',
             category: 'General',
-            imagePath: '',
+            imageBase64: '',
         });
         setEditingAnnouncementId(null);
         setImagePreview(null);
@@ -286,6 +348,7 @@ const handleImageChange = (e) => {
         eventType: 'Class',
         requiresAttendance: false,
         description: '',
+        imageBase64:'',
       });
       setEditingEventId(null);
       setLoading(false);
@@ -638,6 +701,7 @@ const handleImageChange = (e) => {
                         eventDate: '',
                         eventTime: '',
                         category: 'General',
+                        imageBase64: '',
                       });
                     }}
                     style={styles.cancelButton}
@@ -688,10 +752,10 @@ const handleImageChange = (e) => {
 
 
                                             {/* ADD THIS BLOCK */}
-                        {announcement.imageUrl && (
+                        {announcement.imageBase64 && (
                             <div style={styles.announcementImageWrapper}>
                                 <img 
-                                    src={announcement.imageUrl}
+                                    src={announcement.imageBase64}
                                     alt={announcement.title}
                                     style={styles.announcementImage}
                                     onError={(e) => {
@@ -1391,14 +1455,16 @@ imagePreview: {
 },
 announcementImageWrapper: {
     width: '100%',
-    height: '200px',
+    height: 'auto',
     overflow: 'hidden',
     backgroundColor: '#8a2a2a',
+    padding: '0.7rem',
 },
 announcementImage: {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
+    borderRadius: '10px',
 },
 };
 

@@ -3,16 +3,13 @@ import { CardProvider } from './CardContext/CardContext.jsx';
 import AdminPage from './admin/admin.jsx';
 import Header from './components/Header/Header.jsx';
 import Sidebar from './components/Sidebar/Sidebar.jsx';
-import Document from './components/Document Page/Document.jsx';
 import styles from './App.module.css';
 import WorkinProgress from './components/WorkinProgress/WorkinProgress.jsx';
-import MemberDashboard from './components/MemberDashboard.jsx';
-import TestFirebase from './components/TestFirebase.jsx';
-import Loginpage from './components/Login-Page/loginpage.jsx';
 import Homepage from './Homepage/Homepage.jsx';
 import Order from './components/Order/order.jsx';
 import Announcement from './components/Announcement.jsx';
 import ClassUpload from './components/ClassUpload.jsx';
+import Playground from './components/playground.jsx';
 function App() {
   return (
     <div className={styles.app}>

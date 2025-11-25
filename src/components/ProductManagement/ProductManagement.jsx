@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../firebase/firebaseConfig';
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
+import styles from './productmanagement.module.css';
 
 function ProductManagement() {
+
+
+
+
+
+
   // ========================================
   // STATE MANAGEMENT
   // ========================================
@@ -15,8 +22,8 @@ function ProductManagement() {
     sizeOptions: [],
     colorVariations: [],
     description: '',
-    price: 0,
     supplier: '',
+    price: 0,
     imageFile: null,
     imagePath: '',
   });
@@ -72,37 +79,51 @@ function ProductManagement() {
   };
 
   // ========================================
-  // HANDLE IMAGE UPLOAD
-  // ========================================
-  const handleImageChange = (e) => {
+// HANDLE IMAGE UPLOAD (Using Compression)
+// ========================================
+const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
+    
+    if (!file) {
+        setProductData(prev => ({ ...prev, imageBase64: '' }));
+        setImagePreview(null);
+        return;
+    }
+
+    // Input validation (remains the same)
+    if (!file.type.startsWith('image/')) {
         alert('Please select an image file');
         return;
-      }
-
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert('Image size should be less than 5MB');
-        return;
-      }
-
-      setProductData(prev => ({
-        ...prev,
-        imageFile: file,
-        imagePath: `/products/${file.name}`
-      }));
-
-      // Create preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
     }
-  };
+
+    // Check size *before* compression to give early feedback for huge files
+    // If the file is > 5MB, we might skip processing to save user time.
+    if (file.size > 5 * 1024 * 1024) {
+        alert('Image size should be less than 5MB before processing.');
+        // We will still attempt compression, but warn the user.
+    }
+    
+    try {
+        // CALL THE COMPRESSION FUNCTION
+        const compressedBase64 = await CompressImage(file, 1000, 0.8);
+
+        // Update state with the COMPRESSED Base64 string
+        setProductData(prev => ({
+            ...prev,
+            imageBase64: compressedBase64,
+        }));
+        
+        // Set the image preview
+        setImagePreview(compressedBase64);
+
+    } catch (error) {
+        console.error("Error during image compression:", error);
+        alert("Failed to process image. Please try a different file.");
+        setProductData(prev => ({ ...prev, imageBase64: '' }));
+        setImagePreview(null);
+    }
+};
+
 
   // ========================================
   // ADD SIZE TO LIST
@@ -201,7 +222,7 @@ function ProductManagement() {
         description: productData.description,
         price: parseFloat(productData.price),
         supplier: productData.supplier,
-        imageUrl: productData.imagePath || '/products/default.jpg',
+        imageUrl: productData.imageBase64 || '/products/default.jpg',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -225,24 +246,44 @@ function ProductManagement() {
   // ========================================
   // HANDLE EDIT PRODUCT
   // ========================================
-  const handleEditClick = (product) => {
-    setEditingProductId(product.productId);
+  // ========================================
+// HANDLE EDIT PRODUCT
+// ========================================
+const handleEditClick = (product) => {
+    // 1. CRITICAL: Set the editingProductId to the Firestore Document ID (docId)
+    setEditingProductId(product.docId);
+
+    // 2. Populate the productData state with the selected product's details
     setProductData({
-      productName: product.productName,
-      stockAvailable: product.stockAvailable,
-      hasVariations: product.hasVariations,
-      sizeOptions: product.sizeOptions || [],
-      colorVariations: product.colorVariations || [],
-      description: product.description,
-      price: product.price,
-      supplier: product.supplier,
-      imageFile: null,
-      imagePath: product.imageUrl || '',
+        // Spread the main document fields
+        productName: product.productName,
+        stockAvailable: product.stockAvailable,
+        hasVariations: product.hasVariations,
+        description: product.description,
+        price: product.price,
+        supplier: product.supplier,
+        
+        // Ensure array fields are present, defaulting to empty arrays if null/undefined
+        sizeOptions: product.sizeOptions || [],
+        colorVariations: product.colorVariations || [],
+
+        // Set the image data
+        imageBase64: product.imageBase64 || '',
+        
+        // The original custom productId field (optional, but good for display/history)
+        productId: product.productId, 
+        
+        // Reset file to null as a file input cannot be programmatically set
+        imageFile: null, 
     });
-    setImagePreview(product.imageUrl);
+    
+    // 3. Set the image preview from the Base64 string
+    setImagePreview(product.imageBase64);
+
+    // 4. Switch to the 'add/edit' tab and scroll to top
     setActiveTab('add');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+};
 
   // ========================================
   // HANDLE UPDATE PRODUCT
@@ -317,7 +358,7 @@ function ProductManagement() {
       price: 0,
       supplier: '',
       imageFile: null,
-      imagePath: '',
+      imageBase64: '',
     });
     setImagePreview(null);
     setTempSize('');
@@ -325,21 +366,84 @@ function ProductManagement() {
     setEditingProductId(null);
   };
 
+
+  // ========================================
+// IMAGE COMPRESSION UTILITY
+// ========================================
+
+/**
+ * Compresses an image file (e.g., JPEG) using the Canvas API to generate 
+ * a smaller Base64 string, helping to keep it under Firestore's 1MB limit.
+ * @param {File} file - The original image file selected by the user.
+ * @param {number} maxWidth - Maximum width for the resized image.
+ * @param {number} quality - JPEG quality (0.0 to 1.0).
+ * @returns {Promise<string>} A promise that resolves with the compressed Base64 Data URL.
+ */
+const CompressImage = (file, maxWidth = 1000, quality = 0.8) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                // 1. Create a canvas element
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // 2. Calculate new dimensions if image exceeds maxWidth
+                if (width > maxWidth) {
+                    height *= maxWidth / width;
+                    width = maxWidth;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+
+                // 3. Draw the image onto the canvas with new dimensions
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // 4. Generate the new Base64 string (JPEG) with compression quality
+                // The output format is 'image/jpeg' to ensure maximum compression.
+                const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+
+                // Simple check: If the resulting string is still too large, 
+                // you might need to try lower quality or a smaller maxWidth.
+                // We'll trust the 1000px/0.8 setting is usually enough.
+                if (compressedBase64.length > 1024 * 1024) {
+                    console.warn("Base64 string still exceeds 1MB after compression. Consider lowering quality or resizing further.");
+                }
+
+                resolve(compressedBase64);
+            };
+            img.onerror = reject;
+            img.src = event.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+};
+
+
+
+
+
+
   // ========================================
   // RENDER
   // ========================================
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h2 style={styles.mainTitle}>Product Management</h2>
-        <p style={styles.headerSubtitle}>Manage lanyards, uniforms and other products</p>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h2 className={styles.mainTitle}>Product Management</h2>
+        <p className={styles.headerSubtitle}>Manage lanyards, uniforms and other products</p>
       </div>
 
       {/* TAB NAVIGATION */}
-      <div style={styles.tabContainer}>
+      <div className={styles.tabContainer}>
         <button
           onClick={() => setActiveTab('add')}
-          style={{
+          className={{
             ...styles.tab,
             ...(activeTab === 'add' ? styles.tabActive : {})
           }}
@@ -351,7 +455,7 @@ function ProductManagement() {
             setActiveTab('manage');
             resetForm();
           }}
-          style={{
+          className={{
             ...styles.tab,
             ...(activeTab === 'manage' ? styles.tabActive : {})
           }}
@@ -362,31 +466,31 @@ function ProductManagement() {
 
       {/* ADD/EDIT PRODUCT FORM */}
       {activeTab === 'add' && (
-        <div style={styles.formWrapper}>
-          <h3 style={styles.sectionTitle}>
+        <div className={styles.formWrapper}>
+          <h3 className={styles.sectionTitle}>
             {editingProductId ? 'Edit Product Details' : 'Add New Product'}
           </h3>
 
-          <form onSubmit={editingProductId ? handleUpdateProduct : handleAddProduct} style={styles.form}>
+          <form onSubmit={editingProductId ? handleUpdateProduct : handleAddProduct} className={styles.form}>
             
             {/* Product Name */}
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Product Name *</label>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Product Name *</label>
               <input
                 type="text"
                 name="productName"
                 value={productData.productName}
                 onChange={handleChange}
                 placeholder="e.g., COED Lanyard"
-                style={styles.input}
+                className={styles.input}
                 required
               />
             </div>
 
             {/* Stock and Price */}
-            <div style={styles.formRow}>
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Stock Quantity *</label>
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Stock Quantity *</label>
                 <input
                   type="number"
                   name="stockAvailable"
@@ -394,13 +498,13 @@ function ProductManagement() {
                   onChange={handleChange}
                   min="0"
                   placeholder="e.g., 100"
-                  style={styles.input}
+                  className={styles.input}
                   required
                 />
               </div>
 
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Price (₱) *</label>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Price (₱) *</label>
                 <input
                   type="number"
                   name="price"
@@ -409,49 +513,49 @@ function ProductManagement() {
                   min="0"
                   step="0.01"
                   placeholder="e.g., 150.00"
-                  style={styles.input}
+                  className={styles.input}
                   required
                 />
               </div>
             </div>
 
             {/* Supplier */}
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Supplier Name *</label>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Supplier Name *</label>
               <input
                 type="text"
                 name="supplier"
                 value={productData.supplier}
                 onChange={handleChange}
                 placeholder="e.g., ABC Manufacturing Inc."
-                style={styles.input}
+                className={styles.input}
                 required
               />
             </div>
 
             {/* Description */}
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Product Description *</label>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Product Description *</label>
               <textarea
                 name="description"
                 value={productData.description}
                 onChange={handleChange}
                 placeholder="Describe the product features, materials, etc."
                 rows="4"
-                style={styles.textarea}
+                className={styles.textarea}
                 required
               />
             </div>
 
             {/* Has Variations Checkbox */}
-            <div style={styles.checkboxGroup}>
-              <label style={styles.checkboxLabel}>
+            <div className={styles.checkboxGroup}>
+              <label className={styles.checkboxLabel}>
                 <input
                   type="checkbox"
                   name="hasVariations"
                   checked={productData.hasVariations}
                   onChange={handleChange}
-                  style={styles.checkbox}
+                  className={styles.checkbox}
                 />
                 <span>This product has variations (sizes/colors)</span>
               </label>
@@ -459,39 +563,39 @@ function ProductManagement() {
 
             {/* Variations Section - Only show if hasVariations is true */}
             {productData.hasVariations && (
-              <div style={styles.variationsSection}>
-                <h4 style={styles.variationsTitle}>Product Variations</h4>
+              <div className={styles.variationsSection}>
+                <h4 className={styles.variationsTitle}>Product Variations</h4>
 
                 {/* Size Options */}
-                <div style={styles.variationGroup}>
-                  <label style={styles.label}>Size Options</label>
-                  <div style={styles.addVariationContainer}>
+                <div className={styles.variationGroup}>
+                  <label className={styles.label}>Size Options</label>
+                  <div className={styles.addVariationContainer}>
                     <input
                       type="text"
                       value={tempSize}
                       onChange={(e) => setTempSize(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddSize())}
                       placeholder="e.g., Small, Medium, Large"
-                      style={styles.variationInput}
+                      className={styles.variationInput}
                     />
                     <button
                       type="button"
                       onClick={handleAddSize}
-                      style={styles.addButton}
+                      className={styles.addButton}
                     >
                       + Add
                     </button>
                   </div>
 
                   {productData.sizeOptions.length > 0 && (
-                    <div style={styles.tagsList}>
+                    <div className={styles.tagsList}>
                       {productData.sizeOptions.map((size, index) => (
-                        <div key={index} style={styles.tag}>
+                        <div key={index} className={styles.tag}>
                           <span>{size}</span>
                           <button
                             type="button"
                             onClick={() => handleRemoveSize(index)}
-                            style={styles.removeTagButton}
+                            className={styles.removeTagButton}
                           >
                             ×
                           </button>
@@ -502,35 +606,35 @@ function ProductManagement() {
                 </div>
 
                 {/* Color Variations */}
-                <div style={styles.variationGroup}>
-                  <label style={styles.label}>Color Variations</label>
-                  <div style={styles.addVariationContainer}>
+                <div className={styles.variationGroup}>
+                  <label className={styles.label}>Color Variations</label>
+                  <div className={styles.addVariationContainer}>
                     <input
                       type="text"
                       value={tempColor}
                       onChange={(e) => setTempColor(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddColor())}
                       placeholder="e.g., Red, Blue, Black"
-                      style={styles.variationInput}
+                      className={styles.variationInput}
                     />
                     <button
                       type="button"
                       onClick={handleAddColor}
-                      style={styles.addButton}
+                      className={styles.addButton}
                     >
                       + Add
                     </button>
                   </div>
 
                   {productData.colorVariations.length > 0 && (
-                    <div style={styles.tagsList}>
+                    <div className={styles.tagsList}>
                       {productData.colorVariations.map((color, index) => (
-                        <div key={index} style={styles.tag}>
+                        <div key={index} className={styles.tag}>
                           <span>{color}</span>
                           <button
                             type="button"
                             onClick={() => handleRemoveColor(index)}
-                            style={styles.removeTagButton}
+                            className={styles.removeTagButton}
                           >
                             ×
                           </button>
@@ -543,32 +647,32 @@ function ProductManagement() {
             )}
 
             {/* Image Upload */}
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Product Image</label>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Product Image</label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                style={styles.fileInput}
+                className={styles.fileInput}
               />
-              <p style={styles.helperText}>
+              <p className={styles.helperText}>
                 Image will be saved to: <code>/products/[filename]</code>
               </p>
               
               {imagePreview && (
-                <div style={styles.imagePreviewContainer}>
-                  <img src={imagePreview} alt="Preview" style={styles.imagePreview} />
-                  <p style={styles.imagePreviewText}>Image Preview</p>
+                <div className={styles.imagePreviewContainer}>
+                  <img src={imagePreview} alt="Preview" className={styles.imagePreview} />
+                  <p className={styles.imagePreviewText}>Image Preview</p>
                 </div>
               )}
             </div>
 
             {/* Buttons */}
-            <div style={styles.buttonGroup}>
+            <div className={styles.buttonGroup}>
               <button
                 type="submit"
                 disabled={loading}
-                style={{
+                className={{
                   ...styles.submitButton,
                   ...(loading ? styles.submitButtonDisabled : {})
                 }}
@@ -587,7 +691,7 @@ function ProductManagement() {
                     resetForm();
                     setActiveTab('manage');
                   }}
-                  style={styles.cancelButton}
+                  className={styles.cancelButton}
                 >
                   ❌ Cancel
                 </button>
@@ -596,7 +700,7 @@ function ProductManagement() {
               <button
                 type="button"
                 onClick={resetForm}
-                style={styles.resetButton}
+                className={styles.resetButton}
               >
                 🔄 Reset
               </button>
@@ -607,83 +711,83 @@ function ProductManagement() {
 
       {/* MANAGE PRODUCTS TAB */}
       {activeTab === 'manage' && (
-        <div style={styles.manageWrapper}>
-          <h3 style={styles.sectionTitle}>Product Inventory</h3>
+        <div className={styles.manageWrapper}>
+          <h3 className={styles.sectionTitle}>Product Inventory</h3>
           
           {products.length === 0 ? (
-            <div style={styles.emptyState}>
-              <p style={styles.emptyStateText}>No products added yet.</p>
+            <div className={styles.emptyState}>
+              <p className={styles.emptyStateText}>No products added yet.</p>
               <button
                 onClick={() => setActiveTab('add')}
-                style={styles.addFirstButton}
+                className={styles.addFirstButton}
               >
                 Add Your First Product
               </button>
             </div>
           ) : (
-            <div style={styles.productsGrid}>
+            <div className={styles.productsGrid}>
               {products.map((product) => (
-                <div key={product.productId} style={styles.productCard}>
+                <div key={product.productId} className={styles.productCard}>
                   {/* Product Image */}
-                  <div style={styles.productImageWrapper}>
+                  <div className={styles.productImageWrapper}>
                     <img
                       src={product.imageUrl || 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&h=400&fit=crop'}
                       alt={product.productName}
-                      style={styles.productImage}
+                      className={styles.productImage}
                       onError={(e) => {
                         e.target.src = 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&h=400&fit=crop';
                       }}
                     />
                     {product.stockAvailable <= 10 && (
-                      <div style={styles.lowStockBadge}>
+                      <div className={styles.lowStockBadge}>
                         ⚠️ Low Stock
                       </div>
                     )}
                   </div>
 
                   {/* Product Info */}
-                  <div style={styles.productCardContent}>
-                    <h4 style={styles.productCardTitle}>{product.productName}</h4>
-                    <p style={styles.productCardDesc}>{product.description}</p>
+                  <div className={styles.productCardContent}>
+                    <h4 className={styles.productCardTitle}>{product.productName}</h4>
+                    <p className={styles.productCardDesc}>{product.description}</p>
 
-                    <div style={styles.productCardDetails}>
-                      <div style={styles.productCardRow}>
-                        <span style={styles.detailLabel}>ID:</span>
-                        <span style={styles.detailValue}>{product.productId}</span>
+                    <div className={styles.productCardDetails}>
+                      <div className={styles.productCardRow}>
+                        <span className={styles.detailLabel}>ID:</span>
+                        <span className={styles.detailValue}>{product.productId}</span>
                       </div>
-                      <div style={styles.productCardRow}>
-                        <span style={styles.detailLabel}>Price:</span>
-                        <span style={styles.priceValue}>₱{product.price?.toFixed(2)}</span>
+                      <div className={styles.productCardRow}>
+                        <span className={styles.detailLabel}>Price:</span>
+                        <span className={styles.priceValue}>₱{product.price?.toFixed(2)}</span>
                       </div>
-                      <div style={styles.productCardRow}>
-                        <span style={styles.detailLabel}>Stock:</span>
-                        <span style={styles.stockValue}>{product.stockAvailable} units</span>
+                      <div className={styles.productCardRow}>
+                        <span className={styles.detailLabel}>Stock:</span>
+                        <span className={styles.stockValue}>{product.stockAvailable} units</span>
                       </div>
-                      <div style={styles.productCardRow}>
-                        <span style={styles.detailLabel}>Supplier:</span>
-                        <span style={styles.detailValue}>{product.supplier}</span>
+                      <div className={styles.productCardRow}>
+                        <span className={styles.detailLabel}>Supplier:</span>
+                        <span className={styles.detailValue}>{product.supplier}</span>
                       </div>
                     </div>
 
                     {/* Variations */}
                     {product.hasVariations && (
-                      <div style={styles.variationsDisplay}>
+                      <div className={styles.variationsDisplay}>
                         {product.sizeOptions?.length > 0 && (
-                          <div style={styles.variationDisplay}>
-                            <span style={styles.variationLabel}>Sizes:</span>
-                            <div style={styles.variationTags}>
+                          <div className={styles.variationDisplay}>
+                            <span className={styles.variationLabel}>Sizes:</span>
+                            <div className={styles.variationTags}>
                               {product.sizeOptions.map((size, idx) => (
-                                <span key={idx} style={styles.variationTag}>{size}</span>
+                                <span key={idx} className={styles.variationTag}>{size}</span>
                               ))}
                             </div>
                           </div>
                         )}
                         {product.colorVariations?.length > 0 && (
-                          <div style={styles.variationDisplay}>
-                            <span style={styles.variationLabel}>Colors:</span>
-                            <div style={styles.variationTags}>
+                          <div className={styles.variationDisplay}>
+                            <span className={styles.variationLabel}>Colors:</span>
+                            <div className={styles.variationTags}>
                               {product.colorVariations.map((color, idx) => (
-                                <span key={idx} style={styles.variationTag}>{color}</span>
+                                <span key={idx} className={styles.variationTag}>{color}</span>
                               ))}
                             </div>
                           </div>
@@ -692,16 +796,16 @@ function ProductManagement() {
                     )}
 
                     {/* Action Buttons */}
-                    <div style={styles.cardActions}>
+                    <div className={styles.cardActions}>
                       <button
                         onClick={() => handleEditClick(product)}
-                        style={styles.editButton}
+                        className={styles.editButton}
                       >
                         ✏️ Edit
                       </button>
                       <button
                         onClick={() => handleDeleteProduct(product.productId, product.productName)}
-                        style={styles.deleteButton}
+                        className={styles.deleteButton}
                       >
                         🗑️ Delete
                       </button>
@@ -713,6 +817,7 @@ function ProductManagement() {
           )}
         </div>
       )}
+
     </div>
   );
 }
@@ -720,236 +825,6 @@ function ProductManagement() {
 // ========================================
 // STYLES
 // ========================================
-const styles = {
-  container: {
-    width: '100%',
-    padding: '2rem',
-    backgroundColor: '#4c1515',
-    borderRadius: '1rem',
-    fontFamily: 'Arial, sans-serif',
-  },
-  header: {
-    marginBottom: '2rem',
-  },
-  mainTitle: {
-    fontSize: '2rem',
-    color: '#fe5c03',
-    marginBottom: '0.5rem',
-    fontWeight: 'bold',
-  },
-  headerSubtitle: {
-    fontSize: '1rem',
-    color: '#c0c0c0',
-  },
-  tabContainer: {
-    display: 'flex',
-    gap: '1rem',
-    marginBottom: '2rem',
-    flexWrap: 'wrap',
-  },
-  tab: {
-    padding: '0.8rem 1.5rem',
-    backgroundColor: '#732020',
-    color: '#c0c0c0',
-    border: '2px solid transparent',
-    borderRadius: '50px',
-    fontSize: '0.95rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-  },
-  tabActive: {
-    backgroundColor: '#fe5c03',
-    color: '#000',
-    borderColor: '#fe5c03',
-  },
-  formWrapper: {
-    backgroundColor: '#5a1a1a',
-    borderRadius: '1rem',
-    padding: '2rem',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-    border: '1px solid rgba(254, 92, 3, 0.2)',
-  },
-  sectionTitle: {
-    fontSize: '1.5rem',
-    color: '#fe5c03',
-    marginBottom: '1.5rem',
-    fontWeight: 'bold',
-    borderBottom: '2px solid rgba(254, 92, 3, 0.3)',
-    paddingBottom: '0.5rem',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1.2rem',
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  formRow: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: '1rem',
-  },
-  label: {
-    fontSize: '0.9rem',
-    color: '#f1f1f1',
-    marginBottom: '0.4rem',
-    fontWeight: '600',
-  },
-  input: {
-    padding: '0.8rem',
-    border: '1px solid #7a2a2a',
-    borderRadius: '0.5rem',
-    backgroundColor: '#732020',
-    color: '#f1f1f1',
-    fontSize: '0.95rem',
-    outline: 'none',
-  },
-  textarea: {
-    padding: '0.8rem',
-    border: '1px solid #7a2a2a',
-    borderRadius: '0.5rem',
-    backgroundColor: '#732020',
-    color: '#f1f1f1',
-    fontSize: '0.95rem',
-    outline: 'none',
-    resize: 'vertical',
-    fontFamily: 'Arial, sans-serif',
-  },
-  checkboxGroup: {
-    padding: '1rem',
-    backgroundColor: '#732020',
-    borderRadius: '0.5rem',
-    border: '1px solid rgba(254, 92, 3, 0.2)',
-  },
-  checkboxLabel: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.8rem',
-    color: '#f1f1f1',
-    fontSize: '0.95rem',
-    cursor: 'pointer',
-  },
-  checkbox: {
-    width: '18px',
-    height: '18px',
-    cursor: 'pointer',
-  },
-  variationsSection: {
-    backgroundColor: '#732020',
-    padding: '1.2rem',
-    borderRadius: '0.8rem',
-    border: '2px solid rgba(254, 92, 3, 0.3)',
-  },
-  variationsTitle: {
-    fontSize: '1.1rem',
-    color: '#fe5c03',
-    marginBottom: '1rem',
-    fontWeight: 'bold',
-  },
-  variationGroup: {
-    marginBottom: '1.2rem',
-  },
-  addVariationContainer: {
-    display: 'flex',
-    gap: '0.5rem',
-    marginBottom: '0.8rem',
-  },
-  variationInput: {
-    flex: 1,
-    padding: '0.7rem',
-    border: '1px solid #7a2a2a',
-    borderRadius: '0.5rem',
-    backgroundColor: '#8a2a2a',
-    color: '#f1f1f1',
-    fontSize: '0.9rem',
-    outline: 'none',
-  },
-  addButton: {
-    padding: '0.7rem 1.2rem',
-    backgroundColor: '#fe5c03',
-    color: '#000',
-    border: 'none',
-    borderRadius: '0.5rem',
-    fontSize: '0.85rem',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    whiteSpace: 'nowrap',
-  },
-  tagsList: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '0.5rem',
-  },
-  tag: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    backgroundColor: 'rgba(254, 92, 3, 0.2)',
-    color: '#f1f1f1',
-    padding: '0.4rem 0.8rem',
-    borderRadius: '20px',
-    border: '1px solid rgba(254, 92, 3, 0.4)',
-    fontSize: '0.85rem',
-  },
-  removeTagButton: {
-    backgroundColor: 'transparent',
-    border: 'none',
-    color: '#ff6b6b',
-    fontSize: '1.3rem',
-    cursor: 'pointer',
-    lineHeight: '1',
-    padding: '0',
-  },
-  fileInput: {
-    padding: '0.7rem',
-    border: '2px dashed #7a2a2a',
-    borderRadius: '0.5rem',
-    backgroundColor: '#732020',
-    color: '#f1f1f1',
-    fontSize: '0.9rem',
-    cursor: 'pointer',
-  },
-  helperText: {
-    fontSize: '0.8rem',
-    color: '#c0c0c0',
-    marginTop: '0.4rem',
-  },
-  imagePreviewContainer: {
-    marginTop: '1rem',
-    textAlign: 'center',
-  },
-  imagePreview: {
-    maxWidth: '250px',
-    maxHeight: '250px',
-    borderRadius: '0.5rem',
-    border: '3px solid #fe5c03',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-  },
-  imagePreviewText: {
-    color: '#c0c0c0',
-    fontSize: '0.85rem',
-    marginTop: '0.5rem',
-  },
-  buttonGroup: {
-    display: 'flex',
-    gap: '0.8rem',
-    flexWrap: 'wrap',
-    marginTop: '1rem',
-  },
-  submitButton: {
-    flex: 1,
-    padding: '1rem',
-    backgroundColor: '#fe5c03',
-    color: '#000',
-    border: 'none',
-    borderRadius: '50px',
-    fontSize: '1rem',
-    fontWeight: 'bold',
-    cursor: 'click'
-  }
-}
+
 
 export default ProductManagement;

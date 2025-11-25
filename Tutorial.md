@@ -14,6 +14,8 @@ flowchart TD
     A2["Firebase Database Integration (Firestore)
 "]
     A3["Member Management System
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
 "]
     A4["Product and Order Management
 "]
@@ -65,10 +67,7 @@ Our application works similarly! We want a consistent look and feel. This is whe
 
 The Global Application Layout defines the standard visual "frame" that wraps around everything in our app. It includes elements that stay in the same place and look the same, no matter which part of the application you're currently using.
 
-For our SSG Office Assistant App, this means:
-1.  **A Header at the top**: This will always show the SSG logo and name.
-2.  **A Sidebar on the left**: This acts as our main navigation menu, allowing us to jump between different sections of the app like "Home", "Admin", or "Finance".
-3.  **A main content area**: This is where the actual "pages" of our application (like the Admin page or the Homepage) will appear. This area changes based on what you click in the sidebar.
+
 
 This consistent layout makes our app easy to use and navigate.
 

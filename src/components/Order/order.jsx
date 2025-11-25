@@ -357,7 +357,7 @@ function Order() {
               <label style={styles.label}>School ID *</label>
               <input
                 type="text"
-                name="fullName"
+                name="schoolID"
                 value={formData.schoolID}
                 onChange={handleChange}
                 placeholder="8304433"
