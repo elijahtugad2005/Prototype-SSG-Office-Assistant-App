@@ -1,9 +1,27 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext/AuthContext.jsx'; 
 import styles from './Sidebar.module.css';
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { currentUser, userRole, logout, loading } = useAuth(); 
+  const navigate = useNavigate();
+
+  if (loading) {
+    return null; 
+  }
+
+  const role = currentUser ? (userRole || 'public') : 'public'; 
+  
+  const navItems = [
+    { to: "/", text: "Home", roles: ['public', 'admin', 'secretary', 'representative'] },
+    { to: "/order", text: "Place Order", roles: ['public', 'admin', 'secretary', 'representative'] },
+    { to: "/admin", text: "Admin Dashboard", roles: ['admin'] },
+    { to: "/finance", text: "Finance (WIP)", roles: ['admin'] },
+    { to: "/reports", text: "Reports / Uploads", roles: ['admin'] },
+    { to: "/announcement", text: "Announcements", roles: ['admin', 'secretary'] },
+  ];
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -13,15 +31,37 @@ function Sidebar() {
     setIsOpen(false);
   };
 
-  // Function to handle link clicks on mobile
   const handleLinkClick = () => {
     if (window.innerWidth <= 600) {
       closeSidebar();
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+      closeSidebar();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  console.log('Sidebar Debug:', { currentUser, userRole, role, loading });
+
   return (
     <>
+      {/* Hamburger menu button - visible on mobile */}
+      {!isOpen && window.innerWidth <= 600 && (
+        <button
+          className={styles.hamburger}
+          onClick={toggleSidebar}
+          aria-label="Toggle Sidebar"
+        >
+          ☰
+        </button>
+      )}
+      
       {/* Overlay for mobile when sidebar is open */}
       {isOpen && (
         <div 
@@ -32,17 +72,19 @@ function Sidebar() {
       )}
       
       <nav className={`${styles.container} ${isOpen ? styles.open : ''}`}>
-        <button
-          className={styles.hamburger}
-          onClick={toggleSidebar}
-          aria-label="Toggle Sidebar"
-          aria-expanded={isOpen}
-        >
-          ☰
-        </button>
-        
         <div className={styles.listContainer}>
+          {/* UPDATED: Sidebar header with improved role display */}
           <div className={styles.sidebarHeader}>
+            <div className={styles.roleInfo}>
+              <p className={styles.roleLabel}>Current Role:</p>
+              <div className={styles.roleValue}>
+                {String(role).toUpperCase()}
+              </div>
+            </div>
+            <h3 className={styles.welcomeText}>
+              {currentUser ? `Welcome, ${String(role).charAt(0).toUpperCase() + String(role).slice(1)}` : 'Guest Mode'}
+            </h3>
+            
             <button
               className={styles.closeButton}
               onClick={closeSidebar}
@@ -53,64 +95,23 @@ function Sidebar() {
           </div>
           
           <ul className={styles.navList}>
-            <li>
-              <NavLink
-                to="/"
-                className={({ isActive }) => 
-                  isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
-                }
-                onClick={handleLinkClick}
-              >
-                <span className={styles.linkText}>Home</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/admin"
-                className={({ isActive }) => 
-                  isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
-                }
-                onClick={handleLinkClick}
-              >
-                <span className={styles.linkText}>Admin</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/finance"
-                className={({ isActive }) => 
-                  isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
-                }
-                onClick={handleLinkClick}
-              >
-                <span className={styles.linkText}>Finance</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/reports"
-                className={({ isActive }) => 
-                  isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
-                }
-                onClick={handleLinkClick}
-              >
-                <span className={styles.linkText}>Reports</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/announcement"
-                className={({ isActive }) => 
-                  isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
-                }
-                onClick={handleLinkClick}
-              >
-                <span className={styles.linkText}>Announcement</span>
-              </NavLink>
-            </li>
+            {navItems
+              .filter(item => item.roles.includes(role))
+              .map((item) => (
+                <li key={item.to}>
+                  <NavLink
+                    to={item.to}
+                    className={({ isActive }) => 
+                      isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+                    }
+                    onClick={handleLinkClick}
+                  >
+                    <span className={styles.linkText}>{item.text}</span>
+                  </NavLink>
+                </li>
+            ))}
           </ul>
           
-          {/* Additional buttons section */}
           <div className={styles.buttonSection}>
             <button className={styles.sidebarButton}>
               Settings
@@ -118,9 +119,23 @@ function Sidebar() {
             <button className={styles.sidebarButton}>
               Help & Support
             </button>
-            <button className={styles.logoutButton}>
-              Logout
-            </button>
+            
+            {currentUser ? (
+              <button 
+                className={styles.logoutButton}
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            ) : (
+              <NavLink 
+                to="/login"
+                className={styles.loginButton}
+                onClick={handleLinkClick}
+              >
+                Login
+              </NavLink>
+            )}
           </div>
         </div>
       </nav>

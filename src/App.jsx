@@ -1,39 +1,106 @@
-import { Routes, Route } from 'react-router-dom';
-import { CardProvider } from './CardContext/CardContext.jsx';
+// --- CORE IMPORTS ---
+import { Routes, Route } from 'react-router-dom'; 
+
+// --- CONTEXT IMPORTS ---
+import { AuthProvider } from './components/AuthContext/AuthContext.jsx'; // Make sure this path is correct
+
+// --- COMPONENT IMPORTS (Your Original Files) ---
 import AdminPage from './admin/admin.jsx';
 import Header from './components/Header/Header.jsx';
 import Sidebar from './components/Sidebar/Sidebar.jsx';
-import styles from './App.module.css';
 import WorkinProgress from './components/WorkinProgress/WorkinProgress.jsx';
 import Homepage from './Homepage/Homepage.jsx';
 import Order from './components/Order/order.jsx';
 import Announcement from './components/Announcement.jsx';
 import ClassUpload from './components/ClassUpload.jsx';
-import Playground from './components/playground.jsx';
-function App() {
+import Login from './components/Login/Login.jsx'; 
+import ProtectedRoute from './components/ProtectedRoutes/ProtectedRoutes.jsx'; 
+
+// --- STYLES ---
+import styles from './App.module.css';
+
+// --- LAYOUT COMPONENT ---
+// This preserves your exact design for dashboard pages
+const DashboardLayout = ({ children }) => {
   return (
     <div className={styles.app}>
       <Header />
       <div className={styles.mainContent}>
-      <Sidebar />
+        <Sidebar />
         <div className={styles.contentWrapper}>
-          <CardProvider>
-            
-            <Routes>
-              <Route path="/" element={<Homepage />} />
-              <Route path="/admin" element={<AdminPage />} />
-              <Route path="/finance" element={<WorkinProgress />} />
-              <Route path="/reports" element={<ClassUpload />} />
-              <Route path="/announcement" element={<Announcement />} />
-              <Route path="/order" element = {<Order/>}/>
-            </Routes>
-
-          </CardProvider>
-          
-          
+          {children}
         </div>
       </div>
     </div>
+  );
+};
+
+function App() {
+  return (
+    // NOTE: Removed <BrowserRouter> and <CardProvider> here as they are now in main.jsx
+    <AuthProvider> 
+      <Routes>
+        {/* ========================================
+            PUBLIC ROUTES (No Sidebar/Header)
+            ======================================== */}
+        <Route path="/login" element={<Login />} />
+
+        {/* ========================================
+            DASHBOARD ROUTES (Wrapped in Layout)
+            ======================================== */}
+        
+        {/* 1. Public Dashboard Pages */}
+        <Route path="/" element={
+          <DashboardLayout>
+            <Homepage />
+          </DashboardLayout>
+        } />
+
+        <Route path="/order" element={
+          <DashboardLayout>
+            <Order />
+          </DashboardLayout>
+        } />
+
+        {/* 2. ADMIN ONLY ROUTES */}
+        <Route path="/admin" element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <DashboardLayout>
+              <AdminPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance" element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <DashboardLayout>
+              <WorkinProgress />
+            </DashboardLayout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/reports" element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <DashboardLayout>
+              <ClassUpload />
+            </DashboardLayout>
+          </ProtectedRoute>
+        } />
+
+        {/* 3. ADMIN + SECRETARY ROUTES */}
+        <Route path="/announcement" element={
+          <ProtectedRoute allowedRoles={['admin', 'secretary']}>
+            <DashboardLayout>
+              <Announcement />
+            </DashboardLayout>
+          </ProtectedRoute>
+        } />
+
+        {/* 4. CATCH ALL */}
+        <Route path="*" element={<div>404 - Page Not Found</div>} />
+
+      </Routes>
+    </AuthProvider>
   );
 }
 

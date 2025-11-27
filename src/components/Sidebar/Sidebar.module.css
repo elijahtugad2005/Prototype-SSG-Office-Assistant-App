@@ -14,6 +14,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  overflow-y: auto; /* Added for scroll if content overflows */
 }
 
 .listContainer {
@@ -23,11 +24,45 @@
   padding: 0 20px;
 }
 
+/* UPDATED: Sidebar header now visible on all screens */
 .sidebarHeader {
-  display: none;
-  padding: 10px 0;
+  display: block; /* Changed from 'none' to 'block' */
+  padding: 15px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   margin-bottom: 15px;
+  position: relative;
+}
+
+.roleInfo {
+  color: black;
+  font-family: 'Arial', sans-serif;
+  margin-bottom: 10px;
+}
+
+.roleLabel {
+  font-size: 12px;
+  margin: 0 0 5px 0;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.roleValue {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  color: #000;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.welcomeText {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+  color: #000;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.5px;
 }
 
 .navList {
@@ -121,8 +156,28 @@
   margin-top: 10px;
 }
 
+.loginButton {
+  background-color: rgb(39, 174, 96);
+  color: white;
+  border: none;
+  padding: 12px 15px;
+  border-radius: 4px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  margin-top: 10px;
+  text-decoration: none;
+  display: block;
+}
+
 .logoutButton:hover {
   background-color: rgb(150, 0, 0);
+}
+
+.loginButton:hover {
+  background-color: rgb(33, 145, 80);
 }
 
 /* Hamburger and Close Buttons */
@@ -200,6 +255,7 @@
 
   .sidebarHeader {
     display: block;
+    padding-top: 10px;
   }
 
   .closeButton {
@@ -220,9 +276,18 @@
   }
 
   .sidebarButton,
-  .logoutButton {
+  .logoutButton,
+  .loginButton {
     font-size: 18px;
     padding: 10px 12px;
+  }
+
+  .roleInfo {
+    font-size: 14px;
+  }
+
+  .welcomeText {
+    font-size: 14px;
   }
 }
 
@@ -237,7 +302,8 @@
   }
   
   .sidebarButton:hover,
-  .logoutButton:hover {
+  .logoutButton:hover,
+  .loginButton:hover {
     transform: translateX(5px);
   }
 }

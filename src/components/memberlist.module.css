@@ -22,7 +22,7 @@
 .memberCard {
   /* Changed to 100% to ensure card fills its grid column, allowing 'gap' to work effectively */
   width: 100%; 
-  background-color: #fff;
+  background-color: rgb(115, 32, 32);
   border-radius: 1rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   padding: 1.5rem;
