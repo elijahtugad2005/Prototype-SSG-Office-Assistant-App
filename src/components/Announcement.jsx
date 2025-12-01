@@ -964,7 +964,7 @@ const handleImageChange = async (e) => {
 
                     <div style={styles.eventCardActions}>
                       <button
-                        onClick={() => handleEditEvent(event)}
+                        onClick={() => handleEditEvent(event.id)}
                         style={styles.editButton}
                       >
                         ✏️ Edit
@@ -1036,6 +1036,7 @@ const styles = {
     borderColor: '#fe5c03',
   },
   formWrapper: {
+    margin: '0 auto',
     backgroundColor: '#5a1a1a',
     borderRadius: '1rem',
     padding: '2rem',
