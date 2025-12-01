@@ -5,8 +5,8 @@ function Header() {
   return (
     <header className={styles.header}>
      
-       <div className={styles.logo}>
-        <img src= {logotext} className = {styles.img} alt="SSG Logo" />
+       <div className={styles.titleWrapper}>
+        <h1 className={styles.ssgtitle}>SUPREME STUDENT GOVERNMENT</h1>
       </div>
 
       <div className={styles.textContainer}>

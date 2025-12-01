@@ -9,6 +9,13 @@
   /* Add separate @font-face blocks for Bold, Italic, etc. */
 }
 
+@font-face {
+  font-family: 'Heading';
+  src: url('./assets/fonts/HEADINGNOWTRIAL-65MEDIUM.TTF') format('truetype');
+  font-weight: 350;
+  font-style: normal;
+}
+
 .cardContainer{
   background-color: white;
   height: 250px;

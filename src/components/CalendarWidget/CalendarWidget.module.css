@@ -1,0 +1,582 @@
+/* components/CalendarWidget/CalendarWidget.module.css */
+
+.container {
+  width: 100%;
+  background-color: #5a1a1a;
+  border-radius: 1rem;
+  padding: 2rem;
+  border: 1px solid rgba(254, 92, 3, 0.2);
+  box-sizing: border-box;
+}
+
+.header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  color: #fe5c03;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #c0c0c0;
+}
+
+/* CALENDAR STYLES */
+.calendarWrapper {
+  background-color: #732020;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(254, 92, 3, 0.2);
+}
+
+.calendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.calendarTitle {
+  font-size: 1.5rem;
+  color: #fe5c03;
+  font-weight: bold;
+}
+
+.calendarNavButton {
+  padding: 0.5rem 1rem;
+  background-color: #8a2a2a;
+  color: #fe5c03;
+  border: 1px solid #fe5c03;
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.calendarNavButton:hover {
+  background-color: #fe5c03;
+  color: #000;
+}
+
+.calendarDayNames {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.calendarDayName {
+  text-align: center;
+  color: #fe5c03;
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 0.5rem;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.calendarDay {
+  min-height: 80px;
+  background-color: #8a2a2a;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendarDay:hover {
+  background-color: #9a3a3a;
+  border-color: #fe5c03;
+}
+
+.calendarDayToday {
+  border: 2px solid #fe5c03;
+  background-color: #9a3a3a;
+}
+
+.calendarDayEmpty {
+  min-height: 80px;
+}
+
+.hasEvents {
+  border: 1px solid rgba(254, 92, 3, 0.3);
+}
+
+.calendarDayNumber {
+  font-size: 0.9rem;
+  color: #f1f1f1;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+.calendarDayEvents {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+  overflow: hidden;
+}
+
+.calendarEventDot {
+  font-size: 0.7rem;
+  color: #fff;
+  padding: 0.2rem 0.4rem;
+  border-radius: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+
+.calendarMoreEvents {
+  font-size: 0.7rem;
+  color: #c0c0c0;
+  font-style: italic;
+  margin-top: 0.2rem;
+}
+
+/* UPCOMING EVENTS */
+.upcomingSection {
+  background-color: #732020;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(254, 92, 3, 0.2);
+}
+
+.upcomingTitle {
+  font-size: 1.3rem;
+  color: #fe5c03;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.noEvents {
+  color: #c0c0c0;
+  text-align: center;
+  padding: 2rem;
+  font-style: italic;
+}
+
+.eventsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.eventItem {
+  display: flex;
+  gap: 1rem;
+  background-color: #8a2a2a;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.eventItem:hover {
+  background-color: #9a3a3a;
+  border-color: #fe5c03;
+}
+
+.eventTypeIndicator {
+  width: 4px;
+  border-radius: 2px;
+  min-height: 100%;
+}
+
+.eventDetails {
+  flex: 1;
+}
+
+.eventName {
+  font-size: 1.1rem;
+  color: #f1f1f1;
+  margin-bottom: 0.3rem;
+  font-weight: bold;
+}
+
+.eventDate {
+  font-size: 0.9rem;
+  color: #c0c0c0;
+  margin-bottom: 0.5rem;
+}
+
+.attendanceBadge {
+  display: inline-block;
+  background-color: #4caf50;
+  color: #fff;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* MODAL STYLES */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background-color: #5a1a1a;
+  border-radius: 1rem;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 2px solid #fe5c03;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 2px solid rgba(254, 92, 3, 0.3);
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  color: #fe5c03;
+  font-weight: bold;
+}
+
+.modalClose {
+  background-color: transparent;
+  border: none;
+  color: #f1f1f1;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.modalClose:hover {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.modalBody {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modalEvent {
+  background-color: #732020;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(254, 92, 3, 0.2);
+}
+
+.modalEventHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  gap: 1rem;
+}
+
+.modalEventName {
+  font-size: 1.2rem;
+  color: #f1f1f1;
+  font-weight: bold;
+}
+
+.modalEventType {
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.modalEventDesc {
+  color: #c0c0c0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.modalAttendance {
+  color: #4caf50;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN - TABLET
+   ======================================== */
+@media (max-width: 1024px) {
+  .container {
+    padding: 1.5rem;
+  }
+
+  .calendarWrapper {
+    padding: 1rem;
+  }
+
+  .upcomingSection {
+    padding: 1rem;
+  }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN - MOBILE
+   ======================================== */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    border-radius: 0.8rem;
+  }
+
+  .header {
+    margin-bottom: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  /* Calendar Header */
+  .calendarWrapper {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .calendarHeader {
+    margin-bottom: 1rem;
+  }
+
+  .calendarTitle {
+    font-size: 1.2rem;
+  }
+
+  .calendarNavButton {
+    padding: 0.4rem 0.8rem;
+    font-size: 1rem;
+  }
+
+  /* Day Names */
+  .calendarDayNames {
+    gap: 0.3rem;
+  }
+
+  .calendarDayName {
+    font-size: 0.75rem;
+    padding: 0.3rem;
+  }
+
+  /* Calendar Grid */
+  .calendarGrid {
+    gap: 0.3rem;
+  }
+
+  .calendarDay {
+    min-height: 60px;
+    padding: 0.3rem;
+  }
+
+  .calendarDayEmpty {
+    min-height: 60px;
+  }
+
+  .calendarDayNumber {
+    font-size: 0.8rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .calendarEventDot {
+    font-size: 0.6rem;
+    padding: 0.15rem 0.3rem;
+  }
+
+  .calendarMoreEvents {
+    font-size: 0.6rem;
+  }
+
+  /* Upcoming Events */
+  .upcomingSection {
+    padding: 1rem;
+  }
+
+  .upcomingTitle {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .eventsList {
+    gap: 0.8rem;
+  }
+
+  .eventItem {
+    padding: 0.8rem;
+    gap: 0.8rem;
+  }
+
+  .eventName {
+    font-size: 1rem;
+  }
+
+  .eventDate {
+    font-size: 0.85rem;
+  }
+
+  .attendanceBadge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  /* Modal */
+  .modal {
+    margin: 0.5rem;
+    border-radius: 0.8rem;
+  }
+
+  .modalHeader {
+    padding: 1rem;
+  }
+
+  .modalTitle {
+    font-size: 1.2rem;
+  }
+
+  .modalClose {
+    font-size: 1.3rem;
+    padding: 0.3rem;
+  }
+
+  .modalBody {
+    padding: 1rem;
+  }
+
+  .modalEvent {
+    padding: 0.8rem;
+  }
+
+  .modalEventHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .modalEventName {
+    font-size: 1.1rem;
+  }
+
+  .modalEventType {
+    font-size: 0.8rem;
+  }
+
+  .modalEventDesc {
+    font-size: 0.9rem;
+  }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN - SMALL MOBILE
+   ======================================== */
+@media (max-width: 480px) {
+  .container {
+    padding: 0.8rem;
+  }
+
+  .title {
+    font-size: 1.3rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+  }
+
+  /* Smaller calendar cells for tiny screens */
+  .calendarDay {
+    min-height: 50px;
+    padding: 0.2rem;
+  }
+
+  .calendarDayEmpty {
+    min-height: 50px;
+  }
+
+  .calendarDayNumber {
+    font-size: 0.75rem;
+  }
+
+  .calendarDayName {
+    font-size: 0.7rem;
+    padding: 0.2rem;
+  }
+
+  /* Hide event text on very small screens, show only dots */
+  .calendarEventDot {
+    font-size: 0;
+    padding: 0.3rem;
+    border-radius: 50%;
+    width: 6px;
+    height: 6px;
+  }
+
+  .calendarMoreEvents {
+    font-size: 0.55rem;
+  }
+
+  .calendarNavButton {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .eventName {
+    font-size: 0.95rem;
+  }
+
+  .eventDate {
+    font-size: 0.8rem;
+  }
+}
+
+/* ========================================
+   LANDSCAPE MODE MOBILE
+   ======================================== */
+@media (max-width: 768px) and (orientation: landscape) {
+  .calendarDay {
+    min-height: 50px;
+  }
+
+  .calendarDayEmpty {
+    min-height: 50px;
+  }
+
+  .modal {
+    max-height: 90vh;
+  }
+}

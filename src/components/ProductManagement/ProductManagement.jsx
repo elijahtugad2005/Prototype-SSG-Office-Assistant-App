@@ -6,10 +6,6 @@ import styles from './productmanagement.module.css';
 function ProductManagement() {
 
 
-
-
-
-
   // ========================================
   // STATE MANAGEMENT
   // ========================================
@@ -289,60 +285,78 @@ const handleEditClick = (product) => {
   // HANDLE UPDATE PRODUCT
   // ========================================
   const handleUpdateProduct = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!validateForm()) return;
+  if (!validateForm()) return;
 
-    setLoading(true);
+  setLoading(true);
 
-    try {
-      const productRef = doc(db, 'products', editingProductId);
+  try {
+    const productRef = doc(db, 'products', editingProductId);
 
-      const updatedProduct = {
-        productName: productData.productName,
-        stockAvailable: parseInt(productData.stockAvailable),
-        hasVariations: productData.hasVariations,
-        sizeOptions: productData.hasVariations ? productData.sizeOptions : [],
-        colorVariations: productData.hasVariations ? productData.colorVariations : [],
-        description: productData.description,
-        price: parseFloat(productData.price),
-        supplier: productData.supplier,
-        imageUrl: productData.imagePath || '/products/default.jpg',
-        updatedAt: new Date().toISOString(),
-      };
+    const updatedProduct = {
+      productName: productData.productName,
+      stockAvailable: parseInt(productData.stockAvailable),
+      hasVariations: productData.hasVariations,
+      sizeOptions: productData.hasVariations ? productData.sizeOptions : [],
+      colorVariations: productData.hasVariations ? productData.colorVariations : [],
+      description: productData.description,
+      price: parseFloat(productData.price),
+      supplier: productData.supplier,
+      imageBase64: productData.imageBase64 || '/products/default.jpg', // ✅ FIXED: was imagePath
+      updatedAt: new Date().toISOString(),
+    };
 
-      await updateDoc(productRef, updatedProduct);
+    await updateDoc(productRef, updatedProduct);
 
-      alert('✅ Product updated successfully!');
+    alert('✅ Product updated successfully!');
 
-      resetForm();
-      setEditingProductId(null);
-      setLoading(false);
-      setActiveTab('manage');
+    resetForm();
+    setEditingProductId(null);
+    setActiveTab('manage');
 
-    } catch (error) {
-      console.error('Error updating product:', error);
-      alert('Error updating product. Please try again.');
-      setLoading(false);
-    }
-  };
+  } catch (error) {
+    console.error('Error updating product:', error);
+    alert('Error updating product. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
 
-  // ========================================
-  // HANDLE DELETE PRODUCT
-  // ========================================
-  const handleDeleteProduct = async (productId, productName) => {
-    if (!window.confirm(`Are you sure you want to delete "${productName}"?\nThis action cannot be undone.`)) {
-      return;
-    }
+// ========================================
+// HANDLE DELETE PRODUCT - FIXED
+// ========================================
+const handleDeleteProduct = async (docId, productName) => { // ✅ FIXED: parameter name
+  if (!window.confirm(`Are you sure you want to delete "${productName}"?\nThis action cannot be undone.`)) {
+    return;
+  }
 
-    try {
-      await deleteDoc(doc(db, 'products', productId));
-      alert('🗑️ Product deleted successfully!');
-    } catch (error) {
-      console.error('Error deleting product:', error);
-      alert('Error deleting product. Please try again.');
-    }
-  };
+  try {
+    await deleteDoc(doc(db, 'products', docId)); // ✅ FIXED: use docId
+    alert('🗑️ Product deleted successfully!');
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    alert('Error deleting product. Please try again.');
+  }
+};
+
+
+
+
+    useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'products'), (snapshot) => {
+      const productsData = snapshot.docs.map((doc) => ({
+        docId: doc.id,           // ✅ Firestore document ID
+        productId: doc.data().productId, // ✅ Your custom ID
+        ...doc.data(),
+      }));
+      setProducts(productsData);
+    }, (error) => {
+      console.error('Error fetching products:', error);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   // ========================================
   // RESET FORM
@@ -727,7 +741,7 @@ const CompressImage = (file, maxWidth = 1000, quality = 0.8) => {
           ) : (
             <div className={styles.productsGrid}>
               {products.map((product) => (
-                <div key={product.productId} className={styles.productCard}>
+                <div key={product.docId} className={styles.productCard}>
                   {/* Product Image */}
                   <div className={styles.productImageWrapper}>
                     <img
@@ -804,7 +818,7 @@ const CompressImage = (file, maxWidth = 1000, quality = 0.8) => {
                         ✏️ Edit
                       </button>
                       <button
-                        onClick={() => handleDeleteProduct(product.productId, product.productName)}
+                        onClick={() => handleDeleteProduct(product.docId, product.productName)}
                         className={styles.deleteButton}
                       >
                         🗑️ Delete

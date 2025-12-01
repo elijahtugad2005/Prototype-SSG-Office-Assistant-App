@@ -1453,19 +1453,32 @@ imagePreview: {
     borderRadius: '0.5rem',
     border: '2px solid #fe5c03',
 },
-announcementImageWrapper: {
+  announcementImageWrapper: {
     width: '100%',
+    maxWidth: '400px',        // Prevents excessive width
+    maxHeight: '300px',       // Prevents excessive height
     height: 'auto',
+    margin: '0 auto',         // Centers the wrapper horizontally
     overflow: 'hidden',
     backgroundColor: '#8a2a2a',
     padding: '0.7rem',
-},
-announcementImage: {
+    borderRadius: '10px',
+    boxSizing: 'border-box',
+    display: 'flex',          // Flexbox for perfect centering
+    justifyContent: 'center', // Horizontal centering
+    alignItems: 'center',     // Vertical centering
+    marginBottom: '10px',
+  },
+  announcementImage: {
     width: '100%',
     height: '100%',
-    objectFit: 'cover',
+    maxWidth: '380px',        // Slightly less than wrapper max-width
+    maxHeight: '280px',       // Slightly less than wrapper max-height
+    objectFit: 'cover',       // Maintains aspect ratio, crops if needed
     borderRadius: '10px',
-},
+    display: 'block',
+  },
+
 };
 
 export default Announcement;

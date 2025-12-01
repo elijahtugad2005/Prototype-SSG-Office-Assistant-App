@@ -1,14 +1,14 @@
-// components/Budget/BudgetForm.jsx
+
 import React, { useState, useContext, useEffect } from 'react';
 import { db } from '../../firebase/firebaseConfig';
 import { collection, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
-import { FinanceContext } from '../../context/FinanceContext';
-import { useAuth } from '../../context/AuthContext/AuthContext';
+import {useFinance} from '../FinanceContext/FinanceProvider.jsx';
+import { useAuth } from '../AuthContext/AuthContext.jsx';
 import styles from './BudgetForm.module.css';
 
 const BudgetForm = ({ editingBudget = null, onSuccess = () => {} }) => {
-  const { updateBudgetStats } = useContext(FinanceContext);
   const { userName, userRole } = useAuth();
+  const { addBudget, updateBudget } = useFinance();
   
   // Form state
   const [formData, setFormData] = useState({
@@ -150,7 +150,7 @@ const BudgetForm = ({ editingBudget = null, onSuccess = () => {} }) => {
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
+   const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -174,33 +174,23 @@ const BudgetForm = ({ editingBudget = null, onSuccess = () => {} }) => {
         committee: formData.committee,
         resolution: formData.resolution.trim(),
         description: formData.description.trim(),
-        receiptUrl: formData.receiptUrl.trim(), // Updated field name
+        receiptUrl: formData.receiptUrl.trim(),
         status,
         fiscalYear: formData.fiscalYear,
         startDate: formData.startDate || null,
         endDate: formData.endDate || null,
         createdBy: userName,
         userRole: userRole,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
         isActive: true,
       };
 
       let result;
       if (editingBudget) {
         // Update existing budget
-        const budgetRef = doc(db, 'budgets', editingBudget.id);
-        await updateDoc(budgetRef, budgetData);
-        result = { id: editingBudget.id, ...budgetData };
+        result = await updateBudget(editingBudget.id, budgetData);
       } else {
         // Create new budget
-        const docRef = await addDoc(collection(db, 'budgets'), budgetData);
-        result = { id: docRef.id, ...budgetData };
-      }
-
-      // Update global finance stats
-      if (updateBudgetStats) {
-        updateBudgetStats(result);
+        result = await addBudget(budgetData);
       }
 
       // Reset form if not editing

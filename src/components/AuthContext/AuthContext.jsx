@@ -27,6 +27,7 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userName, setUserName] = useState(null);
 
   // ========================================
   // SIGNUP FUNCTION
@@ -59,10 +60,12 @@ export function AuthProvider({ children }) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       
-      // Fetch user role from Firestore
+      // Fetch user data from Firestore
       const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
       if (userDoc.exists()) {
-        setUserRole(userDoc.data().role);
+        const userData = userDoc.data();
+        setUserRole(userData.role);
+        setUserName(userData.name || null);
       }
       
       return userCredential;
@@ -76,31 +79,52 @@ export function AuthProvider({ children }) {
   // Signs out user and clears auth state
   // ========================================
   const logout = () => {
+    // Clear all auth state before signing out
+    setUserRole(null);
+    setUserName(null);
     return signOut(auth);
   };
 
   // ========================================
   // AUTH STATE LISTENER
   // Runs on app load and whenever auth state changes
-  // Automatically fetches user role from Firestore
+  // Automatically fetches user data from Firestore
   // ========================================
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      console.log('Auth state changed - User:', user);
       setCurrentUser(user);
       
       if (user) {
-        // User is logged in, fetch their role
+        // User is logged in, fetch their data
         try {
+          console.log('Fetching user data for UID:', user.uid);
           const userDoc = await getDoc(doc(db, 'users', user.uid));
+          console.log('User document exists:', userDoc.exists());
+          
           if (userDoc.exists()) {
-            setUserRole(userDoc.data().role);
+            const userData = userDoc.data();
+            console.log('User data:', userData);
+            console.log('User role:', userData.role);
+            console.log('User name:', userData.name);
+            
+            setUserRole(userData.role);
+            setUserName(userData.name || null); // Set name or null if not present
+          } else {
+            console.log('No user document found for UID:', user.uid);
+            setUserRole(null);
+            setUserName(null);
           }
         } catch (error) {
-          console.error('Error fetching user role:', error);
+          console.error('Error fetching user data:', error);
+          setUserRole(null);
+          setUserName(null);
         }
       } else {
         // User is logged out
+        console.log('No user logged in');
         setUserRole(null);
+        setUserName(null);
       }
       
       setLoading(false);
@@ -110,47 +134,11 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
-
-
-
-  useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, async (user) => {
-    console.log('Auth state changed - User:', user);
-    setCurrentUser(user);
-    
-    if (user) {
-      try {
-        console.log('Fetching user data for UID:', user.uid);
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        console.log('User document exists:', userDoc.exists());
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          console.log('User data:', userData);
-          console.log('User role:', userData.role);
-          setUserRole(userData.role);
-        } else {
-          console.log('No user document found for UID:', user.uid);
-        }
-      } catch (error) {
-        console.error('Error fetching user role:', error);
-      }
-    } else {
-      console.log('No user logged in');
-      setUserRole(null);
-    }
-    
-    setLoading(false);
-  });
-
-  return unsubscribe;
-}, []);
-
-
-
   // Values accessible to all components via useAuth()
   const value = {
     currentUser,      // Firebase user object
     userRole,         // 'admin', 'secretary', or 'representative'
+    userName,         // User's display name from Firestore
     login,            // Function to log in
     signup,           // Function to create account
     logout,           // Function to log out
@@ -161,10 +149,4 @@ export function AuthProvider({ children }) {
       {!loading && children}
     </AuthContext.Provider>
   );
-
-
-
-
-  
 }
-

@@ -3,6 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 
 // --- CONTEXT IMPORTS ---
 import { AuthProvider } from './components/AuthContext/AuthContext.jsx'; // Make sure this path is correct
+import { InventoryProvider , useInventory } from './components/InventoryContext/InventoryProvider.jsx'; 
+import { FinanceProvider } from './components/FinanceContext/FinanceProvider.jsx';
 
 // --- COMPONENT IMPORTS (Your Original Files) ---
 import AdminPage from './admin/admin.jsx';
@@ -15,9 +17,11 @@ import Announcement from './components/Announcement.jsx';
 import ClassUpload from './components/ClassUpload.jsx';
 import Login from './components/Login/Login.jsx'; 
 import ProtectedRoute from './components/ProtectedRoutes/ProtectedRoutes.jsx'; 
-
+import FinanceDashboard from './components/Finance/FinanceDashboard.jsx';
+import InventoryManagement from './components/InventoryDashboard/InventoryManagement.jsx';
 // --- STYLES ---
 import styles from './App.module.css';
+
 
 // --- LAYOUT COMPONENT ---
 // This preserves your exact design for dashboard pages
@@ -39,6 +43,8 @@ function App() {
   return (
     // NOTE: Removed <BrowserRouter> and <CardProvider> here as they are now in main.jsx
     <AuthProvider> 
+      <InventoryProvider> 
+      <FinanceProvider>
       <Routes>
         {/* ========================================
             PUBLIC ROUTES (No Sidebar/Header)
@@ -74,7 +80,16 @@ function App() {
         <Route path="/finance" element={
           <ProtectedRoute allowedRoles={['admin']}>
             <DashboardLayout>
-              <WorkinProgress />
+              <FinanceDashboard />
+            </DashboardLayout>
+          </ProtectedRoute>
+        } />
+
+
+        <Route path= "/inventory" element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <DashboardLayout>
+             <InventoryManagement/>
             </DashboardLayout>
           </ProtectedRoute>
         } />
@@ -100,6 +115,8 @@ function App() {
         <Route path="*" element={<div>404 - Page Not Found</div>} />
 
       </Routes>
+      </FinanceProvider>
+      </InventoryProvider>
     </AuthProvider>
   );
 }

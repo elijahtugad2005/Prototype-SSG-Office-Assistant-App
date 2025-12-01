@@ -1,0 +1,255 @@
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #1e293b;
+}
+
+/* --- Header Section --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.titleGroup h2 {
+
+  font-family: 'Bebas Neue';
+  font-size: 3.85rem;
+  font-weight: 800;
+  color: #ff0202;
+  margin: 0;
+  background: linear-gradient(135deg, #0045e6 0%, hsl(0, 100%, 6%) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.refreshButton {
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #64748b;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.refreshButton:hover {
+  background: #f8fafc;
+  color: #3b82f6;
+  border-color: #cbd5e1;
+}
+
+/* --- KPI Cards --- */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.statCard {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: transform 0.2s;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.statLabel {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.statValue {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.statTrend {
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.trendGood { color: #10b981; }
+.trendBad { color: #ef4444; }
+
+/* --- Charts Section --- */
+.chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.chartCard {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+  height: 400px; /* Fixed height for chart container */
+  display: flex;
+  flex-direction: column;
+}
+
+.chartTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 1.5rem;
+}
+
+/* --- Table (Sheet) Section --- */
+.sheetSection {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+}
+
+.sheetHeader {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.searchBar {
+  padding: 0.6rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  width: 300px;
+  background: #f8fafc;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th {
+  background: #f8fafc;
+  padding: 1rem 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+  font-size: 0.95rem;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Status Badges */
+.statusBadge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.statusGreen { background: #dcfce7; color: #166534; }
+.statusYellow { background: #fef9c3; color: #854d0e; }
+.statusRed { background: #fee2e2; color: #991b1b; }
+.statusBlue { background: #dbeafe; color: #1e40af; }
+.statusGray { background: #f1f5f9; color: #475569; }
+
+/* Loading State */
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .container { color: #f1f5f9; }
+  
+  .titleGroup h2 { 
+    background: linear-gradient(135deg, #ff782f 0%, #fe5c03 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .statCard, .chartCard, .sheetSection, .refreshButton {
+    background: #171a1f;
+    border-color: #334155;
+  }
+  
+  .statLabel, .table th { color: #94a3b8; }
+  .statValue { color: #f8fafc; }
+  .chartTitle { color: #f1f5f9; }
+  
+  .refreshButton { color: #cbd5e1; }
+  .refreshButton:hover { background: #334155; color: #60a5fa; }
+  
+  .sheetHeader, .table th, .table td { border-color: #334155; }
+  .table th { background: #0f172a; }
+  .table td { color: #cbd5e1; }
+  .table tr:hover { background-color: #334155; }
+  
+  .searchBar {
+    background: #0f172a;
+    border-color: #475569;
+    color: white;
+  }
+}
+
+@media (max-width: 768px) {
+  .chartsGrid { grid-template-columns: 1fr; }
+  .searchBar { width: 100%; }
+}

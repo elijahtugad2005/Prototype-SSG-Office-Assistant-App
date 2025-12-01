@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { db } from "../firebase/firebaseConfig";
 import { collection, onSnapshot } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
+import styles from './Homepage.module.css'; // Import CSS module
+import CalendarWidget from '../components/CalendarWidget/CalendarWidget';
 function Homepage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [officers, setOfficers] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const navigate = useNavigate();
-  const [expandedID, setExpandedId]= useState(null);
+  const [expandedID, setExpandedId] = useState(null);
 
-  /*FIREBASE*/
-  
   // ✅ Fetch products from Firebase
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "products"), (snapshot) => {
@@ -29,7 +29,7 @@ function Homepage() {
     return () => unsubscribe();
   }, []);
 
-  // ✅ Fetch officers from Firebase (for "Meet Our Team" section)
+  // ✅ Fetch officers from Firebase
   useEffect(() => {
     const officerPositions = ["President", "Vice President", "Secretary", "Treasurer"];
     
@@ -41,7 +41,6 @@ function Homepage() {
         }))
         .filter(member => officerPositions.includes(member.position));
 
-      // Sort by position hierarchy
       const positionOrder = {
         "President": 1,
         "Vice President": 2,
@@ -59,12 +58,51 @@ function Homepage() {
     return () => unsubscribe();
   }, []);
 
+  // ✅ Fetch announcements from Firebase
+useEffect(() => {
+  const unsubscribe = onSnapshot(collection(db, "announcements"), (snapshot) => {
+    const announcementsData = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    
+    // Enhanced debugging
+    
+    
+    setAnnouncements(announcementsData);
+  }, (error) => {
+    console.error("Error fetching announcements:", error);
+  });
+
+  return () => unsubscribe();
+}, []);
+
   const handleOrderNow = (product) => {
-    // Navigate to Order page with product details
-    navigate('/order', { });
+    navigate('/order', {});
   };
 
-  // Simple SVG Icons
+  const getCategoryColor = (category) => {
+    const colors = {
+      'Event': '#4CAF50',
+      'Academic': '#2196F3',
+      'Sports': '#FF9800',
+      'Cultural': '#9C27B0',
+      'General': '#607D8B'
+    };
+    return colors[category] || '#fe5c03';
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Date TBA';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric' 
+    });
+  };
+
+  // SVG Icons
   const ShoppingBagIcon = () => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
@@ -91,105 +129,91 @@ function Homepage() {
     </svg>
   );
 
-  
-
   return (
-    <div style={styles.pageWrapper}>
+    <div className={styles.pageWrapper}>
       {/* Hero Section */}  
-      <section style={styles.heroSection}>
-        <div style={styles.heroOverlay}></div>
-        <div style={styles.heroContent}>
-        
-          <h1 style={styles.heroTitle}>Welcome to Shirio</h1>
-          <h2 style={styles.heroSubtitle}>Student Government Made Easier</h2>
-          <p style={styles.heroDescription}>
-            A New Innovation  to Learn, Collaborate, and Serve the students of Cebu Technological University - Daanbantayan Campus
-            .A project dedicating itself to create system that help students government to Track,Engage and Plan for University Activities and Events.
-            We Provide Commerce, Public Informations and Communication. The New Age of Starts Now
+      <section className={styles.heroSection}>
+        <div className={styles.heroOverlay}></div>
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>Welcome to Shirio</h1>
+          <h2 className={styles.heroSubtitle}>Student Government Made Easier</h2>
+          <p className={styles.heroDescription}>
+            A New Innovation to Learn, Collaborate, and Serve the students of Cebu Technological University - Daanbantayan Campus.
+            A project dedicating itself to create system that help students government to Track, Engage and Plan for University Activities and Events.
+            We Provide Commerce, Public Informations and Communication. The New Age Starts Now
           </p>
         </div>
       </section>
 
       {/* Products Section */}
-      <section style={styles.productsSection}>
-        <h2 style={styles.sectionTitle}>Our Products</h2>
-        <p style={styles.sectionSubtitle}>
+      <section className={styles.productsSection}>
+        <h2 className={styles.sectionTitle}>Our Products</h2>
+        <p className={styles.sectionSubtitle}>
           Browse our collection of official lanyards and uniforms
         </p>
         
         {loading ? (
-          <div style={styles.loadingContainer}>
-            <p style={styles.loadingText}>Loading products...</p>
+          <div className={styles.loadingContainer}>
+            <p className={styles.loadingText}>Loading products...</p>
           </div>
         ) : products.length === 0 ? (
-          <div style={styles.noProductsContainer}>
-            <p style={styles.noProductsText}>No products available at the moment. Check back soon!</p>
+          <div className={styles.noProductsContainer}>
+            <p className={styles.noProductsText}>No products available at the moment. Check back soon!</p>
           </div>
         ) : (
-          <div style={styles.productsGrid}>
+          <div className={styles.productsGrid}>
             {products.map((product) => (
-              <div 
-                key={product.productId} 
-                style={styles.productCard}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-8px)';
-                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(254, 92, 3, 0.3)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
-                }}
-              >
-                <div style={styles.productImageWrapper}>
+              <div key={product.productId} className={styles.productCard}>
+                <div className={styles.productImageWrapper}>
                   <img 
                     src={product.imageUrl || 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&h=400&fit=crop'}
                     alt={product.productName}
-                    style={styles.productImage}
+                    className={styles.productImage}
                     onError={(e) => {
                       e.target.src = 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&h=400&fit=crop';
                     }}
                   />
                   {product.stockAvailable <= 10 && product.stockAvailable > 0 && (
-                    <div style={styles.lowStockBadge}>Low Stock!</div>
+                    <div className={styles.lowStockBadge}>Low Stock!</div>
                   )}
                   {product.stockAvailable === 0 && (
-                    <div style={styles.outOfStockBadge}>Out of Stock</div>
+                    <div className={styles.outOfStockBadge}>Out of Stock</div>
                   )}
                 </div>
                 
-                <div style={styles.productInfo}>
-                  <h3 style={styles.productName}>{product.productName}</h3>
-                  <p style={styles.productDescription}>{product.description}</p>
+                <div className={styles.productInfo}>
+                  <h3 className={styles.productName}>{product.productName}</h3>
+                  <p className={styles.productDescription}>{product.description}</p>
                   
-                  <div style={styles.productDetails}>
-                    <div style={styles.priceContainer}>
-                      <span style={styles.priceLabel}>Price:</span>
-                      <span style={styles.price}>₱{product.price?.toFixed(2)}</span>
+                  <div className={styles.productDetails}>
+                    <div className={styles.priceContainer}>
+                      <span className={styles.priceLabel}>Price:</span>
+                      <span className={styles.price}>₱{product.price?.toFixed(2)}</span>
                     </div>
                     
-                    <div style={styles.stockContainer}>
-                      <span style={styles.stockLabel}>Stock:</span>
-                      <span style={styles.stock}>{product.stockAvailable || 0} available</span>
+                    <div className={styles.stockContainer}>
+                      <span className={styles.stockLabel}>Stock:</span>
+                      <span className={styles.stock}>{product.stockAvailable || 0} available</span>
                     </div>
                   </div>
 
                   {product.sizeOptions && product.sizeOptions.length > 0 && (
-                    <div style={styles.attributeContainer}>
-                      <span style={styles.attributeLabel}>Sizes:</span>
-                      <div style={styles.attributeTags}>
+                    <div className={styles.attributeContainer}>
+                      <span className={styles.attributeLabel}>Sizes:</span>
+                      <div className={styles.attributeTags}>
                         {product.sizeOptions.map((size, idx) => (
-                          <span key={idx} style={styles.tag}>{size}</span>
+                          <span key={idx} className={styles.tag}>{size}</span>
                         ))}
                       </div>
                     </div>
                   )}
 
                   {product.colorVariations && product.colorVariations.length > 0 && (
-                    <div style={styles.attributeContainer}>
-                      <span style={styles.attributeLabel}>Colors:</span>
-                      <div style={styles.attributeTags}>
+                    <div className={styles.attributeContainer}>
+                      <span className={styles.attributeLabel}>Colors:</span>
+                      <div className={styles.attributeTags}>
                         {product.colorVariations.map((color, idx) => (
-                          <span key={idx} style={styles.tag}>{color}</span>
+                          <span key={idx} className={styles.tag}>{color}</span>
                         ))}
                       </div>
                     </div>
@@ -198,22 +222,7 @@ function Homepage() {
                   <button 
                     onClick={() => handleOrderNow(product)}
                     disabled={product.stockAvailable === 0}
-                    style={{
-                      ...styles.orderButton,
-                      ...(product.stockAvailable === 0 ? styles.orderButtonDisabled : {})
-                    }}
-                    onMouseEnter={(e) => {
-                      if (product.stockAvailable > 0) {
-                        e.currentTarget.style.backgroundColor = '#ff7035';
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (product.stockAvailable > 0) {
-                        e.currentTarget.style.backgroundColor = '#fe5c03';
-                        e.currentTarget.style.transform = 'translateY(0)';
-                      }
-                    }}
+                    className={`${styles.orderButton} ${product.stockAvailable === 0 ? styles.orderButtonDisabled : ''}`}
                   >
                     <ShoppingBagIcon />
                     <span>{product.stockAvailable === 0 ? 'Out of Stock' : 'Order Now'}</span>
@@ -225,136 +234,129 @@ function Homepage() {
         )}
       </section>
 
-        {/*AnnounceMent*/}
-          
-          <section style={styles.announcementsWrapper}>
-              <h3 style={styles.sectionTitle}>All Announcements</h3>
-              
-              {announcements.length === 0 ? (
-                <div style={styles.emptyState}>
-                  <p style={styles.emptyText}>No announcements yet. Create your first one above!</p>
-                </div>
-              ) : (
-                <div style={styles.announcementsList}>
-                  {announcements.map((announcement) => (
-                    <div key={announcement.id} style={styles.announcementCard}>
-                      <div 
-                        style={styles.announcementHeader}
-                        onClick={() => setExpandedId(expandedId === announcement.id ? null : announcement.id)}
+          {/* Announcements Section */}
+      <section className={styles.announcementsSection}>
+        <h2 className={styles.sectionTitle}>Latest Announcements</h2>
+        <p className={styles.sectionSubtitle}>
+          Stay updated with recent events and activities
+        </p>
+
+        {announcements.length === 0 ? (
+          <div className={styles.noAnnouncementsContainer}>
+            <p className={styles.noAnnouncementsText}>No announcements at the moment.</p>
+          </div>
+        ) : (
+          <div className={styles.announcementsList}>
+            {announcements.map((announcement) => (
+              <div key={announcement.id} className={styles.announcementCard}>
+                
+                {/* HEADER - Always visible */}
+                <div 
+                  className={styles.announcementHeader}
+                  onClick={() => setExpandedId(expandedID === announcement.id ? null : announcement.id)}
+                >
+                  <div className={styles.announcementHeaderLeft}>
+                    <h4 className={styles.announcementTitle}>{announcement.title}</h4>
+                    <div className={styles.announcementMeta}>
+                      <span 
+                        className={styles.categoryBadge}
+                        style={{ backgroundColor: getCategoryColor(announcement.category) }}
                       >
-                        <div style={styles.announcementHeaderLeft}>
-                          <h4 style={styles.announcementTitle}>{announcement.title}</h4>
-                          <div style={styles.announcementMeta}>
-                            <span 
-                              style={{
-                                ...styles.categoryBadge,
-                                backgroundColor: getCategoryColor(announcement.category)
-                              }}
-                            >
-                              {announcement.category}
-                            </span>
-                            <span style={styles.announcementDate}>
-                              📅 {formatDate(announcement.eventDate)} at {announcement.eventTime}
-                            </span>
-                          </div>
-                        </div>
-                        <div style={styles.expandIcon}>
-                          {expandedId === announcement.id ? '▲' : '▼'}
-                        </div>
-                      </div>
-
-
-                                              {/* ADD THIS BLOCK */}
-                          {announcement.imageUrl && (
-                              <div style={styles.announcementImageWrapper}>
-                                  <img 
-                                      src={announcement.imageUrl}
-                                      alt={announcement.title}
-                                      style={styles.announcementImage}
-                                      onError={(e) => {
-                                          e.target.src = '/AnnouncementPic/default.jpg';
-                                      }}
-                                  />
-                              </div>
-                          )}
-
-                      {expandedId === announcement.id && (
-                        <div style={styles.announcementBody}>
-                          <div style={styles.announcementDetail}>
-                            <strong style={styles.detailLabel}>Description:</strong>
-                            <p style={styles.detailValue}>{announcement.description}</p>
-                          </div>
-
-                          <div style={styles.announcementDetail}>
-                            <strong style={styles.detailLabel}>Venue:</strong>
-                            <p style={styles.detailValue}>📍 {announcement.venue}</p>
-                          </div>
-                          
-                        </div>
-                      )}
+                        {announcement.category}
+                      </span>
+                      <span className={styles.announcementDate}>
+                        📅 {formatDate(announcement.eventDate)} at {announcement.eventTime}
+                      </span>
                     </div>
-                  ))}
+                  </div>
+                  <div className={styles.expandIcon}>
+                    {expandedID === announcement.id ? '▲' : '▼'}
+                  </div>
                 </div>
-              )}
-            </section>
+
+                {/* IMAGE - Always visible if exists */}
+                {announcement.imageBase64 && (
+                  <div className={styles.announcementImageWrapper}>
+                    <img 
+                      src={announcement.imageBase64}
+                      alt={announcement.title}
+                      className={styles.announcementImage}
+                      onError={(e) => {
+                        e.target.src = '/AnnouncementPic/default.jpg';
+                      }}
+                    />
+                  </div>
+                )}
+
+                {/* EXPANDED CONTENT - Shows on click */}
+                {expandedID === announcement.id && (
+                  <div className={styles.announcementBody}>
+                    
+                    {/* Description */}
+                    <div className={styles.announcementDetail}>
+                      <strong className={styles.detailLabel}>Description:</strong>
+                      <p className={styles.detailValue}>{announcement.description}</p>
+                    </div>
+
+                    {/* Venue */}
+                    <div className={styles.announcementDetail}>
+                      <strong className={styles.detailLabel}>Venue:</strong>
+                      <p className={styles.detailValue}>📍 {announcement.venue}</p>
+                    </div>
+
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+    {/*Calendar Section */}
+    <section style={{ padding: '3rem 2rem', backgroundColor: '#4c1515' }}>
+        <CalendarWidget />
+      </section>
 
       {/* Officers Section */}
       {officers.length > 0 && (
-        <section style={styles.officersSection}>
-          <h2 style={styles.sectionTitle}>Meet Our Officers</h2>
-          <p style={styles.sectionSubtitle}>
+        <section className={styles.officersSection}>
+          <h2 className={styles.sectionTitle}>Meet Our Officers</h2>
+          <p className={styles.sectionSubtitle}>
             Dedicated leaders committed to serving our student community
           </p>
           
-          <div style={styles.officersGrid}>
+          <div className={styles.officersGrid}>
             {officers.map((officer) => (
-              <div 
-                key={officer.docId} 
-                style={styles.officerCard}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-8px)';
-                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(254, 92, 3, 0.3)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
-              >
-                <div style={styles.officerImageWrapper}>
-                 <img 
-                            // 🌟 MODIFIED LOGIC: Check for and use the Base64 string first
-                            src={
-                                officer.image64 ? officer.image64 // Use Base64 data directly as the source
-                                    : 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=400&h=400&fit=crop' // Fallback image
-                            }
-                            alt={officer.name}
-                            style={styles.officerImage}
-                            onError={(e) => {
-                                // If Base64 somehow fails (rare), fall back to the default image
-                                e.target.src = 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=400&h=400&fit=crop';
-                            }}
-                        />
+              <div key={officer.docId} className={styles.officerCard}>
+                <div className={styles.officerImageWrapper}>
+                  <img 
+                    src={
+                      officer.image64 
+                        ? officer.image64 
+                        : 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=400&h=400&fit=crop'
+                    }
+                    alt={officer.name}
+                    className={styles.officerImage}
+                    onError={(e) => {
+                      e.target.src = 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=400&h=400&fit=crop';
+                    }}
+                  />
                 </div>
 
-
-
-
-                <h3 style={styles.officerName}>{officer.name}</h3>
-                <p style={styles.officerPosition}>{officer.position}</p>
-                              
-                {/* 🌟 NEW: Description Display */}
-                <p style={styles.officerDescription}>
-                        {officer.description || 'No description available.'}
-                    </p>
+                <h3 className={styles.officerName}>{officer.name}</h3>
+                <p className={styles.officerPosition}>{officer.position}</p>
+                <p className={styles.officerDescription}>
+                  {officer.description || 'No description available.'}
+                </p>
                 
-                <div style={styles.socialLinks}>
-                  <a href={officer.facebookLink || "#"} style={styles.socialLink}>
+                <div className={styles.socialLinks}>
+                  <a href={officer.facebookLink || "#"} className={styles.socialLink}>
                     <FacebookIcon />
                   </a>
-                  <a href={officer.twitterLink || "#"} style={styles.socialLink}>
+                  <a href={officer.twitterLink || "#"} className={styles.socialLink}>
                     <TwitterIcon />
                   </a>
-                  <a href={officer.instagramLink || "#"} style={styles.socialLink}>
+                  <a href={officer.instagramLink || "#"} className={styles.socialLink}>
                     <InstagramIcon />
                   </a>
                 </div>
@@ -365,8 +367,8 @@ function Homepage() {
       )}
 
       {/* Footer */}
-      <footer style={styles.footer}>
-        <p style={styles.footerText}>
+      <footer className={styles.footer}>
+        <p className={styles.footerText}>
           © 2025 Shirio. All rights reserved. | Official Student Government E-Commerce Platform
         </p>
       </footer>
@@ -374,480 +376,5 @@ function Homepage() {
   );
 }
 
-const styles = {
-  pageWrapper: {
-    width: '100%',
-    backgroundColor: '#4c151534',
-    minHeight: '100vh',
-  },
-  heroSection: {
-    position: 'relative',
-    height: '70vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundImage: 'url(images/heroimage.jpg)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundAttachment: 'scroll',
-    marginBottom: '20px'
-  },
- 
-  heroOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(76, 21, 21, 0.8)',
-  },
-  heroContent: {
-    position: 'relative',
-    zIndex: 1,
-    textAlign: 'center',
-    padding: '2rem',
-    maxWidth: '900px',
-  },
-  heroTitle: {
-    fontSize: '3.5rem',
-    color: '#fe5c03',
-    marginBottom: '1rem',
-    fontWeight: 'bold',
-    letterSpacing: '2px',
-    textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-  },
-  heroSubtitle: {
-    fontSize: '1.6rem',
-    color: '#f1f1f1',
-    marginBottom: '1.5rem',
-    fontWeight: '300',
-  },
-  heroDescription: {
-    fontSize: '1.1rem',
-    color: '#e0e0e0',
-    lineHeight: '1.8',
-    maxWidth: '700px',
-    margin: '0 auto',
-    fontFamily: 'Arial, san-serif',
-  },
-  productsSection: {
-    padding: '5rem 2rem',
-    backgroundColor: '#5a1a1a',
-    marginBottom: '10px'
-  },
-  sectionTitle: {
-    fontSize: '2.5rem',
-    color: '#fe5c03',
-    textAlign: 'center',
-    marginBottom: '0.5rem',
-    fontWeight: 'bold',
-  },
-  sectionSubtitle: {
-    fontSize: '1.1rem',
-    color: '#c0c0c0',
-    textAlign: 'center',
-    marginBottom: '3rem',
-  },
-  loadingContainer: {
-    textAlign: 'center',
-    padding: '3rem',
-  },
-  loadingText: {
-    color: '#fe5c03',
-    fontSize: '1.2rem',
-  },
-  noProductsContainer: {
-    textAlign: 'center',
-    padding: '3rem',
-  },
-  noProductsText: {
-    color: '#c0c0c0',
-    fontSize: '1.1rem',
-  },
-  productsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-    gap: '2rem',
-    maxWidth: '1400px',
-    margin: '0 auto',
-  },
-  productCard: {
-    backgroundColor: '#732020',
-    borderRadius: '1rem',
-    overflow: 'hidden',
-    border: '1px solid rgba(254, 92, 3, 0.2)',
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-  },
-  productImageWrapper: {
-    position: 'relative',
-    width: '100%',
-    height: '250px',
-    overflow: 'hidden',
-    backgroundColor: '#8a2a2a',
-  },
-  productImage: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-  },
-  lowStockBadge: {
-    position: 'absolute',
-    top: '1rem',
-    right: '1rem',
-    backgroundColor: '#ff9800',
-    color: '#000',
-    padding: '0.4rem 0.8rem',
-    borderRadius: '20px',
-    fontSize: '0.85rem',
-    fontWeight: 'bold',
-  },
-  outOfStockBadge: {
-    position: 'absolute',
-    top: '1rem',
-    right: '1rem',
-    backgroundColor: '#f44336',
-    color: '#fff',
-    padding: '0.4rem 0.8rem',
-    borderRadius: '20px',
-    fontSize: '0.85rem',
-    fontWeight: 'bold',
-  },
-  productInfo: {
-    padding: '1.5rem',
-  },
-  productName: {
-    fontSize: '1.5rem',
-    color: '#f1f1f1',
-    marginBottom: '0.5rem',
-    fontWeight: 'bold',
-  },
-  productDescription: {
-    fontSize: '0.95rem',
-    color: '#c0c0c0',
-    marginBottom: '1rem',
-    lineHeight: '1.5',
-  },
-  productDetails: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '1rem',
-    paddingBottom: '1rem',
-    borderBottom: '1px solid rgba(254, 92, 3, 0.2)',
-  },
-  priceContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  priceLabel: {
-    fontSize: '0.85rem',
-    color: '#c0c0c0',
-    marginBottom: '0.2rem',
-  },
-  price: {
-    fontSize: '1.5rem',
-    color: '#fe5c03',
-    fontWeight: 'bold',
-  },
-  stockContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-  },
-  stockLabel: {
-    fontSize: '0.85rem',
-    color: '#c0c0c0',
-    marginBottom: '0.2rem',
-  },
-  stock: {
-    fontSize: '1rem',
-    color: '#f1f1f1',
-    fontWeight: '500',
-  },
-  attributeContainer: {
-    marginBottom: '0.8rem',
-  },
-  attributeLabel: {
-    fontSize: '0.9rem',
-    color: '#fe5c03',
-    fontWeight: '600',
-    display: 'block',
-    marginBottom: '0.4rem',
-  },
-  attributeTags: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '0.5rem',
-  },
-  tag: {
-    backgroundColor: 'rgba(254, 92, 3, 0.2)',
-    color: '#f1f1f1',
-    padding: '0.3rem 0.7rem',
-    borderRadius: '15px',
-    fontSize: '0.85rem',
-    border: '1px solid rgba(254, 92, 3, 0.3)',
-  },
-  orderButton: {
-    width: '100%',
-    backgroundColor: '#fe5c03',
-    color: '#000',
-    border: 'none',
-    padding: '1rem',
-    borderRadius: '50px',
-    fontSize: '1rem',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    marginTop: '1rem',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '0.5rem',
-  },
-  orderButtonDisabled: {
-    backgroundColor: '#5a1a1a',
-    color: '#7a2a2a',
-    cursor: 'not-allowed',
-    border: '1px solid #7a2a2a',
-  },
-
-
-  announcementsWrapper: {
-  backgroundColor: '#5a1a1a',
-  borderRadius: '1rem',
-  padding: '2rem',
-  border: '1px solid rgba(254, 92, 3, 0.2)',
-  boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-  marginBottom: '10px',
-},
-sectionTitle: {
-  fontSize: '1.5rem',
-  color: '#fe5c03',
-  marginBottom: '1.5rem',
-  fontWeight: 'bold',
-  borderBottom: '2px solid rgba(254, 92, 3, 0.3)',
-  paddingBottom: '0.5rem',
-},
-emptyState: {
-  textAlign: 'center',
-  padding: '3rem',
-  backgroundColor: '#732020',
-  borderRadius: '0.8rem',
-  border: '1px solid rgba(254, 92, 3, 0.1)',
-},
-emptyText: {
-  color: '#c0c0c0',
-  fontSize: '1.1rem',
-},
-announcementsList: {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '1.5rem',
-},
-announcementCard: {
-  backgroundColor: '#732020',
-  borderRadius: '1rem',
-  border: '1px solid rgba(254, 92, 3, 0.2)',
-  overflow: 'hidden',
-  transition: 'all 0.3s ease',
-  boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-},
-announcementHeader: {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  padding: '1.5rem',
-  cursor: 'pointer',
-  transition: 'background-color 0.3s ease',
-  borderBottom: '1px solid rgba(254, 92, 3, 0.1)',
-},
-announcementHeaderLeft: {
-  flex: 1,
-},
-announcementTitle: {
-  fontSize: '1.4rem',
-  color: '#f1f1f1',
-  marginBottom: '0.8rem',
-  fontWeight: 'bold',
-},
-announcementMeta: {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '1rem',
-  flexWrap: 'wrap',
-},
-categoryBadge: {
-  padding: '0.4rem 1rem',
-  borderRadius: '20px',
-  fontSize: '0.85rem',
-  fontWeight: 'bold',
-  color: '#fff',
-  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-},
-announcementDate: {
-  fontSize: '0.95rem',
-  color: '#c0c0c0',
-  fontWeight: '500',
-},
-expandIcon: {
-  fontSize: '1.3rem',
-  color: '#fe5c03',
-  marginLeft: '1rem',
-  transition: 'transform 0.3s ease',
-},
-announcementImageWrapper: {
-  width: '100%',
-  height: '300px',
-  overflow: 'hidden',
-  backgroundColor: '#8a2a2a',
-  position: 'relative',
-},
-announcementImage: {
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover',
-  transition: 'transform 0.3s ease',
-},
-announcementBody: {
-  padding: '1.5rem',
-  backgroundColor: '#8a2a2a',
-  borderTop: '2px solid rgba(254, 92, 3, 0.2)',
-},
-announcementDetail: {
-  marginBottom: '1.5rem',
-  padding: '1rem',
-  backgroundColor: '#9a3a3a',
-  borderRadius: '0.5rem',
-  borderLeft: '4px solid #fe5c03',
-},
-detailLabel: {
-  color: '#fe5c03',
-  fontSize: '1rem',
-  display: 'block',
-  marginBottom: '0.5rem',
-  fontWeight: '700',
-  textTransform: 'uppercase',
-  letterSpacing: '0.5px',
-},
-detailValue: {
-  color: '#f1f1f1',
-  fontSize: '1rem',
-  lineHeight: '1.7',
-  margin: 0,
-},
-announcementActions: {
-  display: 'flex',
-  gap: '1rem',
-  marginTop: '1.5rem',
-  paddingTop: '1.5rem',
-  borderTop: '1px solid rgba(254, 92, 3, 0.2)',
-},
-editButton: {
-  flex: 1,
-  padding: '0.9rem',
-  backgroundColor: '#fe5c03',
-  color: '#000',
-  border: 'none',
-  borderRadius: '50px',
-  fontSize: '0.95rem',
-  fontWeight: 'bold',
-  cursor: 'pointer',
-  transition: 'all 0.3s ease',
-},
-deleteButton: {
-  flex: 1,
-  padding: '0.9rem',
-  backgroundColor: '#f44336',
-  color: '#fff',
-  border: 'none',
-  borderRadius: '50px',
-  fontSize: '0.95rem',
-  fontWeight: 'bold',
-  cursor: 'pointer',
-  transition: 'all 0.3s ease',
-},
-  officersSection: {
-    padding: '5rem 2rem',
-    backgroundColor: '#4c1515',
-  },
-  officersGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-    gap: '2rem',
-    maxWidth: '1200px',
-    margin: '0 auto',
-  },
-  officerCard: {
-    backgroundColor: '#732020',
-    borderRadius: '1rem',
-    padding: '2rem',
-    textAlign: 'center',
-    border: '1px solid rgba(254, 92, 3, 0.2)',
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-  },
-  officerImageWrapper: {
-    width: '120px',
-    height: '120px',
-    margin: '0 auto 1.2rem',
-    borderRadius: '50%',
-    overflow: 'hidden',
-    border: '3px solid #fe5c03',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-  },
-  officerImage: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-  },
-  officerName: {
-    fontSize: '1.2rem',
-    color: '#f1f1f1',
-    marginBottom: '0.4rem',
-    fontWeight: 'bold',
-  },
-  officerPosition: {
-    fontSize: '0.95rem',
-    color: '#fe5c03',
-    marginBottom: '1rem',
-    fontWeight: '500',
-  },
-  socialLinks: {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '0.8rem',
-  },
-  socialLink: {
-    color: '#f1f1f1',
-    padding: '0.4rem',
-    borderRadius: '50%',
-    backgroundColor: 'rgba(254, 92, 3, 0.2)',
-    transition: 'all 0.3s ease',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textDecoration: 'none',
-    cursor: 'pointer',
-  },
-  footer: {
-    backgroundColor: '#3a1010',
-    padding: '2rem',
-    textAlign: 'center',
-  },
-  footerText: {
-    color: '#c0c0c0',
-    fontSize: '0.95rem',
-  },
-
-  officerDescription: {
-        fontSize: '0.9em',
-        color: '#ffe5e5ff',
-        margin: '10px 0 15px',
-        lineHeight: '1.4em', // Defines line height
-        maxHeight: '4.2em', // Limits height to approx. 3 lines (1.4em * 3)
-        overflow: 'hidden', // Crops text if it exceeds maxHeight
-        textAlign: 'center',
-        padding: '0 15px',
-    },
-};
-
 export default Homepage;
+
