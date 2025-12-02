@@ -14,7 +14,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* Added for scroll if content overflows */
+  overflow-y: auto;
 }
 
 .listContainer {
@@ -26,41 +26,59 @@
 
 /* UPDATED: Sidebar header now visible on all screens */
 .sidebarHeader {
-  display: block; /* Changed from 'none' to 'block' */
-  padding: 15px 0;
+  display: block;
+  padding: 10px 0; /* Reduced padding for mobile */
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  margin-bottom: 15px;
+  margin-bottom: 10px; /* Reduced margin */
   position: relative;
+  min-height: auto; /* Allow it to shrink */
 }
 
 .roleInfo {
   color: black;
   font-family: 'Arial', sans-serif;
-  margin-bottom: 10px;
+  margin-bottom: 8px; /* Reduced */
 }
 
 .roleLabel {
-  font-size: 12px;
-  margin: 0 0 5px 0;
+  font-size: 10px; /* Smaller on all screens */
+  margin: 0 0 3px 0; /* Reduced spacing */
   color: rgba(0, 0, 0, 0.8);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .roleValue {
-  font-size: 14px;
-  margin: 0 0 8px 0;
+  font-size: 12px; /* Smaller on all screens */
+  margin: 0 0 6px 0; /* Reduced */
   color: #000;
   background-color: rgba(255, 255, 255, 0.3);
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 3px 6px; /* Reduced padding */
+  border-radius: 3px;
   display: inline-block;
+  font-weight: bold;
 }
 
+/* UPDATED: Made welcome text more compact */
 .welcomeText {
-  font-size: 50px;
-  margin: 0;
+  font-size: 16px; /* Much smaller base size */
+  margin: 5px 0 0 0; /* Reduced margins */
   color: #000;
   font-family: 'Bebas Neue', sans-serif;
   letter-spacing: 0.5px;
+  line-height: 1.2; /* Tighter line height */
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Campus name styling */
+.campusName {
+  font-size: 14px; /* Reasonable size */
+  color: #333;
+  font-weight: 600;
+  margin-top: 2px;
 }
 
 .navList {
@@ -115,21 +133,21 @@
 /* Button Section */
 .buttonSection {
   margin-top: auto;
-  padding: 20px 0;
+  padding: 15px 0; /* Reduced padding */
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px; /* Reduced gap */
 }
 
 .sidebarButton {
   background-color: rgba(255, 255, 255, 0.1);
   color: black;
   border: none;
-  padding: 12px 15px;
+  padding: 10px 12px; /* Reduced padding */
   border-radius: 4px;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 20px;
+  font-size: 18px; /* Slightly smaller */
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
@@ -144,28 +162,28 @@
   background-color: rgb(200, 0, 0);
   color: white;
   border: none;
-  padding: 12px 15px;
+  padding: 10px 12px; /* Reduced padding */
   border-radius: 4px;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 20px;
+  font-size: 18px; /* Slightly smaller */
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
-  margin-top: 10px;
+  margin-top: 8px; /* Reduced margin */
 }
 
 .loginButton {
   background-color: rgb(39, 174, 96);
   color: white;
   border: none;
-  padding: 12px 15px;
+  padding: 10px 12px; /* Reduced padding */
   border-radius: 4px;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 20px;
+  font-size: 18px; /* Slightly smaller */
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
-  margin-top: 10px;
+  margin-top: 8px; /* Reduced margin */
   text-decoration: none;
   display: block;
 }
@@ -232,7 +250,7 @@
   z-index: 899;
 }
 
-/* Mobile styles */
+/* Mobile styles - UPDATED for better header scaling */
 @media (max-width: 600px) {
   .container {
     width: 280px;
@@ -240,7 +258,7 @@
     top: 0;
     transform: translateX(-100%);
     z-index: 900;
-    padding-top: 60px;
+    padding-top: 50px; /* Reduced top padding */
   }
 
   .container.open {
@@ -253,7 +271,8 @@
 
   .sidebarHeader {
     display: block;
-    padding-top: 10px;
+    padding: 8px 0; /* Further reduced for mobile */
+    margin-bottom: 8px;
   }
 
   .closeButton {
@@ -264,33 +283,65 @@
     display: block;
   }
 
+  /* Further reduce text sizes on mobile */
+  .welcomeText {
+    font-size: 14px;
+    margin: 3px 0 0 0;
+  }
+
+  .campusName {
+    font-size: 12px;
+    margin-top: 1px;
+  }
+
+  .roleLabel {
+    font-size: 9px;
+  }
+
+  .roleValue {
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+
   .navLink {
-    font-size: 24px;
-    padding: 12px 10px;
+    font-size: 20px; /* Smaller on mobile */
+    padding: 10px 8px; /* Adjusted padding */
   }
 
   .buttonSection {
-    padding: 15px 0;
+    padding: 12px 0;
+    gap: 6px;
   }
 
   .sidebarButton,
   .logoutButton,
   .loginButton {
-    font-size: 18px;
-    padding: 10px 12px;
+    font-size: 16px;
+    padding: 8px 10px;
   }
 
-  .roleInfo {
-    font-size: 14px;
+  .listContainer {
+    padding: 0 15px; /* Reduced side padding */
   }
+}
 
+/* Tablet adjustments */
+@media (min-width: 601px) and (max-width: 900px) {
   .welcomeText {
+    font-size: 18px;
+  }
+  
+  .campusName {
     font-size: 14px;
+  }
+  
+  .navLink {
+    font-size: 24px;
   }
 }
 
 /* Desktop hover effects */
-@media (min-width: 601px) {
+@media (min-width: 901px) {
   .container {
     transition: transform 0.3s ease, width 0.3s ease;
   }
@@ -303,5 +354,33 @@
   .logoutButton:hover,
   .loginButton:hover {
     transform: translateX(5px);
+  }
+}
+
+/* Extra small phones */
+@media (max-width: 360px) {
+  .container {
+    width: 260px;
+    padding-top: 45px;
+  }
+  
+  .welcomeText {
+    font-size: 13px;
+  }
+  
+  .campusName {
+    font-size: 11px;
+  }
+  
+  .navLink {
+    font-size: 18px;
+    padding: 8px 6px;
+  }
+  
+  .sidebarButton,
+  .logoutButton,
+  .loginButton {
+    font-size: 14px;
+    padding: 7px 9px;
   }
 }

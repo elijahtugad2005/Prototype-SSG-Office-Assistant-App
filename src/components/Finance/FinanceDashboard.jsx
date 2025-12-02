@@ -2,6 +2,7 @@ import React from 'react';
 import BudgetManager from '../BudgetManager/BudgetManagement.jsx'; // Adjust path as needed
 import BudgetAnalytics from '../BudgetAnalytics/BudgetAnalytics.jsx'; // Adjust path as needed
 import styles from './FinanceDashboard.module.css';
+import BudgetForm from '../BudgetForm/BudgetForm.jsx';
 
 /**
  * @component
@@ -21,6 +22,11 @@ const FinanceDashboard = () => {
       {/* The Budget Analytics component provides the overview and graphs */}
       <section className={styles.analyticsSection}>
         <BudgetAnalytics />
+      </section>
+
+
+      <section className = {styles.formSection}>
+        <BudgetForm/>
       </section>
 
       {/* The Budget Manager component provides the editing and deletion interface */}

@@ -43,6 +43,7 @@
   flex-direction: column;
   gap: 1.5rem;
   margin: 0 auto;
+  background-color: #171a1f;
 }
 
 /* Error Alert */
@@ -382,7 +383,7 @@
 /* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   .container {
-    background: #1f2937;
+    background: #0f172a;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   }
   

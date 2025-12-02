@@ -173,7 +173,9 @@ export default function Memberlist({ members = [], setMembers }) {
                       className={styles.memberPhoto}
                     />
                   )}
-                  <h3>{member.name}</h3>
+                  <h3 className={styles.memberName}>{member.name}</h3>
+
+                <div className={styles.memberCardText}>
                   <p><strong>{member.position}</strong></p>
                   <p>ID: {member.id}</p> 
                   <p>{member.address}</p>
@@ -183,7 +185,7 @@ export default function Memberlist({ members = [], setMembers }) {
                     {member.facebookLink && <p className={styles.socialLink}>FB: <a href={member.facebookLink} target="_blank" rel="noopener noreferrer">Link</a></p>}
                     {member.instagramLink && <p className={styles.socialLink}>IG: <a href={member.instagramLink} target="_blank" rel="noopener noreferrer">Link</a></p>}
                     {member.twitterLink && <p className={styles.socialLink}>X/TW: <a href={member.twitterLink} target="_blank" rel="noopener noreferrer">Link</a></p>}
-
+                </div>
 
                   <div className={styles.cardButtons}>
                     <button onClick={() => handleEditClick(member)}>✏️ Edit</button> 

@@ -1,74 +1,93 @@
-/* ProductManagement.module.css */
+
 
 .container {
-  width: 100%;
-  padding: 2rem;
-  background-color: #4c1515;
-  border-radius: 1rem;
-  font-family: Arial, sans-serif;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
 }
+
+/* ========================================
+   HEADER
+   ======================================== */
 
 .header {
   margin-bottom: 2rem;
 }
 
 .mainTitle {
-  font-size: 2rem;
-  color: #fe5c03;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0 0 0.5rem 0;
 }
 
 .headerSubtitle {
-  font-size: 1rem;
-  color: #c0c0c0;
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0;
 }
+
+/* ========================================
+   TAB NAVIGATION
+   ======================================== */
 
 .tabContainer {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-bottom: 2rem;
   flex-wrap: wrap;
 }
 
 .tab {
-  padding: 0.8rem 1.5rem;
-  background-color: #732020;
-  color: #c0c0c0;
-  border: 2px solid transparent;
-  border-radius: 50px;
-  font-size: 0.95rem;
+  padding: 0.75rem 1.5rem;
+  background-color: white;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .tab:hover {
-  background-color: #8a2a2a;
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
 }
 
 .tabActive {
-  background-color: #fe5c03;
-  color: #000;
-  border-color: #fe5c03;
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
 }
 
+/* ========================================
+   FORM WRAPPER
+   ======================================== */
+
 .formWrapper {
-  background-color: #5a1a1a;
-  border-radius: 1rem;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
   padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(254, 92, 3, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  margin-bottom: 2rem;
 }
 
 .sectionTitle {
-  font-size: 1.5rem;
-  color: #fe5c03;
+  font-size: 1.25rem;
+  color: #1e293b;
   margin-bottom: 1.5rem;
-  font-weight: bold;
-  border-bottom: 2px solid rgba(254, 92, 3, 0.3);
+  font-weight: 700;
+  border-bottom: 2px solid #e2e8f0;
   padding-bottom: 0.5rem;
 }
+
+/* ========================================
+   FORM ELEMENTS
+   ======================================== */
 
 .form {
   display: flex;
@@ -89,93 +108,107 @@
 
 .label {
   font-size: 0.9rem;
-  color: #f1f1f1;
+  color: #1e293b;
   margin-bottom: 0.4rem;
   font-weight: 600;
 }
 
 .input {
-  padding: 0.8rem;
-  border: 1px solid #7a2a2a;
-  border-radius: 0.5rem;
-  background-color: #732020;
-  color: #f1f1f1;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: white;
+  color: #1e293b;
   font-size: 0.95rem;
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .input:focus {
-  border-color: #fe5c03;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .textarea {
-  padding: 0.8rem;
-  border: 1px solid #7a2a2a;
-  border-radius: 0.5rem;
-  background-color: #732020;
-  color: #f1f1f1;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: white;
+  color: #1e293b;
   font-size: 0.95rem;
   outline: none;
   resize: vertical;
-  font-family: Arial, sans-serif;
-  transition: border-color 0.3s ease;
+  min-height: 100px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: all 0.2s ease;
 }
 
 .textarea:focus {
-  border-color: #fe5c03;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .select {
-  padding: 0.8rem;
-  border: 1px solid #7a2a2a;
-  border-radius: 0.5rem;
-  background-color: #732020;
-  color: #f1f1f1;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: white;
+  color: #1e293b;
   font-size: 0.95rem;
   outline: none;
   cursor: pointer;
-  transition: border-color 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .select:focus {
-  border-color: #fe5c03;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
+
+/* ========================================
+   CHECKBOX
+   ======================================== */
 
 .checkboxGroup {
   padding: 1rem;
-  background-color: #732020;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(254, 92, 3, 0.2);
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
 }
 
 .checkboxLabel {
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  color: #f1f1f1;
+  color: #1e293b;
   font-size: 0.95rem;
   cursor: pointer;
+  font-weight: 500;
 }
 
 .checkbox {
   width: 18px;
   height: 18px;
   cursor: pointer;
+  accent-color: #3b82f6;
 }
 
+/* ========================================
+   VARIATIONS SECTION
+   ======================================== */
+
 .variationsSection {
-  background-color: #732020;
-  padding: 1.2rem;
-  border-radius: 0.8rem;
-  border: 2px solid rgba(254, 92, 3, 0.3);
+  background-color: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
 }
 
 .variationsTitle {
   font-size: 1.1rem;
-  color: #fe5c03;
+  color: #1e293b;
   margin-bottom: 1rem;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .variationGroup {
@@ -191,29 +224,36 @@
 .variationInput {
   flex: 1;
   padding: 0.7rem;
-  border: 1px solid #7a2a2a;
-  border-radius: 0.5rem;
-  background-color: #8a2a2a;
-  color: #f1f1f1;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: white;
+  color: #1e293b;
   font-size: 0.9rem;
   outline: none;
+  transition: all 0.2s ease;
+}
+
+.variationInput:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .addButton {
   padding: 0.7rem 1.2rem;
-  background-color: #fe5c03;
-  color: #000;
+  background-color: #3b82f6;
+  color: white;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   font-size: 0.85rem;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .addButton:hover {
-  background-color: #ff7035;
+  background-color: #2563eb;
+  transform: translateY(-1px);
 }
 
 .tagsList {
@@ -226,42 +266,55 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: rgba(254, 92, 3, 0.2);
-  color: #f1f1f1;
+  background-color: #eff6ff;
+  color: #1e3a8a;
   padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  border: 1px solid rgba(254, 92, 3, 0.4);
+  border-radius: 999px;
+  border: 1px solid #bfdbfe;
   font-size: 0.85rem;
+  font-weight: 500;
 }
 
 .removeTagButton {
   background-color: transparent;
   border: none;
-  color: #ff6b6b;
-  font-size: 1.3rem;
+  color: #ef4444;
+  font-size: 1.2rem;
   cursor: pointer;
   line-height: 1;
   padding: 0;
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
 }
 
 .removeTagButton:hover {
-  color: #ff4444;
+  color: #dc2626;
 }
 
+/* ========================================
+   FILE UPLOAD
+   ======================================== */
+
 .fileInput {
-  padding: 0.7rem;
-  border: 2px dashed #7a2a2a;
-  border-radius: 0.5rem;
-  background-color: #732020;
-  color: #f1f1f1;
+  padding: 0.75rem;
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  color: #475569;
   font-size: 0.9rem;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fileInput:hover {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
 }
 
 .helperText {
   font-size: 0.8rem;
-  color: #c0c0c0;
+  color: #64748b;
   margin-top: 0.4rem;
 }
 
@@ -273,16 +326,20 @@
 .imagePreview {
   max-width: 250px;
   max-height: 250px;
-  border-radius: 0.5rem;
-  border: 3px solid #fe5c03;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  border: 3px solid #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
 .imagePreviewText {
-  color: #c0c0c0;
+  color: #64748b;
   font-size: 0.85rem;
   margin-top: 0.5rem;
 }
+
+/* ========================================
+   BUTTONS
+   ======================================== */
 
 .buttonGroup {
   display: flex;
@@ -294,67 +351,74 @@
 .submitButton {
   flex: 1;
   padding: 1rem;
-  background-color: #fe5c03;
-  color: #000;
+  background-color: #3b82f6;
+  color: white;
   border: none;
-  border-radius: 50px;
+  border-radius: 12px;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   min-width: 200px;
 }
 
-.submitButton:hover {
-  background-color: #ff7035;
+.submitButton:hover:not(:disabled) {
+  background-color: #2563eb;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .submitButton:disabled {
-  background-color: #7a2a2a;
+  background-color: #cbd5e1;
+  color: #94a3b8;
   cursor: not-allowed;
-  opacity: 0.6;
   transform: translateY(0);
 }
 
 .cancelButton {
   flex: 1;
   padding: 1rem;
-  background-color: #f44336;
-  color: #fff;
+  background-color: #ef4444;
+  color: white;
   border: none;
-  border-radius: 50px;
+  border-radius: 12px;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   min-width: 200px;
 }
 
 .cancelButton:hover {
-  background-color: #d32f2f;
+  background-color: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .resetButton {
   flex: 1;
   padding: 1rem;
   background-color: transparent;
-  color: #c0c0c0;
-  border: 2px solid #7a2a2a;
-  border-radius: 50px;
+  color: #64748b;
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   min-width: 200px;
 }
 
 .resetButton:hover {
-  background-color: #5a1a1a;
-  border-color: #fe5c03;
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+  color: #475569;
 }
 
-/* PRODUCT GRID STYLES */
+/* ========================================
+   PRODUCT GRID - MANAGE VIEW
+   ======================================== */
+
 .manageWrapper {
   max-width: 1400px;
   margin: 0 auto;
@@ -363,31 +427,34 @@
 .emptyState {
   text-align: center;
   padding: 4rem 2rem;
-  background-color: #5a1a1a;
-  border-radius: 1rem;
-  border: 2px dashed #7a2a2a;
+  background-color: white;
+  border-radius: 16px;
+  border: 2px dashed #cbd5e1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .emptyStateText {
   font-size: 1.2rem;
-  color: #c0c0c0;
+  color: #64748b;
   margin-bottom: 1.5rem;
 }
 
 .addFirstButton {
   padding: 1rem 2rem;
-  background-color: #fe5c03;
-  color: #000;
+  background-color: #3b82f6;
+  color: white;
   border: none;
-  border-radius: 50px;
+  border-radius: 12px;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .addFirstButton:hover {
-  background-color: #ff7035;
+  background-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .productsGrid {
@@ -398,18 +465,23 @@
   width: 100%;
 }
 
+/* ========================================
+   PRODUCT CARD
+   ======================================== */
+
 .productCard {
-  background-color: #5a1a1a;
-  border-radius: 1rem;
+  background-color: white;
+  border-radius: 16px;
   overflow: hidden;
-  border: 1px solid rgba(254, 92, 3, 0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .productCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(254, 92, 3, 0.2);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border-color: #cbd5e1;
 }
 
 .productImageWrapper {
@@ -417,7 +489,7 @@
   width: 100%;
   height: 250px;
   overflow: hidden;
-  background-color: #732020;
+  background-color: #f1f5f9;
 }
 
 .productImage {
@@ -435,13 +507,14 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background-color: #ff9800;
-  color: #000;
+  background-color: #f59e0b;
+  color: white;
   padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: bold;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
 }
 
 .productCardContent {
@@ -449,15 +522,15 @@
 }
 
 .productCardTitle {
-  font-size: 1.5rem;
-  color: #fe5c03;
+  font-size: 1.25rem;
+  color: #1e293b;
   margin-bottom: 0.5rem;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .productCardDesc {
-  font-size: 0.95rem;
-  color: #c0c0c0;
+  font-size: 0.9rem;
+  color: #64748b;
   margin-bottom: 1rem;
   line-height: 1.5;
   display: -webkit-box;
@@ -467,10 +540,11 @@
 }
 
 .productCardDetails {
-  background-color: #732020;
+  background-color: #f8fafc;
   padding: 1rem;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   margin-bottom: 1rem;
+  border: 1px solid #e2e8f0;
 }
 
 .productCardRow {
@@ -484,27 +558,32 @@
 }
 
 .detailLabel {
-  color: #c0c0c0;
-  font-size: 0.9rem;
-}
-
-.detailValue {
-  color: #f1f1f1;
-  font-size: 0.9rem;
+  color: #64748b;
+  font-size: 0.85rem;
   font-weight: 500;
 }
 
+.detailValue {
+  color: #1e293b;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 .priceValue {
-  color: #fe5c03;
+  color: #3b82f6;
   font-size: 1.1rem;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .stockValue {
-  color: #4ade80;
+  color: #10b981;
   font-size: 0.95rem;
   font-weight: 600;
 }
+
+/* ========================================
+   VARIATIONS DISPLAY
+   ======================================== */
 
 .variationsDisplay {
   margin-bottom: 1rem;
@@ -515,11 +594,13 @@
 }
 
 .variationLabel {
-  font-size: 0.9rem;
-  color: #fe5c03;
+  font-size: 0.85rem;
+  color: #1e293b;
   font-weight: 600;
   display: block;
   margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .variationTags {
@@ -529,58 +610,70 @@
 }
 
 .variationTag {
-  background-color: rgba(254, 92, 3, 0.2);
-  color: #f1f1f1;
+  background-color: #eff6ff;
+  color: #1e3a8a;
   padding: 0.3rem 0.8rem;
-  border-radius: 15px;
-  font-size: 0.85rem;
-  border: 1px solid rgba(254, 92, 3, 0.3);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  border: 1px solid #bfdbfe;
+  font-weight: 500;
 }
+
+/* ========================================
+   CARD ACTIONS
+   ======================================== */
 
 .cardActions {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-top: 1.5rem;
 }
 
 .editButton {
   flex: 1;
-  padding: 0.9rem;
-  background-color: #fe5c03;
-  color: #000;
+  padding: 0.75rem;
+  background-color: #3b82f6;
+  color: white;
   border: none;
-  border-radius: 50px;
-  font-size: 0.95rem;
-  font-weight: bold;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .editButton:hover {
-  background-color: #ff7035;
+  background-color: #2563eb;
   transform: translateY(-2px);
 }
 
 .deleteButton {
   flex: 1;
-  padding: 0.9rem;
-  background-color: #f44336;
-  color: #fff;
+  padding: 0.75rem;
+  background-color: #ef4444;
+  color: white;
   border: none;
-  border-radius: 50px;
-  font-size: 0.95rem;
-  font-weight: bold;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .deleteButton:hover {
-  background-color: #d32f2f;
+  background-color: #dc2626;
   transform: translateY(-2px);
 }
 
-/* Responsive Design */
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
 @media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
   .productsGrid {
     grid-template-columns: 1fr;
   }
@@ -601,5 +694,145 @@
   .cancelButton,
   .resetButton {
     min-width: 100%;
+  }
+
+  .tabContainer {
+    gap: 0.5rem;
+  }
+
+  .tab {
+    font-size: 0.85rem;
+    padding: 0.6rem 1.2rem;
+  }
+
+  .mainTitle {
+    font-size: 1.5rem;
+  }
+}
+
+/* ========================================
+   DARK MODE SUPPORT
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  .container {
+    background-color: #0f1214;
+  }
+
+  .mainTitle {
+    color: #f1f5f9;
+  }
+
+  .headerSubtitle {
+    color: #94a3b8;
+  }
+
+  .tab {
+    background: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+  }
+
+  .tab:hover {
+    background: #273548;
+    border-color: #475569;
+  }
+
+  .tabActive {
+    background-color: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+  }
+
+  .formWrapper,
+  .productCard,
+  .emptyState {
+    background: #1e293b;
+    border-color: #334155;
+  }
+
+  .sectionTitle,
+  .productCardTitle,
+  .label,
+  .detailValue,
+  .variationLabel {
+    color: #f1f5f9;
+  }
+
+  .input,
+  .textarea,
+  .select,
+  .variationInput {
+    background: #273548;
+    border-color: #475569;
+    color: #cbd5e1;
+  }
+
+  .input:focus,
+  .textarea:focus,
+  .select:focus,
+  .variationInput:focus {
+    border-color: #3b82f6;
+    background: #273548;
+  }
+
+  .checkboxGroup,
+  .variationsSection,
+  .productCardDetails {
+    background: #273548;
+    border-color: #334155;
+  }
+
+  .checkboxLabel {
+    color: #cbd5e1;
+  }
+
+  .variationsTitle {
+    color: #f1f5f9;
+  }
+
+  .fileInput {
+    background: #273548;
+    border-color: #475569;
+    color: #cbd5e1;
+  }
+
+  .fileInput:hover {
+    border-color: #3b82f6;
+    background: #1e3a8a;
+  }
+
+  .helperText,
+  .imagePreviewText,
+  .emptyStateText,
+  .detailLabel,
+  .productCardDesc {
+    color: #94a3b8;
+  }
+
+  .resetButton {
+    border-color: #475569;
+    color: #94a3b8;
+  }
+
+  .resetButton:hover {
+    background: #273548;
+    border-color: #64748b;
+    color: #cbd5e1;
+  }
+
+  .productImageWrapper {
+    background-color: #273548;
+  }
+
+  .productCard:hover {
+    border-color: #475569;
+  }
+
+  .tag,
+  .variationTag {
+    background-color: #1e3a8a;
+    border-color: #3b82f6;
+    color: #bfdbfe;
   }
 }

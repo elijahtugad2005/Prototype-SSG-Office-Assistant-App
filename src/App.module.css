@@ -7,18 +7,68 @@
   display: flex;
   flex: 1;
   width: 100%;
-  padding: 0 20px 20px; /* Remove top padding, use margin-top instead */
-  margin-top: 100px; /* Space for fixed header (adjust if header height changes) */
+  padding: 0;
+  margin-top: 60px; /* Reduced for mobile */
 }
 
 .contentWrapper {
   width: 100%;
-  padding: 20px;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
+/* Ensure admin page container takes full available width */
+.contentWrapper > .container {
+  width: 100%;
+  max-width: 100%;
+  padding: 1rem;
+}
+
+/* Tablet and Desktop */
 @media (min-width: 601px) {
+  .mainContent {
+    margin-top: 100px;
+    padding: 0 5px 5px;
+  }
+
   .contentWrapper {
-    margin-left: 250px; /* Match sidebar width */
-    width: calc(100% - 250px); /* Adjust for sidebar */
+    width: calc(100% - 250px);
+    padding: 5px;
+  }
+  
+  .contentWrapper > .container {
+    padding: 1.5rem;
+  }
+}
+
+/* Mobile Devices */
+@media (max-width: 600px) {
+  .mainContent {
+    padding: 0;
+    margin-top: 60px;
+    flex-direction: column;
+  }
+
+  .contentWrapper {
+    width: 100%;
+    padding: 0;
+  }
+  
+  /* Ensure sidebar doesn't push content on mobile */
+  .sidebar {
+    position: fixed;
+    z-index: 1000;
+    /* Adjust based on your sidebar implementation */
+  }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+  .mainContent {
+    margin-top: 50px;
+  }
+  
+  .contentWrapper > .container {
+    padding: 0.75rem;
   }
 }

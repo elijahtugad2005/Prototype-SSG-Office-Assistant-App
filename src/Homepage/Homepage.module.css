@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url('images/heroimage.jpg');
+  background-image: url('public/heroimage.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: scroll;

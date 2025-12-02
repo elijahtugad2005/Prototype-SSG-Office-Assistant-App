@@ -14,7 +14,7 @@
   flex-direction: column;
   align-items: center;
   padding: 2rem;
-  background: #4c1515; /* Deep maroon body background */
+  background: #131111; /* Deep maroon body background */
   min-height: 100vh;
   font-family: Arial, sans-serif;
   color: #000000; /* Light text for contrast on dark background */
@@ -23,17 +23,18 @@
 
 /* ---------- FORM TITLE ---------- */
 .title {
-  font-size: 2rem;
+  font-size: 3rem;
   color: #fe5c03; /* Accent color matches sidebar tone */
   margin-bottom: 1.2rem;
   text-align: center;
   font-weight: bold;
   letter-spacing: 1px;
+  font-family: 'Bebas Neue';
 }
 
 /* ---------- FORM CONTAINER ---------- */
 .form {
-  background-color: #5a1a1a; /* Slightly lighter maroon for visual layering */
+  background-color: #273548; /* Slightly lighter maroon for visual layering */
   padding: 1.2rem; /* Reduced padding for compactness */
   border-radius: 0.8rem; /* Softer edges for professional look */
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
@@ -42,7 +43,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem; /* Balanced spacing between elements */
-  border: 1px solid rgba(254, 92, 3, 0.2); /* Soft accent border glow */
+  border: 1px solid #475569; /* Soft accent border glow */
   
 }
 
@@ -50,9 +51,9 @@
 .form input,
 .form select {
   padding: 1rem; /* Slightly larger for comfort */
-  border: 1px solid #7a2a2a; /* Subtle border tone */
+  border: 1px solid #475569; /* Subtle border tone */
   border-radius: 0.5rem; /* Matches photo corners */
-  background-color: #732020; /* Dark input background */
+  background-color: #273548; /* Dark input background */
   color: #f1f1f1; /* Readable light text */
   font-size: 1rem;
   transition: all 0.3s ease;

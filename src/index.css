@@ -76,9 +76,9 @@
 
 p {
   font-family: Arial, sans-serif;
-  font-size: 12px;
-  color: wh;
+  font-size: 15px;
 }
+
 
 .cardContainer:hover .previewContainer {
   transform: scale(1.02);

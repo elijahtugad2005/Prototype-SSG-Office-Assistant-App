@@ -6,7 +6,7 @@
 
 .dashboardHeader {
     margin-bottom: 2rem;
-    padding: 0 1.5rem; /* Add padding to align with other components' content */
+    padding: 0 2.5rem; /* Add padding to align with other components' content */
 }
 
 .mainTitle {
@@ -31,6 +31,11 @@
     margin-bottom: 2rem;
 }
 
+
+.formSection{
+    margin-bottom: 2rem;
+
+}
 
 /* Dark Mode Support */
 @media (prefers-color-scheme: dark) {

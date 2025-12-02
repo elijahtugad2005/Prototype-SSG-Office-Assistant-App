@@ -30,6 +30,12 @@
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
+
+.memberCard h3{
+  color: #ffffff;
+  font-size: 2rem;
+}
+
 .memberCard:hover {
   transform: translateY(-6px);
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
@@ -37,8 +43,8 @@
 
 /* PROFILE IMAGE */
 .memberPhoto {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 1rem;
@@ -46,13 +52,7 @@
 }
 
 /* TEXT CONTENT */
-.memberName {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.4rem;
-  color: #820000;
-  letter-spacing: 1px;
-  margin-bottom: 0.3rem;
-}
+
 
 .memberPosition {
   font-size: 1rem;
@@ -63,6 +63,13 @@
 .memberID {
   font-size: 0.9rem;
   color: #ee0d0d;
+}
+
+.memberCardText p{
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.205rem;
+
 }
 
 /* BUTTON SECTION */
