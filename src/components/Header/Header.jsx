@@ -1,6 +1,5 @@
 
 import styles from './Header.module.css';
-import logotext from '../../assets/logotext.png'
 function Header() {
   return (
     <header className={styles.header}>
