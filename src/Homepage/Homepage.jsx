@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { db } from "../firebase/firebaseConfig";
 import { collection, onSnapshot } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 import styles from './Homepage.module.css'; // Import CSS module
 import CalendarWidget from '../components/CalendarWidget/CalendarWidget';
+import { useRef } from 'react';
 function Homepage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -101,6 +102,19 @@ useEffect(() => {
       year: 'numeric' 
     });
   };
+
+
+
+
+      const sliderRef = useRef(null);
+
+    const scrollSlider = (direction) => {
+      if (sliderRef.current) {
+        const scrollAmount = 320; // Width of slide + gap
+        sliderRef.current.scrollLeft += direction * scrollAmount;
+      }
+    };
+
 
   // SVG Icons
   const ShoppingBagIcon = () => (
@@ -235,82 +249,100 @@ useEffect(() => {
       </section>
 
           {/* Announcements Section */}
-      <section className={styles.announcementsSection}>
-        <h2 className={styles.sectionTitle}>Latest Announcements</h2>
-        <p className={styles.sectionSubtitle}>
-          Stay updated with recent events and activities
-        </p>
+<section className={styles.announcementsSection}>
+  <h2 className={styles.sectionTitle}>Latest Announcements</h2>
+  <p className={styles.sectionSubtitle}>
+    Stay updated with recent events and activities
+  </p>
 
-        {announcements.length === 0 ? (
-          <div className={styles.noAnnouncementsContainer}>
-            <p className={styles.noAnnouncementsText}>No announcements at the moment.</p>
-          </div>
-        ) : (
-          <div className={styles.announcementsList}>
-            {announcements.map((announcement) => (
-              <div key={announcement.id} className={styles.announcementCard}>
+  {announcements.length === 0 ? (
+    <div className={styles.noAnnouncementsContainer}>
+      <p className={styles.noAnnouncementsText}>No announcements at the moment.</p>
+    </div>
+  ) : (
+    <div className={styles.announcementsSliderContainer}>
+      <div className={styles.announcementsSlider} ref={sliderRef}>
+        {announcements.map((announcement) => (
+          <div key={announcement.id} className={styles.announcementSlide}>
+            
+            {/* HEADER - Always visible */}
+            <div 
+              className={styles.announcementHeader}
+              onClick={() => setExpandedId(expandedID === announcement.id ? null : announcement.id)}
+            >
+              <div className={styles.announcementHeaderLeft}>
+                <h4 className={styles.announcementTitle}>{announcement.title}</h4>
+                <div className={styles.announcementMeta}>
+                  <span 
+                    className={styles.categoryBadge}
+                    style={{ backgroundColor: getCategoryColor(announcement.category) }}
+                  >
+                    {announcement.category}
+                  </span>
+                  <span className={styles.announcementDate}>
+                    📅 {formatDate(announcement.eventDate)} at {announcement.eventTime}
+                  </span>
+                </div>
+              </div>
+              <div className={styles.expandIcon}>
+                {expandedID === announcement.id ? '▲' : '▼'}
+              </div>
+            </div>
+
+            {/* IMAGE - Always visible if exists */}
+            {announcement.imageBase64 && (
+              <div className={styles.announcementImageWrapper}>
+                <img 
+                  src={announcement.imageBase64}
+                  alt={announcement.title}
+                  className={styles.announcementImage}
+                  onError={(e) => {
+                    e.target.src = '/AnnouncementPic/default.jpg';
+                  }}
+                />
+              </div>
+            )}
+
+            {/* EXPANDED CONTENT - Shows on click */}
+            
+              <div className={styles.announcementBody}>
                 
-                {/* HEADER - Always visible */}
-                <div 
-                  className={styles.announcementHeader}
-                  onClick={() => setExpandedId(expandedID === announcement.id ? null : announcement.id)}
-                >
-                  <div className={styles.announcementHeaderLeft}>
-                    <h4 className={styles.announcementTitle}>{announcement.title}</h4>
-                    <div className={styles.announcementMeta}>
-                      <span 
-                        className={styles.categoryBadge}
-                        style={{ backgroundColor: getCategoryColor(announcement.category) }}
-                      >
-                        {announcement.category}
-                      </span>
-                      <span className={styles.announcementDate}>
-                        📅 {formatDate(announcement.eventDate)} at {announcement.eventTime}
-                      </span>
-                    </div>
-                  </div>
-                  <div className={styles.expandIcon}>
-                    {expandedID === announcement.id ? '▲' : '▼'}
-                  </div>
+                {/* Description */}
+                <div className={styles.announcementDetail}>
+                  <strong className={styles.detailLabel}>Description:</strong>
+                  <p className={styles.detailValue}>{announcement.description}</p>
                 </div>
 
-                {/* IMAGE - Always visible if exists */}
-                {announcement.imageBase64 && (
-                  <div className={styles.announcementImageWrapper}>
-                    <img 
-                      src={announcement.imageBase64}
-                      alt={announcement.title}
-                      className={styles.announcementImage}
-                      onError={(e) => {
-                        e.target.src = '/AnnouncementPic/default.jpg';
-                      }}
-                    />
-                  </div>
-                )}
+                {/* Venue */}
+                <div className={styles.announcementDetail}>
+                  <strong className={styles.detailLabel}>Venue:</strong>
+                  <p className={styles.detailValue}>📍 {announcement.venue}</p>
+                </div>
 
-                {/* EXPANDED CONTENT - Shows on click */}
-                {expandedID === announcement.id && (
-                  <div className={styles.announcementBody}>
-                    
-                    {/* Description */}
-                    <div className={styles.announcementDetail}>
-                      <strong className={styles.detailLabel}>Description:</strong>
-                      <p className={styles.detailValue}>{announcement.description}</p>
-                    </div>
-
-                    {/* Venue */}
-                    <div className={styles.announcementDetail}>
-                      <strong className={styles.detailLabel}>Venue:</strong>
-                      <p className={styles.detailValue}>📍 {announcement.venue}</p>
-                    </div>
-
-                  </div>
-                )}
               </div>
-            ))}
+            
           </div>
-        )}
-      </section>
+        ))}
+      </div>
+      
+      {/* Optional: Add navigation arrows */}
+      <button 
+        className={`${styles.sliderNav} ${styles.sliderPrev}`}
+        onClick={() => scrollSlider(-1)}
+        aria-label="Previous announcement"
+      >
+        ‹
+      </button>
+      <button 
+        className={`${styles.sliderNav} ${styles.sliderNext}`}
+        onClick={() => scrollSlider(1)}
+        aria-label="Next announcement"
+      >
+        ›
+      </button>
+    </div>
+  )}
+</section>
 
     {/*Calendar Section */}
     <section style={{ padding: '3rem 2rem', backgroundColor: '#4c1515' }}>

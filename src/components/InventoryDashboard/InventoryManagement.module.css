@@ -237,6 +237,9 @@ font-family: 'Bebas Neue';
 .table td {
   padding: 1rem;
   border-bottom: 1px solid #ecf0f1;
+  color: rgb(0, 0, 0);
+  font-size: 1rem;
+  font-weight: 400px;
 }
 
 .table tbody tr:hover {
@@ -249,30 +252,33 @@ font-family: 'Bebas Neue';
 
 .textRight {
   text-align: right;
+  color: white;
 }
 
 .textCenter {
   text-align: center;
+  color: white;
 }
 
 /* Item Styles */
 .itemName {
-    color: #fcfcfc;
+    color: #fe5c03;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
   font-size: 1rem;
+  font-weight: 500;
 }
 
 .itemDescription {
-  color: #ffffff;
+  color: #fe5c03;
   font-size: 0.9rem;
   line-height: 1.4;
 }
 
 .categoryBadge {
-  background: #e8f4fc;
-  color: #3498db;
+  background: #fe5c03;
+  color: #000000;
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
   font-size: 0.85rem;
@@ -301,8 +307,9 @@ font-family: 'Bebas Neue';
 }
 
 .statusInStock {
-  background: #d5f4e6;
-  color: #27ae60;
+  background: #fe5c03;
+  color: #000000;
+  font-size: 15px;
 }
 
 .statusOutOfStock {
