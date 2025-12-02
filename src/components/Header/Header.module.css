@@ -3,8 +3,8 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 7rem;
-  background-color: rgb(130,0,0);
+  height: 7rem; /* Desktop height */
+  background-color: rgb(130, 0, 0);
   color: white;
   display: flex;
   justify-content: space-between;
@@ -28,8 +28,8 @@
   font-family: 'Bebas Neue';
   font-display: auto;
   text-align: right;
-  font-size: 55px;
-  font-weight:700px;
+  font-size: 55px; /* Desktop size */
+  font-weight: 700;
   letter-spacing: -1px;
   margin: 0;
   line-height: 1.1;
@@ -52,178 +52,179 @@ h1, h2 {
 }
 
 h1 {
-  font-size: 24px;
+  font-size: 24px; /* Desktop size */
   font-weight: 600;
 }
 
 h2 {
-  font-size: 18px;
+  font-size: 18px; /* Desktop size */
   margin-top: 5px;
   font-weight: 400;
   opacity: 0.9;
 }
 
-/* Tablet Devices (768px and below) */
+/* ====== ONLY MOBILE/TABLET SIZES REDUCED ====== */
+
+/* Tablet Devices (768px and below) - REDUCED SIZES */
 @media screen and (max-width: 768px) {
   .header {
-    height: 6rem;
+    height: 5.5rem; /* Reduced from 7rem */
     padding: 0 15px;
   }
   
   .titleWrapper {
-    padding: 8px;
+    padding: 5px; /* Reduced */
     margin-top: 5px;
   }
   
   .ssgtitle {
-    font-size: 36px;
-    letter-spacing: 1.5px;
+    font-size: 42px; /* Reduced from 55px */
+    letter-spacing: 0.5px; /* Reduced spacing */
   }
   
   .textContainer {
-    padding: 8px;
+    padding: 5px; /* Reduced */
     margin-top: 5px;
   }
   
   h1 {
-    font-size: 20px;
+    font-size: 18px; /* Reduced from 24px */
   }
   
   h2 {
-    font-size: 16px;
+    font-size: 14px; /* Reduced from 18px */
     margin-top: 3px;
   }
 }
 
-/* Mobile Devices (480px and below) - STACKED LAYOUT */
+/* Mobile Devices (480px and below) - REDUCED SIZES & STACKED */
 @media screen and (max-width: 480px) {
   .header {
-    height: auto;
-    min-height: 8rem;
+    height: auto; /* Auto height for stacked layout */
+    min-height: 6rem; /* Reduced from 8rem */
     flex-direction: column;
     justify-content: center;
-    padding: 15px 12px;
-    text-align: center;
+    padding: 10px 12px; /* Reduced padding */
   }
   
   .titleWrapper {
-    padding: 5px 0;
+    padding: 3px 0; /* Reduced */
     margin: 0;
     text-align: center;
     order: 1;
   }
   
   .ssgtitle {
-    font-size: 32px;
-    letter-spacing: 1.5px;
+    font-size: 32px; /* Reduced from 55px */
+    letter-spacing: 1px; /* Reduced */
     text-align: center;
-    line-height: 1.1;
+    line-height: 1;
   }
   
   .textContainer {
-    padding: 5px 0;
+    padding: 3px 0; /* Reduced */
     margin: 0;
     text-align: center;
     order: 2;
   }
   
   h1 {
-    font-size: 18px;
+    font-size: 16px; /* Reduced from 24px */
     line-height: 1.2;
     font-weight: 500;
   }
   
   h2 {
-    font-size: 14px;
+    font-size: 12px; /* Reduced from 18px */
     margin-top: 2px;
     line-height: 1.2;
     font-weight: 400;
   }
 }
 
-/* Small Mobile Devices (360px and below) */
+/* Small Mobile Devices (360px and below) - FURTHER REDUCED */
 @media screen and (max-width: 360px) {
   .header {
-    min-height: 7rem;
-    padding: 12px 10px;
+    min-height: 5rem; /* Further reduced */
+    padding: 8px 10px; /* Further reduced */
   }
   
   .titleWrapper {
-    padding: 3px 0;
+    padding: 2px 0; /* Further reduced */
   }
   
   .ssgtitle {
-    font-size: 28px;
-    letter-spacing: 1.2px;
+    font-size: 28px; /* Further reduced */
+    letter-spacing: 0.8px; /* Further reduced */
   }
   
   .textContainer {
-    padding: 3px 0;
+    padding: 2px 0; /* Further reduced */
   }
   
   h1 {
-    font-size: 16px;
+    font-size: 15px; /* Further reduced */
   }
   
   h2 {
-    font-size: 13px;
+    font-size: 11px; /* Further reduced */
   }
 }
 
-/* Extra Small Mobile Devices (320px and below) */
+/* Extra Small Mobile Devices (320px and below) - MINIMUM SIZES */
 @media screen and (max-width: 320px) {
   .header {
-    min-height: 6.5rem;
-    padding: 10px 8px;
+    min-height: 4.5rem; /* Minimum height */
+    padding: 6px 8px; /* Minimum padding */
   }
   
   .titleWrapper {
-    padding: 2px 0;
+    padding: 1px 0; /* Minimum padding */
   }
   
   .ssgtitle {
-    font-size: 24px;
-    letter-spacing: 1px;
+    font-size: 24px; /* Minimum size */
+    letter-spacing: 0.5px; /* Minimum spacing */
   }
   
   .textContainer {
-    padding: 2px 0;
+    padding: 1px 0; /* Minimum padding */
   }
   
   h1 {
-    font-size: 15px;
+    font-size: 14px; /* Minimum size */
   }
   
   h2 {
-    font-size: 12px;
+    font-size: 10px; /* Minimum size */
   }
 }
 
-/* Landscape Mode for Mobile */
+/* Landscape Mode for Mobile - REDUCED SIZES */
 @media screen and (max-height: 500px) and (orientation: landscape) {
   .header {
-    min-height: 6rem;
-    padding: 10px 12px;
+    min-height: 5rem; /* Reduced from 6rem */
+    padding: 8px 12px; /* Reduced */
   }
   
   .titleWrapper {
-    padding: 2px 0;
+    padding: 2px 0; /* Reduced */
   }
   
   .ssgtitle {
-    font-size: 26px;
+    font-size: 24px; /* Reduced from 26px */
   }
   
   .textContainer {
-    padding: 2px 0;
+    padding: 2px 0; /* Reduced */
   }
   
   h1 {
-    font-size: 16px;
+    font-size: 14px; /* Reduced from 16px */
   }
   
   h2 {
-    font-size: 14px;
+    font-size: 12px; /* Reduced from 14px */
   }
 }
 
