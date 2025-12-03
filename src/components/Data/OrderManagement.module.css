@@ -203,6 +203,8 @@
   border-color: #cbd5e1;
 }
 
+
+
 /* ========================================
    ORDER HEADER
    ======================================== */
@@ -391,6 +393,122 @@
   max-height: 90vh;
   overflow-y: auto;
   animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
+
+
+
+
+
+
+
+/* Status Buttons Section */
+.statusButtonsSection {
+  margin: 15px 0;
+  padding: 15px;
+  background-color: #272829;
+  border-radius: 8px;
+  border-left: 4px solid #6c757d;
+}
+
+.statusButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.statusBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.8;
+}
+
+.statusBtn:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.activeStatus {
+  opacity: 1;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Status Button Colors */
+.pendingBtn {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.pendingBtn:hover {
+  background-color: #ffeaa7;
+}
+
+.paidBtn {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border: 1px solid #a3cfbb;
+}
+
+.paidBtn:hover {
+  background-color: #a3cfbb;
+}
+
+.ongoingBtn {
+  background-color: #cfe2ff;
+  color: #084298;
+  border: 1px solid #9ec5fe;
+}
+
+.ongoingBtn:hover {
+  background-color: #9ec5fe;
+}
+
+.completedBtn {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border: 1px solid #a3cfbb;
+}
+
+.completedBtn:hover {
+  background-color: #a3cfbb;
+}
+
+.cancelledBtn {
+  background-color: #f8d7da;
+  color: #842029;
+  border: 1px solid #f1aeb5;
+}
+
+.cancelledBtn:hover {
+  background-color: #f1aeb5;
+}
+
+/* Updated Stats Grid to accommodate more cards */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* Updated Actions Section */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0 0 0;
+  border-top: 1px solid #eee;
+  margin-top: 15px;
 }
 
 @keyframes fadeIn {

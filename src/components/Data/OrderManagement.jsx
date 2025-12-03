@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { db } from '../../firebase/firebaseConfig.js';
-import { collection, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
-import { Search, Edit2, Trash2, AlertCircle, Package, Clock, CheckCircle, DollarSign } from 'lucide-react';
+import { collection, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { Search, Edit2, Trash2, AlertCircle, Package, Clock, CheckCircle, DollarSign, Check, X, ClockIcon, CreditCard, Truck } from 'lucide-react';
 import Order from '../Order/order.jsx';
 import styles from './OrderManagement.module.css';
 
@@ -54,6 +54,33 @@ function OrderManagement() {
   }, []);
 
   // ========================================
+  // UPDATE ORDER STATUS
+  // ========================================
+  const updateOrderStatus = async (docId, newStatus) => {
+    try {
+      await updateDoc(doc(db, 'orders', docId), {
+        orderStatus: newStatus,
+        updatedAt: new Date().toISOString()
+      });
+      
+      // Show success message
+      alert(`✅ Order status updated to: ${newStatus}`);
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      alert('❌ Failed to update order status. Please try again.');
+    }
+  };
+
+  // ========================================
+  // STATUS CHANGE HANDLERS
+  // ========================================
+  const handleStatusChange = (order, newStatus) => {
+    if (window.confirm(`Change order ${order.orderId} status to "${newStatus}"?`)) {
+      updateOrderStatus(order.docId, newStatus);
+    }
+  };
+
+  // ========================================
   // FILTER ORDERS (MEMOIZED)
   // ========================================
   const filteredOrders = useMemo(() => {
@@ -88,7 +115,10 @@ function OrderManagement() {
     return {
       total: orders.length,
       pending: orders.filter(o => o.orderStatus === 'Pending').length,
+      paid: orders.filter(o => o.orderStatus === 'Paid').length,
+      ongoing: orders.filter(o => o.orderStatus === 'Ongoing').length,
       completed: orders.filter(o => o.orderStatus === 'Completed').length,
+      cancelled: orders.filter(o => o.orderStatus === 'Cancelled').length,
       totalRevenue: orders
         .filter(o => o.orderStatus === 'Paid' || o.orderStatus === 'Completed')
         .reduce((sum, order) => sum + (order.productInfo?.totalPrice || 0), 0),
@@ -212,10 +242,34 @@ function OrderManagement() {
         </div>
 
         <div className={styles.statCard}>
+          <CreditCard className={styles.statIcon} size={24} />
+          <div className={styles.statInfo}>
+            <span className={styles.statLabel}>Paid</span>
+            <span className={styles.statValue}>{stats.paid}</span>
+          </div>
+        </div>
+
+        <div className={styles.statCard}>
+          <Truck className={styles.statIcon} size={24} />
+          <div className={styles.statInfo}>
+            <span className={styles.statLabel}>Ongoing</span>
+            <span className={styles.statValue}>{stats.ongoing}</span>
+          </div>
+        </div>
+
+        <div className={styles.statCard}>
           <CheckCircle className={styles.statIcon} size={24} />
           <div className={styles.statInfo}>
             <span className={styles.statLabel}>Completed</span>
             <span className={styles.statValue}>{stats.completed}</span>
+          </div>
+        </div>
+
+        <div className={styles.statCard}>
+          <X className={styles.statIcon} size={24} />
+          <div className={styles.statInfo}>
+            <span className={styles.statLabel}>Cancelled</span>
+            <span className={styles.statValue}>{stats.cancelled}</span>
           </div>
         </div>
 
@@ -396,6 +450,53 @@ function OrderManagement() {
                         </div>
                       </>
                     )}
+                  </div>
+                </div>
+
+                {/* STATUS CHANGE BUTTONS */}
+                <div className={styles.statusButtonsSection}>
+                  <h4 className={styles.sectionTitle}>Update Status</h4>
+                  <div className={styles.statusButtons}>
+                    <button
+                      className={`${styles.statusBtn} ${styles.pendingBtn} ${order.orderStatus === 'Pending' ? styles.activeStatus : ''}`}
+                      onClick={() => handleStatusChange(order, 'Pending')}
+                      title="Mark as Pending"
+                    >
+                      <ClockIcon size={14} />
+                      Pending
+                    </button>
+                    <button
+                      className={`${styles.statusBtn} ${styles.paidBtn} ${order.orderStatus === 'Paid' ? styles.activeStatus : ''}`}
+                      onClick={() => handleStatusChange(order, 'Paid')}
+                      title="Mark as Paid"
+                    >
+                      <CreditCard size={14} />
+                      Paid
+                    </button>
+                    <button
+                      className={`${styles.statusBtn} ${styles.ongoingBtn} ${order.orderStatus === 'Ongoing' ? styles.activeStatus : ''}`}
+                      onClick={() => handleStatusChange(order, 'Ongoing')}
+                      title="Mark as Ongoing"
+                    >
+                      <Truck size={14} />
+                      Ongoing
+                    </button>
+                    <button
+                      className={`${styles.statusBtn} ${styles.completedBtn} ${order.orderStatus === 'Completed' ? styles.activeStatus : ''}`}
+                      onClick={() => handleStatusChange(order, 'Completed')}
+                      title="Mark as Completed"
+                    >
+                      <Check size={14} />
+                      Completed
+                    </button>
+                    <button
+                      className={`${styles.statusBtn} ${styles.cancelledBtn} ${order.orderStatus === 'Cancelled' ? styles.activeStatus : ''}`}
+                      onClick={() => handleStatusChange(order, 'Cancelled')}
+                      title="Cancel Order"
+                    >
+                      <X size={14} />
+                      Cancel
+                    </button>
                   </div>
                 </div>
 

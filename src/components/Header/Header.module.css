@@ -13,6 +13,7 @@
   z-index: 1000;
   box-sizing: border-box;
   align-items: center;
+   transition: height 0.3s ease, min-height 0.3s ease;
 }
 
 .titleWrapper {
@@ -71,6 +72,24 @@ h2 {
     height: 5.5rem; /* Reduced from 7rem */
     padding: 0 15px;
   }
+
+  .header.shrink {
+    height: 3rem;
+    min-height: 3rem;
+  }
+  
+  .header.shrink .ssgtitle {
+    font-size: 28px;
+  }
+  
+  .header.shrink h1 {
+    font-size: 14px;
+  }
+  
+  .header.shrink h2 {
+    font-size: 11px;
+  }
+
   
   .titleWrapper {
     padding: 5px; /* Reduced */
@@ -101,10 +120,28 @@ h2 {
 @media screen and (max-width: 480px) {
   .header {
     height: auto; /* Auto height for stacked layout */
-    min-height: 6rem; /* Reduced from 8rem */
+    min-height: 8rem; /* Reduced from 8rem */
     flex-direction: column;
     justify-content: center;
     padding: 10px 12px; /* Reduced padding */
+  }
+
+  header.shrink {
+    min-height: 2.8rem;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .header.shrink .ssgtitle {
+    font-size: 18px;
+  }
+  
+  .header.shrink h1 {
+    font-size: 11px;
+  }
+  
+  .header.shrink h2 {
+    font-size: 8px;
   }
   
   .titleWrapper {
@@ -149,6 +186,25 @@ h2 {
     padding: 8px 10px; /* Further reduced */
   }
   
+  .header.shrink {
+    min-height: 3rem;
+  }
+  
+  .header.shrink .ssgtitle {
+    font-size: 20px;
+  }
+  
+  .header.shrink h1 {
+    font-size: 12px;
+  }
+  
+  .header.shrink h2 {
+    font-size: 9px;
+  }
+
+
+
+
   .titleWrapper {
     padding: 2px 0; /* Further reduced */
   }
@@ -207,6 +263,22 @@ h2 {
     padding: 8px 12px; /* Reduced */
   }
   
+  .header.shrink {
+    min-height: 4rem;
+  }
+  
+  .header.shrink .ssgtitle {
+    font-size: 22px;
+  }
+  
+  .header.shrink h1 {
+    font-size: 13px;
+  }
+  
+  .header.shrink h2 {
+    font-size: 11px;
+  }
+
   .titleWrapper {
     padding: 2px 0; /* Reduced */
   }

@@ -1,132 +1,594 @@
-/* MEMBERLIST.MODULE.CSS */
-/* A modern, minimalist design for Member Cards
-   with responsive grid layout and hover animations */
 
-.memberListContainer {
-  display: grid;
-  /* Responsive grid for member cards */
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  /* Explicitly setting gap between grid items (your member cards) */
-  gap: 5rem; 
-  padding: 1rem;
-  align-items: start;
-  margin-top: 1rem;
+
+.memberList {
   width: 100%;
-  margin-inline: auto;
-  background-color: #4c1515;
-  font-family: Arial, sans-serif;
+  padding: 0.5rem;
   box-sizing: border-box;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  min-height: 100vh;
+  
+  /* Direct grid container for cards */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+  align-items: start;
+}
+
+.memberList h2 {
+  color: #ffffff;
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  font-family: 'Arial', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  padding-bottom: 15px;
+  grid-column: 1/ -1;
+}
+
+.memberList h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(90deg, #fe5c03, #ff8c42);
+  border-radius: 2px;
 }
 
 /* CARD STYLING */
 .memberCard {
-  /* Changed to 100% to ensure card fills its grid column, allowing 'gap' to work effectively */
-  width: 100%; 
-  background-color: rgb(115, 32, 32);
-  border-radius: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+   width: 100%;
+  max-width: 320px;
+  background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+  border-radius: 15px;
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   padding: 1.5rem;
   text-align: center;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 420px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 
-.memberCard h3{
-  color: #ffffff;
-  font-size: 2rem;
+.memberCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #fe5c03, #ff8c42);
 }
+
 
 .memberCard:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+  transform: translateY(-12px);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.7),
+    0 0 30px rgba(254, 92, 3, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-color: rgba(254, 92, 3, 0.3);
+}
+
+.memberCard h3 {
+  color: #ffffff;
+  font-size: 1.6rem;
+  margin: 1rem 0;
+  font-weight: 600;
 }
 
 /* PROFILE IMAGE */
 .memberPhoto {
-  width: 150px;
-  height: 150px;
+  width: 160px;
+  height: 160px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 1rem;
-  border: 3px solid #fe5c03;
+   border: 5px solid #fe5c03;
+  box-shadow: 
+    0 0 0 3px rgba(254, 92, 3, 0.3),
+    0 8px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+  z-index: 2;
+  position: relative;
+}
+
+.memberCard:hover .memberPhoto {
+  transform: scale(1.05);
+  box-shadow: 
+    0 0 0 5px rgba(254, 92, 3, 0.4),
+    0 12px 30px rgba(0, 0, 0, 0.6);
 }
 
 /* TEXT CONTENT */
+.memberCardText {
+   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  padding: 1rem 0;
+  position: relative;
+}
 
+
+.memberCardText::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #fe5c03, transparent);
+}
 
 .memberPosition {
-  font-size: 1rem;
-  color: #000000;
-  margin-bottom: 0.5rem;
+   font-size: 1.3rem;
+  color: #fe5c03;
+  font-weight: 700;
+  margin: 0.5rem 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .memberID {
-  font-size: 0.9rem;
-  color: #ee0d0d;
+ font-size: 1.1rem;
+  color: #cccccc;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  display: inline-block;
+  margin: 0.2rem auto;
+  font-weight: 500;
 }
 
-.memberCardText p{
-  color: white;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 1.205rem;
+.memberAddress {
+  font-size: 1rem;
+  color: #b0b0b0;
+  opacity: 0.9;
+  margin: 0.5rem 0;
+  font-style: italic;
+  line-height: 1.4;
+}
 
+.memberCardText p {
+  color: #e0e0e0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  margin: 0.3rem 0;
+  line-height: 1.5;
+}
+
+.description {
+  font-size: 0.95rem !important;
+  color: #aaaaaa !important;
+  font-style: normal !important;
+  line-height: 1.5 !important;
+  margin-top: 1rem !important;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  border-left: 3px solid #fe5c03;
+  text-align: left;
+}
+
+/* SOCIAL LINKS */
+.socialLinks {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.socialIcon {
+background: linear-gradient(135deg, #fe5c03, #ff8c42);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgba(254, 92, 3, 0.3);
+}
+
+.socialIcon:hover {
+   background: linear-gradient(135deg, #ff8c42, #fe5c03);
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 6px 15px rgba(254, 92, 3, 0.5);
 }
 
 /* BUTTON SECTION */
 .cardButtons {
-  display: flex;
+   display: flex;
   justify-content: center;
-  gap: 1rem; /* Added gap between the buttons within the card */
+  gap: 1.5rem;
   margin-top: 1rem;
+  width: 100%;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.cardButtons button{
-  background-color: transparent;
+.cardButtons button {
+   background: transparent;
   border: 2px solid #fe5c03;
   color: #fe5c03;
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1.5rem;
   border-radius: 50px;
-  font-size: 0.9rem;
-  font-weight: bold;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
+  flex: 1;
+  max-width: 140px;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+
+.cardButtons button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(254, 92, 3, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.cardButtons button:hover::before {
+  left: 100%;
 }
 
 .cardButtons button:hover {
+  background: #fe5c03;
+  color: #000000;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(254, 92, 3, 0.4);
+}
+
+
+.cardButtons button:first-child {
+  border-color: #4CAF50;
+  color: #4CAF50;
+}
+
+.cardButtons button:first-child:hover {
+  background: #4CAF50;
+  color: #000000;
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+}
+
+.cardButtons button:last-child {
+  border-color: #f44336;
+  color: #f44336;
+}
+
+.cardButtons button:last-child:hover {
+  background: #f44336;
+  color: #000000;
+  box-shadow: 0 8px 20px rgba(244, 67, 54, 0.4);
+}
+
+/* MODAL STYLES */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modalContent {
+  background-color: #1e293b; /* Requested color */
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s ease;
+  border: 1px solid #334155;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modalHeader {
+  background-color: #0f172a;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #334155;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 12px 12px 0 0;
+}
+
+.modalHeader h3 {
+  color: #ffffff;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  color: #ffffff;
+  background-color: #475569;
+}
+
+.modalBody {
+  padding: 2rem;
+}
+
+/* EDIT FORM STYLES */
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formGroup label {
+  color: #e2e8f0;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+  background-color: #475569; /* Requested color */
+  border: 2px solid #64748b;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  color: #ffffff;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: #fe5c03;
+  box-shadow: 0 0 0 3px rgba(254, 92, 3, 0.2);
+}
+
+.formGroup input::placeholder,
+.formGroup textarea::placeholder {
+  color: #94a3b8;
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.modalFooter {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid #334155;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  background-color: #0f172a;
+  border-radius: 0 0 12px 12px;
+}
+
+.saveButton,
+.cancelButton {
+  padding: 0.8rem 1.8rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.saveButton {
   background-color: #fe5c03;
   color: #000000;
+}
+
+.saveButton:hover {
+  background-color: #ff6b1a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(254, 92, 3, 0.3);
+}
+
+.cancelButton {
+  background-color: #475569;
+  color: #ffffff;
+}
+
+.cancelButton:hover {
+  background-color: #64748b;
   transform: translateY(-2px);
 }
 
 /* RESPONSIVENESS */
+
+@media (max-width: 1200px) {
+  .memberList {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 1.5rem;
+  }
+}
+
+
+
+
 @media (max-width: 768px) {
+
+ .memberList {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+
+  .memberList h2 {
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+  }
+
   .memberListContainer {
-   grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
     padding: 1rem;
   }
 
   .memberCard {
-    padding: 1rem;
+    max-width: 320px;
+    padding: 1.2rem;
+    min-height: 380px;
   }
 
-  .memberName {
-    font-size: 1.2rem;
+  .memberCard h3 {
+    font-size: 1.4rem;
+  }
+
+  .modalContent {
+    max-width: 95%;
+    max-height: 85vh;
+  }
+
+  .modalHeader {
+    padding: 1.2rem 1.5rem;
+  }
+
+  .modalBody {
+    padding: 1.5rem;
+  }
+
+  .modalFooter {
+    padding: 1.2rem 1.5rem;
+    flex-direction: column;
+  }
+
+  .saveButton,
+  .cancelButton {
+    width: 100%;
+    padding: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
+  .memberList {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+
+  .memberList h2 {
+    font-size: 2rem;
+  }
+
   .memberListContainer {
     grid-template-columns: 1fr;
+    gap: 1.2rem;
   }
 
   .memberPhoto {
-    width: 80px;
-    height: 80px;
+    width: 120px;
+    height: 120px;
   }
 
-  .cardButtons button { /* Adjusted selector for consistency */
-    padding: 0.3rem 0.8rem;
-    font-size: 0.8rem;
+  .cardButtons button {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    max-width: 100px;
   }
+
+  .modalContent {
+    max-width: 100%;
+    margin: 0.5rem;
+    max-height: 80vh;
+  }
+
+  .modalHeader h3 {
+    font-size: 1.2rem;
+  }
+
+  .formGroup input,
+  .formGroup select,
+  .formGroup textarea {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* No Members Message */
+.noMembers {
+  color: #ffffff;
+  text-align: center;
+  font-size: 1.2rem;
+  grid-column: 1 / -1;
+  padding: 3rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
 }
