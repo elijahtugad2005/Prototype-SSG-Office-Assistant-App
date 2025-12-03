@@ -16,11 +16,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url('public/heroimage.jpg');
-  background-size: cover;
-  background-position: center;
   background-attachment: scroll;
   margin-bottom: 20px;
+  overflow: hidden;
 }
 
 .heroOverlay {
@@ -30,27 +28,30 @@
   right: 0;
   bottom: 0;
   background-color: rgba(76, 21, 21, 0.8);
+  z-index: 1;
 }
 
 .heroContent {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   text-align: center;
   padding: 2rem;
   max-width: 900px;
+
 }
 
 .heroTitle {
-  font-size: 3.5rem;
+  font-size: 5.5rem;
   color: #fe5c03;
   margin-bottom: 1rem;
   font-weight: bold;
   letter-spacing: 2px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: 'Bebas Neue';
 }
 
 .heroSubtitle {
-  font-size: 1.6rem;
+  font-size: 2.6rem;
   color: #f1f1f1;
   margin-bottom: 1.5rem;
   font-weight: 300;
@@ -63,6 +64,70 @@
   max-width: 700px;
   margin: 0 auto;
   font-family: Arial, sans-serif;
+}
+
+.slideshowContainer {
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+
+}
+
+.slide{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  background-attachment: scroll;
+  opacity: 0;
+  animation: imageTransition 15s infinite; /* Adjust timing as needed */
+}
+
+
+.slide1 {
+  background-image: url('/CTU Cover.jpg'); /* Your first image */
+  animation-delay: 0s;
+}
+
+.slide2 {
+  background-image: url('/achievement 1.jpg'); /* Your second image */
+  animation-delay: 5s; /* 15s total / 3 images = 5s each */
+}
+
+.slide3 {
+  background-image: url('/achievement 2.jpg'); /* Your third image */
+  animation-delay: 10s;
+}
+
+
+/* Animation Keyframes */
+@keyframes imageTransition {
+  0% {
+    opacity: 0;
+    transform: scale(1.05); /* Subtle zoom effect */
+  }
+  10% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  30% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.05);
+  }
 }
 
 /* Products Section */

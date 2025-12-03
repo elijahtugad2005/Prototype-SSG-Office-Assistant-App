@@ -147,17 +147,22 @@ useEffect(() => {
     <div className={styles.pageWrapper}>
       {/* Hero Section */}  
       <section className={styles.heroSection}>
-        <div className={styles.heroOverlay}></div>
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>Welcome to Shirio</h1>
-          <h2 className={styles.heroSubtitle}>Student Government Made Easier</h2>
-          <p className={styles.heroDescription}>
-            A New Innovation to Learn, Collaborate, and Serve the students of Cebu Technological University - Daanbantayan Campus.
-            A project dedicating itself to create system that help students government to Track, Engage and Plan for University Activities and Events.
-            We Provide Commerce, Public Informations and Communication. The New Age Starts Now
-          </p>
+        <div className={styles.slideshowContainer}>
+          <div className={`${styles.slide} ${styles.slide1}`}></div>
+          <div className={`${styles.slide} ${styles.slide2}`}></div>
+          <div className={`${styles.slide} ${styles.slide3}`}></div>
         </div>
-      </section>
+            <div className={styles.heroOverlay}></div>
+              <div className={styles.heroContent}>
+                <h1 className={styles.heroTitle}>Welcome to Shirio</h1>
+                <h2 className={styles.heroSubtitle}>Student Government Made Easier</h2>
+                <p className={styles.heroDescription}>
+                  A New Innovation to Learn, Collaborate, and Serve the students of Cebu Technological University - Daanbantayan Campus.
+                  A project dedicating itself to create system that help students government to Track, Engage and Plan for University Activities and Events.
+                  We Provide Commerce, Public Informations and Communication. The New Age Starts Now
+                </p>
+              </div>
+       </section>
 
       {/* Products Section */}
       <section className={styles.productsSection}>
