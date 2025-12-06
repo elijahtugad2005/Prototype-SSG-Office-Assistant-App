@@ -239,7 +239,12 @@ const handlePhotoChange = async (e) => { // Must be async now
           <option value="President">President</option>
           <option value="Vice President">Vice President</option>
           <option value="Secretary">Secretary</option>
-          <option value="Governor">Governor</option>
+          <option value="COTE Governor"> COTE Governor</option>
+            <option value="COED Governor"> COED Governor</option>
+           <option value="Senator">Senator</option>
+            <option value="Multimedia Director">MultiMedia Director</option>
+            <option value="Multimedia">Multimedia</option>
+            <option value="Activity Officer">Activity Offer</option>
           <option value="BSHM Representative">BSHM Representative</option>
           <option value="BSIT Representative">BSIT Representative</option>
           <option value="BSFI Representative">BSFI Representative</option>

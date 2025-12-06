@@ -20,6 +20,8 @@ import ProtectedRoute from './components/ProtectedRoutes/ProtectedRoutes.jsx';
 import FinanceDashboard from './components/Finance/FinanceDashboard.jsx';
 import InventoryManagement from './components/InventoryDashboard/InventoryManagement.jsx';
 // --- STYLES ---
+
+
 import styles from './App.module.css';
 
 
@@ -78,7 +80,7 @@ function App() {
         } />
 
         <Route path="/finance" element={
-          <ProtectedRoute allowedRoles={['admin']}>
+          <ProtectedRoute allowedRoles={['admin', 'secretary']}>
             <DashboardLayout>
               <FinanceDashboard />
             </DashboardLayout>
@@ -104,7 +106,7 @@ function App() {
 
         {/* 3. ADMIN + SECRETARY ROUTES */}
         <Route path="/announcement" element={
-          <ProtectedRoute allowedRoles={['admin', 'secretary']}>
+          <ProtectedRoute allowedRoles={['admin', 'secretary' ]}>
             <DashboardLayout>
               <Announcement />
             </DashboardLayout>

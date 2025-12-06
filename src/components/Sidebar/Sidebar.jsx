@@ -19,7 +19,7 @@ import styles from './Sidebar.module.css';
       { to: "/", text: "Home", roles: ['public', 'admin', 'secretary', 'representative'] },
       { to: "/order", text: "Place Order", roles: ['public', 'admin', 'secretary', 'representative'] },
       { to: "/admin", text: "Admin Dashboard", roles: ['admin'] },
-      { to: "/finance", text: "Finance (WIP)", roles: ['admin'] },
+      { to: "/finance", text: "Finance (WIP)", roles: ['admin' , 'secretary'] },
       { to: "/reports", text: "Reports / Uploads", roles: ['admin'] },
       { to: "/inventory", text: "Inventory", roles: ['admin'] },
       { to: "/announcement", text: "Announcements", roles: ['admin', 'secretary'] },
