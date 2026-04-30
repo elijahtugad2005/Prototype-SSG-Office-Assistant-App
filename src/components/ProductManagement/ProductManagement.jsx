@@ -36,6 +36,17 @@ function ProductManagement() {
   const [imagePreview, setImagePreview] = useState(null);
   const [editingProductId, setEditingProductId] = useState(null);
   const [activeTab, setActiveTab] = useState('add'); // 'add' or 'manage'
+  const [notification, setNotification] = useState({ show: false, message: '', type: '' });
+
+  // ========================================
+  // SHOW NOTIFICATION
+  // ========================================
+  const showNotification = (message, type = 'success') => {
+    setNotification({ show: true, message, type });
+    setTimeout(() => {
+      setNotification({ show: false, message: '', type: '' });
+    }, 4000);
+  };
 
   // ========================================
   // FETCH PRODUCTS FROM FIREBASE
@@ -226,15 +237,16 @@ const handleImageChange = async (e) => {
       // Add to Firebase
       await addDoc(collection(db, 'products'), newProduct);
 
-      alert(`✅ Product "${productData.productName}" added successfully!\nProduct ID: ${productId}`);
+      showNotification(`Product "${productData.productName}" added successfully!`, 'success');
 
-      // Reset form
+      // Reset form and switch to manage tab
       resetForm();
-      setLoading(false);
+      setTimeout(() => setActiveTab('manage'), 500);
 
     } catch (error) {
       console.error('Error adding product:', error);
-      alert('Error adding product. Please try again.');
+      showNotification('Error adding product. Please try again.', 'error');
+    } finally {
       setLoading(false);
     }
   };
@@ -303,40 +315,40 @@ const handleEditClick = (product) => {
       description: productData.description,
       price: parseFloat(productData.price),
       supplier: productData.supplier,
-      imageBase64: productData.imageBase64 || '/products/default.jpg', // ✅ FIXED: was imagePath
+      imageBase64: productData.imageBase64 || '/products/default.jpg',
       updatedAt: new Date().toISOString(),
     };
 
     await updateDoc(productRef, updatedProduct);
 
-    alert('✅ Product updated successfully!');
+    showNotification('Product updated successfully!', 'success');
 
     resetForm();
     setEditingProductId(null);
-    setActiveTab('manage');
+    setTimeout(() => setActiveTab('manage'), 500);
 
   } catch (error) {
     console.error('Error updating product:', error);
-    alert('Error updating product. Please try again.');
+    showNotification('Error updating product. Please try again.', 'error');
   } finally {
     setLoading(false);
   }
 };
 
 // ========================================
-// HANDLE DELETE PRODUCT - FIXED
+// HANDLE DELETE PRODUCT
 // ========================================
-const handleDeleteProduct = async (docId, productName) => { // ✅ FIXED: parameter name
-  if (!window.confirm(`Are you sure you want to delete "${productName}"?\nThis action cannot be undone.`)) {
+const handleDeleteProduct = async (docId, productName) => {
+  if (!window.confirm(`Are you sure you want to delete "${productName}"?\n\nThis action cannot be undone.`)) {
     return;
   }
 
   try {
-    await deleteDoc(doc(db, 'products', docId)); // ✅ FIXED: use docId
-    alert('🗑️ Product deleted successfully!');
+    await deleteDoc(doc(db, 'products', docId));
+    showNotification(`Product "${productName}" deleted successfully!`, 'success');
   } catch (error) {
     console.error('Error deleting product:', error);
-    alert('Error deleting product. Please try again.');
+    showNotification('Error deleting product. Please try again.', 'error');
   }
 };
 
@@ -448,6 +460,16 @@ const CompressImage = (file, maxWidth = 1000, quality = 0.8) => {
   // ========================================
   return (
     <div className={styles.container}>
+      {/* Notification Toast */}
+      {notification.show && (
+        <div className={`${styles.notification} ${styles[`notification${notification.type.charAt(0).toUpperCase() + notification.type.slice(1)}`]}`}>
+          <span className={styles.notificationIcon}>
+            {notification.type === 'success' ? '✅' : '❌'}
+          </span>
+          <span className={styles.notificationMessage}>{notification.message}</span>
+        </div>
+      )}
+
       <div className={styles.header}>
         <h2 className={styles.mainTitle}>Product Management</h2>
         <p className={styles.headerSubtitle}>Manage lanyards, uniforms and other products</p>
@@ -457,10 +479,7 @@ const CompressImage = (file, maxWidth = 1000, quality = 0.8) => {
       <div className={styles.tabContainer}>
         <button
           onClick={() => setActiveTab('add')}
-          className={{
-            ...styles.tab,
-            ...(activeTab === 'add' ? styles.tabActive : {})
-          }}
+          className={`${styles.tab} ${activeTab === 'add' ? styles.tabActive : ''}`}
         >
           {editingProductId ? '✏️ Edit Product' : '➕ Add Product'}
         </button>
@@ -469,10 +488,7 @@ const CompressImage = (file, maxWidth = 1000, quality = 0.8) => {
             setActiveTab('manage');
             resetForm();
           }}
-          className={{
-            ...styles.tab,
-            ...(activeTab === 'manage' ? styles.tabActive : {})
-          }}
+          className={`${styles.tab} ${activeTab === 'manage' ? styles.tabActive : ''}`}
         >
           📦 Manage Products ({products.length})
         </button>
@@ -686,11 +702,9 @@ const CompressImage = (file, maxWidth = 1000, quality = 0.8) => {
               <button
                 type="submit"
                 disabled={loading}
-                className={{
-                  ...styles.submitButton,
-                  ...(loading ? styles.submitButtonDisabled : {})
-                }}
+                className={`${styles.submitButton} ${loading ? styles.submitButtonDisabled : ''}`}
               >
+                {loading && <span className={styles.spinner}></span>}
                 {loading 
                   ? 'Processing...' 
                   : editingProductId 

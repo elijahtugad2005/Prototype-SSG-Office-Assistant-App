@@ -107,3 +107,21 @@
   font-size: 0.9rem;
   margin-top: 1.5rem;
 }
+
+.homeButton{
+   padding: 1.2rem;
+  background-color: #fe5c03;
+  color: #000;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.homeButton:hover {
+  background-color: #297029;
+  transform: translateY(-2px);
+}

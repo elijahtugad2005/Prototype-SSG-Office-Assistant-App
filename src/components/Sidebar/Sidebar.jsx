@@ -3,8 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext/AuthContext.jsx'; 
 import styles from './Sidebar.module.css';
 
-   function Sidebar() {
-    const [isOpen, setIsOpen] = useState(false);
+   function Sidebar({ isOpen, toggleSidebar }) {
     const { currentUser, userRole, logout, loading, userName } = useAuth(); 
     const navigate = useNavigate();
 
@@ -16,25 +15,24 @@ import styles from './Sidebar.module.css';
     const name = currentUser ? (userName || 'user ') : 'name';
     
     const navItems = [
-      { to: "/", text: "Home", roles: ['public', 'admin', 'secretary', 'representative'] },
-      { to: "/order", text: "Place Order", roles: ['public', 'admin', 'secretary', 'representative'] },
-      { to: "/admin", text: "Admin Dashboard", roles: ['admin'] },
-      { to: "/finance", text: "Finance (WIP)", roles: ['admin' , 'secretary'] },
-      { to: "/reports", text: "Reports / Uploads", roles: ['admin'] },
-      { to: "/inventory", text: "Inventory", roles: ['admin'] },
-      { to: "/announcement", text: "Announcements", roles: ['admin', 'secretary'] },
+      { to: "/", text: "Home", icon: "🏠", roles: ['public', 'admin', 'secretary', 'representative'] },
+      { to: "/order", text: "Place Order", icon: "🛒", roles: ['public', 'admin', 'secretary', 'representative'] },
+      { to: "/admin", text: "Admin Dashboard", icon: "📊", roles: ['admin'] },
+      { to: "/finance", text: "Finance", icon: "💰", roles: ['admin' , 'secretary'] },
+      { to: "/reports", text: "Reports", icon: "📄", roles: ['admin'] },
+      { to: "/inventory", text: "Inventory", icon: "📦", roles: ['admin' , 'representative'] },
+      { to: "/announcement", text: "Announcements", icon: "📢", roles: ['admin', 'secretary', 'representative'] },
+      { to: "/documents", text: "Documents", icon: "📁", roles: ['admin', 'secretary', 'representative'] }
     ];
 
-    const toggleSidebar = () => {
-      setIsOpen(!isOpen);
-    };
-
     const closeSidebar = () => {
-      setIsOpen(false);
+      if (window.innerWidth <= 768) {
+        toggleSidebar();
+      }
     };
 
     const handleLinkClick = () => {
-      if (window.innerWidth <= 600) {
+      if (window.innerWidth <= 768) {
         closeSidebar();
       }
     };
@@ -49,22 +47,18 @@ import styles from './Sidebar.module.css';
       }
     };
 
-    console.log('Sidebar Debug:', { currentUser, userRole, role, loading });
-
     return (
       <>
-        {/* Hamburger menu button - visible on mobile */}
-        {!isOpen && window.innerWidth <= 600 && (
-          <button
-            className={styles.hamburger}
-            onClick={toggleSidebar}
-            aria-label="Toggle Sidebar"
-          >
-            ☰
-          </button>
-        )}
-        
-        {/* Overlay for mobile when sidebar is open */}
+        {/* Mobile floating toggle button */}
+        <button
+          className={styles.mobileToggle}
+          onClick={toggleSidebar}
+          aria-label={isOpen ? 'Close menu' : 'Open menu'}
+        >
+          {isOpen ? '✕' : '☰'}
+        </button>
+
+        {/* Overlay when sidebar is open */}
         {isOpen && (
           <div 
             className={styles.overlay} 
@@ -73,27 +67,33 @@ import styles from './Sidebar.module.css';
           />
         )}
         
-        <nav className={`${styles.container} ${isOpen ? styles.open : ''}`}>
+        <nav className={`${styles.container} ${isOpen ? styles.open : styles.closed}`}>
           <div className={styles.listContainer}>
-            {/* UPDATED: Sidebar header with improved role display */}
+            {/* Sidebar header */}
             <div className={styles.sidebarHeader}>
-              <div className={styles.roleInfo}>
-                <p className={styles.roleLabel}>Current Role:</p>
-                <div className={styles.roleValue}>
-                  {String(role).toUpperCase()}
-                </div>
+              <div className={styles.logoSection}>
+                <button
+                  className={styles.logoToggleButton}
+                  onClick={toggleSidebar}
+                  aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+                  title={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+                >
+                  <div className={styles.logo}>SSG</div>
+                </button>
+                {isOpen && <h2 className={styles.logoText}>Supremo Gobyerno</h2>}
               </div>
-              <h3 className={styles.welcomeText}>
-                {currentUser ? `Welcome, ${String(name).charAt(0).toUpperCase() + String(name).slice(1)}` : 'Guest Mode'}
-              </h3>
               
-              <button
-                className={styles.closeButton}
-                onClick={closeSidebar}
-                aria-label="Close Sidebar"
-              >
-                ✕
-              </button>
+              {isOpen && (
+                <div className={styles.userInfo}>
+                  <div className={styles.userAvatar}>
+                    {String(name).charAt(0).toUpperCase()}
+                  </div>
+                  <div className={styles.userDetails}>
+                    <p className={styles.userName}>{currentUser ? String(name).charAt(0).toUpperCase() + String(name).slice(1) : 'Guest'}</p>
+                    <span className={styles.userRole}>{String(role).toUpperCase()}</span>
+                  </div>
+                </div>
+              )}
             </div>
             
             <ul className={styles.navList}>
@@ -107,35 +107,34 @@ import styles from './Sidebar.module.css';
                         isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
                       }
                       onClick={handleLinkClick}
+                      title={!isOpen ? item.text : ''}
                     >
-                      <span className={styles.linkText}>{item.text}</span>
+                      <span className={styles.navIcon}>{item.icon}</span>
+                      {isOpen && <span className={styles.linkText}>{item.text}</span>}
                     </NavLink>
                   </li>
               ))}
             </ul>
             
             <div className={styles.buttonSection}>
-              <button className={styles.sidebarButton}>
-                Settings
-              </button>
-              <button className={styles.sidebarButton}>
-                Help & Support
-              </button>
-              
               {currentUser ? (
                 <button 
                   className={styles.logoutButton}
                   onClick={handleLogout}
+                  title={!isOpen ? 'Logout' : ''}
                 >
-                  Logout
+                  <span className={styles.navIcon}>🚪</span>
+                  {isOpen && <span>Logout</span>}
                 </button>
               ) : (
                 <NavLink 
                   to="/login"
                   className={styles.loginButton}
                   onClick={handleLinkClick}
+                  title={!isOpen ? 'Login' : ''}
                 >
-                  Login
+                  <span className={styles.navIcon}>🔑</span>
+                  {isOpen && <span>Login</span>}
                 </NavLink>
               )}
             </div>

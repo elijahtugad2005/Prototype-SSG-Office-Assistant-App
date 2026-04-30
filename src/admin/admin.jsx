@@ -6,33 +6,61 @@ import ProductManagement from '../components/ProductManagement/ProductManagement
 import Data from '../components/Data/OrderManagement.jsx';
 
 function Admin() {
+    const [activeTab, setActiveTab] = useState('products');
+
     return (
         <div className={styles.container}>
-            {/* 1. Page Title */}
+            {/* Page Title */}
             <header className={styles.pagetitle}>
                 <h1>Admin Dashboard</h1>
                 <h2>Welcome back, Administrator</h2>
             </header>
 
-            {/* 2. Main Metric Cards (Example: Sales, Users, Orders) */}
-            
-
-            {/* 3. Large Management Components (Tables, Forms, etc.) */}
-            <div className={styles.member_container}>
-                {/* Apply the general card styling for a unified look */}
-                <div className={styles.dashboard_card}>
-                    <ProductManagement />
-                </div>
-                
-                <div className={styles.dashboard_card}>
-                    <Data /> {/* Order Management */}
-                </div>
-                
-                <div className={styles.dashboard_card}>
-                    <MemberDashboard />
-                </div>
+            {/* Tab Navigation */}
+            <div className={styles.tabNavigation}>
+                <button
+                    className={`${styles.tabButton} ${activeTab === 'products' ? styles.tabActive : ''}`}
+                    onClick={() => setActiveTab('products')}
+                >
+                    <span className={styles.tabIcon}>📦</span>
+                    <span className={styles.tabLabel}>Product Management</span>
+                </button>
+                <button
+                    className={`${styles.tabButton} ${activeTab === 'orders' ? styles.tabActive : ''}`}
+                    onClick={() => setActiveTab('orders')}
+                >
+                    <span className={styles.tabIcon}>🛒</span>
+                    <span className={styles.tabLabel}>Order Management</span>
+                </button>
+                <button
+                    className={`${styles.tabButton} ${activeTab === 'members' ? styles.tabActive : ''}`}
+                    onClick={() => setActiveTab('members')}
+                >
+                    <span className={styles.tabIcon}>👥</span>
+                    <span className={styles.tabLabel}>Member Management</span>
+                </button>
             </div>
 
+            {/* Tab Content */}
+            <div className={styles.tabContent}>
+                {activeTab === 'products' && (
+                    <div className={styles.dashboard_card}>
+                        <ProductManagement />
+                    </div>
+                )}
+
+                {activeTab === 'orders' && (
+                    <div className={styles.dashboard_card}>
+                        <Data />
+                    </div>
+                )}
+
+                {activeTab === 'members' && (
+                    <div className={styles.dashboard_card}>
+                        <MemberDashboard />
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

@@ -58,3 +58,11 @@ firebase-debug.log
 package-lock.json
 yarn.lock
 README.md
+
+
+# .gitignore
+public/_next/
+public/build/
+*.log
+.DS_Store
+node_modules/

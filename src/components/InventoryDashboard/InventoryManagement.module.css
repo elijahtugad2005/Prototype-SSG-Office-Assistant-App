@@ -211,7 +211,7 @@ font-family: 'Bebas Neue';
 
 /* Table Styles */
 .tableContainer {
-  background: #171a1f;
+  background: #252627;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -238,8 +238,8 @@ font-family: 'Bebas Neue';
   padding: 1rem;
   border-bottom: 1px solid #ecf0f1;
   color: rgb(0, 0, 0);
-  font-size: 1rem;
-  font-weight: 400px;
+  font-size: 1.20rem;
+  font-weight: bold;
 }
 
 .table tbody tr:hover {
@@ -318,13 +318,13 @@ font-family: 'Bebas Neue';
 }
 
 .statusBorrowed {
-  background: #fff3cd;
-  color: #856404;
+  background: #fe5c03;
+  color: #080600;
 }
 
 .statusReturned {
-  background: #d5f4e6;
-  color: #27ae60;
+  background: #20a76a;
+  color: #05421e;
 }
 
 /* Action Buttons */

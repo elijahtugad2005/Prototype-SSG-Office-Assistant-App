@@ -1,4 +1,31 @@
+/* Import Inter font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+/* CSS Custom Properties - Design System - DARK THEME */
+:root {
+  /* Primary colors - Dark burgundy/red tones */
+  --color-burgundy: #2D0A0A;        /* Very dark burgundy (was #6B1F1F) */
+  --color-deep-red: #3D1010;        /* Dark red (was #8B2828) */
+  --color-crimson: #4D1515;         /* Darker crimson (was #A63232) */
+  
+  /* Accent colors - Darker orange tones */
+  --color-orange: #D94F1F;          /* Darker orange (was #FF6B35) */
+  --color-orange-hover: #E66B3D;    /* Darker orange hover (was #FF8555) */
+  --color-orange-light: rgba(217, 79, 31, 0.2); /* Darker transparent overlay */
+  
+  /* Neutral colors - Darker grays */
+  --color-white: #FFFFFF;
+  --color-light-gray: #2A2A2A;      /* Dark gray (was #F5F5F5) */
+  --color-medium-gray: #404040;     /* Medium dark gray (was #D0D0D0) */
+  --color-dark-gray: #606060;       /* Lighter dark gray (was #808080) */
+  --color-charcoal: #1A1A1A;        /* Very dark charcoal (was #3A3A3A) */
+  
+  /* Semantic colors - Darker versions */
+  --color-success: #2E7D32;         /* Darker green (was #4CAF50) */
+  --color-warning: #E65100;         /* Darker orange (was #FF9800) */
+  --color-error: #C62828;           /* Darker red (was #F44336) */
+  --color-info: #1565C0;            /* Darker blue (was #2196F3) */
+}
 
 /* src/App.css */
 @font-face {
@@ -23,6 +50,8 @@
   box-shadow:5px 5px 5px rgba(5, 5, 5, 0.068);
   margin: 10px;
   padding:15px;
+
+  zoom: 0.60;
 }
 .upperContainer{
   height :30px;
@@ -74,8 +103,18 @@
 }
 
 
+/* Typography System */
+body, p, span, div {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Bebas Neue', 'BebasNeue', sans-serif;
+  letter-spacing: 0.02em;
+}
+
 p {
-  font-family: Arial, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   font-size: 15px;
 }
 
@@ -84,14 +123,26 @@ p {
   transform: scale(1.02);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-.button{
-  display: inline-block;
-  background-color: red;
-  border-color: black;
-  padding: 10px 20px;
-  border-radius: 50%;
-  box-shadow: 5px 5px 5px rgba(5, 5, 5, 0.068);
-  cursor: pointer;
+
+
+
+/* Scrollbar hiding utility - works across all browsers */
+.scrollable-container {
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  -webkit-overflow-scrolling: touch;
+}
+
+.scrollable-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollable-container {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 /* Prevent horizontal overflow globally */
@@ -99,7 +150,10 @@ html, body {
     width: 100%;
     overflow-x: hidden;
     box-sizing: border-box;
-     background-color: rgb(101, 7, 7);
+    scroll-behavior: smooth;
+    background: 
+        linear-gradient(rgba(101, 7, 7, 0.8), rgba(101, 7, 7, 0.8)), /* Color overlay */
+        url('/Untitled Design.png') center/cover no-repeat;
 }
 
 *, *::before, *::after {
@@ -111,3 +165,4 @@ html, body {
     width: 100%;
     overflow-x: hidden;
 }
+

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styles from './Header.module.css';
 
-function Header() {
+function Header({ sidebarOpen }) {
   const [isShrunk, setIsShrunk] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -42,7 +42,7 @@ function Header() {
   }, [lastScrollY]);
 
   return (
-    <header className={`${styles.header} ${isShrunk ? styles.shrink : ''}`}>
+    <header className={`${styles.header} ${isShrunk ? styles.shrink : ''} ${!sidebarOpen ? styles.headerSidebarClosed : ''}`}>
      
       <div className={styles.titleWrapper}>
         <h1 className={styles.ssgtitle}>SUPREME STUDENT GOVERNMENT</h1>

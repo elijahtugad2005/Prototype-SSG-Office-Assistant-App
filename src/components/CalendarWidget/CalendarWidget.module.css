@@ -15,10 +15,11 @@
 }
 
 .title {
-  font-size: 2rem;
+  font-size: 3rem;
   color: #fe5c03;
   margin-bottom: 0.5rem;
   font-weight: bold;
+  font-family: 'Bebas Neue'
 }
 
 .subtitle {
@@ -46,6 +47,7 @@
   font-size: 1.5rem;
   color: #fe5c03;
   font-weight: bold;
+  font-family: Arial, Helvetica, sans-serifs
 }
 
 .calendarNavButton {
@@ -65,6 +67,7 @@
 }
 
 .calendarDayNames {
+  
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 0.5rem;
@@ -72,6 +75,7 @@
 }
 
 .calendarDayName {
+  font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   color: #fe5c03;
   font-size: 0.9rem;
@@ -86,6 +90,7 @@
 }
 
 .calendarDay {
+  font-family: Arial, Helvetica, sans-serif;
   min-height: 80px;
   background-color: #8a2a2a;
   border-radius: 0.5rem;
@@ -157,6 +162,7 @@
 }
 
 .upcomingTitle {
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 1.3rem;
   color: #fe5c03;
   margin-bottom: 1rem;

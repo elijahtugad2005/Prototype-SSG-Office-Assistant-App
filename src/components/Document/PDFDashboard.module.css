@@ -1,0 +1,929 @@
+
+.container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #010914;
+}
+
+.title {
+  font-family: 'Bebas Neue';
+  color: #fe5c03;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 3rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.dashboardLayout {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+/* ========================================
+   SECTIONS
+   ======================================== */
+
+.uploadSection, .listSection {
+  background:#171a1f;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  transition: box-shadow 0.3s ease;
+}
+
+.uploadSection:hover, .listSection:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+.uploadSection h2, .listSection h2 {
+  margin-top: 0;
+  color: #ff9900;
+  border-bottom: 3px solid #3498db;
+  padding-bottom: 12px;
+  margin-bottom: 25px;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* ========================================
+   FORM STYLES
+   ======================================== */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  font-weight: 600;
+  color: #e7e1dd;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.formGroup input,
+.formGroup select {
+  padding: 12px 15px;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: #4a4d50;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.formGroup input:disabled,
+.formGroup select:disabled {
+  background: #f5f7fa;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.fileInput {
+  padding: 10px !important;
+  background: #f8f9fa;
+  border: 2px dashed #cbd5e0 !important;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.fileInput:hover:not(:disabled) {
+  border-color: #3498db !important;
+  background: #eef6fc;
+}
+
+.fileInfo {
+  color: #6c757d;
+  font-size: 0.85rem;
+  margin-top: 5px;
+  display: block;
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+.uploadButton {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: rgb(0, 0, 0);
+  padding: 14px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.uploadButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #218838 0%, #1aa179 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+}
+
+.uploadButton:disabled {
+  background: linear-gradient(135deg, #ccc 0%, #aaa 100%);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.previewBtn {
+  background: #17a2b8;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.previewBtn:hover:not(:disabled) {
+  background: #138496;
+  transform: translateY(-1px);
+}
+
+.previewBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   UPLOAD INFO & PROGRESS
+   ======================================== */
+
+.uploadInfo {
+  background: linear-gradient(135deg, #e7f3ff 0%, #d4edff 100%);
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 10px;
+  text-align: center;
+  border: 2px solid #b3d9ff;
+}
+
+.uploadInfo p {
+  margin: 0 0 10px 0;
+  color: #0056b3;
+  font-weight: 600;
+}
+
+.uploadProgress {
+  background: #fff3cd;
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-align: center;
+  border: 2px solid #ffeaa7;
+  color: #856404;
+  font-weight: 600;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* ========================================
+   PDF LIST & FILTERS
+   ======================================== */
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.viewControls {
+  display: flex;
+  gap: 10px;
+}
+
+.toggleViewBtn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.toggleViewBtn:hover:not(:disabled) {
+  background: #5a6268;
+  transform: translateY(-1px);
+}
+
+.toggleViewBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pdfListContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ========================================
+   FILTERS SECTION
+   ======================================== */
+
+.filtersSection {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 250px;
+  padding: 10px 15px;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.searchInput:disabled {
+  background: #f5f7fa;
+  cursor: not-allowed;
+}
+
+.filterSelect {
+  padding: 10px 15px;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 160px;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.filterSelect:disabled {
+  background: #f5f7fa;
+  cursor: not-allowed;
+}
+
+.clearFiltersBtn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.clearFiltersBtn:hover:not(:disabled) {
+  background: #c0392b;
+  transform: translateY(-1px);
+}
+
+/* ========================================
+   SORT OPTIONS
+   ======================================== */
+
+.sortOptions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.sortOptions label {
+  font-weight: 600;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.sortBtn {
+  background: #f8f9fa;
+  border: 2px solid #dee2e6;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.sortBtn:hover:not(:disabled) {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.sortBtn.active {
+  background: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+.sortBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   TABLE STYLES
+   ======================================== */
+
+.tableContainer {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #e1e8ed;
+}
+
+.pdfTable {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgb(54, 49, 49);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.pdfTable th {
+  background: linear-gradient(135deg, #fe5c03 0%, #ff7b34 100%);
+  color: black;
+  padding: 14px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 1.20rem;
+  border-bottom: 3px solid #000000;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
+.pdfTable td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+}
+
+.pdfRow {
+  transition: all 0.2s ease;
+}
+
+.pdfRow:hover {
+  background: #273548;
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  color: #fe5c03;
+}
+
+
+.nameColumn {
+  min-width: 250px;
+}
+
+.actionsColumn {
+  min-width: 180px;
+}
+
+.pdfNameCell {
+  max-width: 300px;
+}
+
+.nameWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pdfTitle {
+  color: #000000;
+  font-weight: 600;
+  display: block;
+}
+
+.pdfTitle  :hover {
+  color: #fe5c03;
+  font-weight: 700;
+  display: block;
+}
+
+
+.fileName {
+  display: block;
+  color: #000000;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.creatorCell {
+  color: #000000;
+  font-size: 12px;
+}
+
+.dateCell, .sizeCell {
+  color: #000000;
+  font-size: 0.85rem;
+}
+
+/* ========================================
+   BADGES
+   ======================================== */
+
+.categoryBadge, .statusBadge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* Category Badges */
+.categoryBadge.memorandum {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  color: #1565c0;
+  border: 1px solid #90caf9;
+}
+
+.categoryBadge.announcement {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  color: #e65100;
+  border: 1px solid #ffcc80;
+}
+
+.categoryBadge.letter {
+  background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+  color: #6a1b9a;
+  border: 1px solid #ce93d8;
+}
+
+.categoryBadge.report {
+  background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+  color: #00695c;
+  border: 1px solid #80cbc4;
+}
+
+.categoryBadge.form {
+  background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+  color: #c2185b;
+  border: 1px solid #f48fb1;
+}
+
+.categoryBadge.guideline {
+  background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
+  color: #f57f17;
+  border: 1px solid #fff176;
+}
+
+/* Status Badges */
+.statusBadge.approved {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  color: #155724;
+  border: 1px solid #b1dfbb;
+}
+
+.statusBadge.pending {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  color: #856404;
+  border: 1px solid #ffd93d;
+}
+
+.statusBadge.completed {
+  background: linear-gradient(135deg, #cce5ff 0%, #b3d7ff 100%);
+  color: #004085;
+  border: 1px solid #99c9ff;
+}
+
+.statusBadge.archived {
+  background: linear-gradient(135deg, #e2e3e5 0%, #d6d8db 100%);
+  color: #383d41;
+  border: 1px solid #c6c8ca;
+}
+
+.statusBadge.ongoing {
+  background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+  color: #0c5460;
+  border: 1px solid #abdde5;
+}
+
+.statusBadge.draft {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+  color: #721c24;
+  border: 1px solid #f1b0b7;
+}
+
+/* ========================================
+   ACTION BUTTONS
+   ======================================== */
+
+.actionCell {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.actionBtn {
+  background: #fe5c03;
+  border: 2px solid #dee2e6;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  min-width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.actionBtn:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #adb5bd;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.actionBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.deleteBtn:hover:not(:disabled) {
+  background: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+/* ========================================
+   NO DATA STATE
+   ======================================== */
+
+.noData {
+  text-align: center;
+  padding: 60px 20px !important;
+  color: #6c757d;
+  background: #f8f9fa;
+}
+
+.noDataIcon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.noData p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.noData small {
+  display: block;
+  margin-top: 8px;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+/* ========================================
+   LIST SUMMARY
+   ======================================== */
+
+.listSummary {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #495057;
+  border-left: 4px solid #3498db;
+}
+
+.resultCount {
+  font-weight: 600;
+}
+
+.resultCount strong {
+  color: #3498db;
+  font-size: 1.1em;
+}
+
+.filterSummary {
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* ========================================
+   PDF PREVIEW
+   ======================================== */
+
+.pdfPreviewContainer {
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgb(0, 0, 0);
+}
+
+.pdfPreviewHeader {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #5568d3;
+  color: rgb(3, 0, 0);
+}
+
+.pdfPreviewHeader h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.pdfPreviewHeader small {
+  display: block;
+  margin-top: 5px;
+  opacity: 0.9;
+  font-size: 0.85rem;
+}
+
+.pdfViewer {
+  height: 700px;
+  background: #f5f7fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdfFrame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.noPreview {
+  text-align: center;
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+.closeBtn {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 2px solid rgba(255,255,255,0.4);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.closeBtn:hover {
+  background: rgba(255,255,255,0.3);
+  border-color: rgba(255,255,255,0.6);
+  transform: translateY(-1px);
+}
+
+/* ========================================
+   STATISTICS
+   ======================================== */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  margin-top: 40px;
+}
+
+.statCard {
+  background: rgb(0, 0, 0);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  text-align: center;
+  transition: all 0.3s ease;
+  border-top: 4px solid transparent;
+}
+
+.statCard:nth-child(1) {
+  border-top-color: #3498db;
+}
+
+.statCard:nth-child(2) {
+  border-top-color: #9b59b6;
+}
+
+.statCard:nth-child(3) {
+  border-top-color: #e74c3c;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.statCard h3 {
+  margin: 0 0 15px 0;
+  color: #fe5c03;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.statCard p {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.statNumber {
+  font-size: 2.5rem !important;
+  font-weight: 700 !important;
+  color: #3498db !important;
+}
+
+.statText {
+  font-size: 0.95rem !important;
+  line-height: 1.6;
+  color: #495057 !important;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 1200px) {
+  .dashboardLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .uploadSection, .listSection {
+    padding: 20px;
+  }
+
+  .filters {
+    flex-direction: column;
+  }
+  
+  .searchInput,
+  .filterSelect {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .sortOptions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sortOptions label {
+    width: 100%;
+  }
+
+  .sortBtn {
+    flex: 1;
+    min-width: 100px;
+  }
+  
+  .actionCell {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pdfTable th,
+  .pdfTable td {
+    padding: 10px 8px;
+    font-size: 0.85rem;
+  }
+
+  .nameColumn {
+    min-width: 180px;
+  }
+
+  .pdfViewer {
+    height: 500px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .viewControls {
+    width: 100%;
+  }
+
+  .toggleViewBtn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .actionBtn {
+    padding: 5px 10px;
+    font-size: 14px;
+    min-width: 34px;
+    height: 34px;
+  }
+
+  .pdfPreviewHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .closeBtn {
+    width: 100%;
+  }
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
+@media print {
+  .uploadSection,
+  .actionCell,
+  .filters,
+  .sortOptions,
+  .viewControls,
+  .sectionHeader button {
+    display: none !important;
+  }
+
+  .container {
+    max-width: 100%;
+  }
+
+  .dashboardLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .pdfTable {
+    page-break-inside: avoid;
+  }
+}

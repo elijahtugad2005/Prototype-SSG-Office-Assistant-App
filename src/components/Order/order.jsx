@@ -329,7 +329,7 @@ useEffect(() => {
           </div>
 
           <p className={styles.successNote}>
-            Please save this Order ID for tracking your order. 
+            Kindly save this order and show it to your fellow officer when claiming your item.
             A confirmation email has been sent to <strong>{formData.email}</strong>
           </p>
 
@@ -578,7 +578,7 @@ useEffect(() => {
                     onChange={handleChange}
                     className={styles.radio}
                   />
-                  Cash on Delivery
+                  Cash on Arrival
                 </label>
                 <label className={styles.radioLabel}>
                   <input

@@ -140,10 +140,21 @@ export default function Memberlist({ members = [], setMembers }) {
                   >
                     <option value="">Select Position</option>
                     <option value="President">President</option>
-                    <option value="Vice President">Vice President</option>
-                    <option value="Secretary">Secretary</option>
-                    <option value="Treasurer">Treasurer</option>
-                    <option value="Member">Member</option>
+                    <option value="Vice President">Vice President</option>
+                    <option value="Secretary">Secretary</option>
+                    <option value="COTE Governor"> COTE Governor</option>
+                    <option value="COED Governor"> COED Governor</option>
+                    <option value="Senator">Senator</option>
+                    <option value="Multimedia Director">MultiMedia Director</option>
+                    <option value="Multimedia">Multimedia</option>
+                    <option value="Activity Officer">Activity Offer</option>
+                    <option value="BSHM Representative">BSHM Representative</option>
+                    <option value="BSIT Representative">BSIT Representative</option>
+                    <option value="BSFI Representative">BSFI Representative</option>
+                    <option value="BEED MATH Representative">BEED MATH Representative</option>
+                    <option value="BSED Representative">BSED Representative</option>
+                    <option value="BIT Representative">BIT Representative</option>
+                    <option value="BSIE Representative">BSIE Representative</option>
                   </select>
                 </div>
 
@@ -206,7 +217,6 @@ export default function Memberlist({ members = [], setMembers }) {
       )}
 
       {/* Member Cards Grid */}
-      <div className={styles.memberListContainer}>
         {members.length === 0 ? (
           <p className={styles.noMembers}>No members added yet.</p>
         ) : (
@@ -259,7 +269,6 @@ export default function Memberlist({ members = [], setMembers }) {
             </div>
           ))
         )}
-      </div>
     </div>
   );
 }

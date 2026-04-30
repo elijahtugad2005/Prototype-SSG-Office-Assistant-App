@@ -2,21 +2,30 @@
   min-height: 100vh; 
   overflow-x: hidden;
   overflow: hidden;
+  background-color: var(--color-charcoal);
 }
 
 .mainContent {
   display: flex;
   flex: 1;
   width: 100%;
-  padding: 0 20px 20px;
-  margin-top: 60px; /* Reduced for mobile */
+  padding: 0;
+  margin-top: 7rem; /* Match header height on desktop */
+  transition: margin-top 0.3s ease;
 }
 
 .contentWrapper {
-  margin-left: 250px;
+  margin-left: 0;
   width: 100%;
   padding: 0;
-   /* Prevent horizontal scroll */
+  transition: margin-left 0.3s ease, width 0.3s ease;
+  /* Prevent horizontal scroll */
+  overflow-x: hidden;
+}
+
+.contentWrapperSidebarClosed {
+  margin-left: 0;
+  width: 100%;
 }
 
 /* Ensure admin page container takes full available width */
@@ -27,16 +36,21 @@
 }
 
 /* Tablet and Desktop */
-@media (min-width: 601px) {
+@media (min-width: 769px) {
   .mainContent {
-    margin-top: 100px;
-    padding: 0 5px 5px;
+    margin-top: 7rem; /* Match header height */
+    padding: 0;
   }
 
   .contentWrapper {
-    width: calc(100% - 250px);
-     margin-left: 250px;
-    padding: 5px;
+    width: 100%;
+    margin-left: 0;
+    padding: 0;
+  }
+
+  .contentWrapperSidebarClosed {
+    width: 100%;
+    margin-left: 0;
   }
   
   .contentWrapper > .container {
@@ -44,39 +58,32 @@
   }
 }
 
-/* Mobile Devices */
-@media (max-width: 600px) {
+/* Mobile and Tablet Devices */
+@media (max-width: 768px) {
   .mainContent {
     padding: 0;
-    margin-top: 60px;
+    margin-top: 5.5rem; /* Match tablet header height */
     flex-direction: column;
   }
 
-  .contentWrapper {
-    width: 100%; /* Remove the calc(100% - 250px) that's still applying */
-    margin-left: 0; /* Ensure no left margin */
+  .contentWrapper,
+  .contentWrapperSidebarClosed {
+    width: 100%;
+    margin-left: 0;
     padding: 0;
   }
   
-  /* Also add this to ensure the container is centered */
   .contentWrapper > .container {
     width: 100%;
     max-width: 100%;
-    margin: 0 auto; /* Center the content */
-  }
-  
-  /* Ensure sidebar doesn't push content on mobile */
-  .sidebar {
-    position: fixed;
-    z-index: 1000;
-    /* Adjust based on your sidebar implementation */
+    margin: 0 auto;
   }
 }
 
 /* Extra Small Devices */
 @media (max-width: 480px) {
   .mainContent {
-    margin-top: 50px;
+    margin-top: 8rem; /* Match mobile header height (stacked layout) */
   }
   
   .contentWrapper > .container {

@@ -4,16 +4,34 @@
   left: 0;
   width: 100%;
   height: 7rem; /* Desktop height */
-  background-color: rgb(130, 0, 0);
-  color: white;
+  background-color: var(--color-charcoal);
+  color: var(--color-white);
   display: flex;
   justify-content: space-between;
   padding: 0 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  z-index: 999;
   box-sizing: border-box;
   align-items: center;
-   transition: height 0.3s ease, min-height 0.3s ease;
+  transition: height 0.3s ease, min-height 0.3s ease, padding-left 0.3s ease;
+}
+
+/* Adjust header when sidebar is open (desktop) */
+@media (min-width: 769px) {
+  .header {
+    padding-left: 300px; /* 280px sidebar + 20px padding */
+  }
+  
+  .headerSidebarClosed {
+    padding-left: 100px; /* 80px sidebar + 20px padding */
+  }
+}
+
+/* Mobile - no sidebar adjustment needed */
+@media (max-width: 768px) {
+  .header {
+    padding-left: 20px;
+  }
 }
 
 .titleWrapper {

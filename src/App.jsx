@@ -1,4 +1,5 @@
 // --- CORE IMPORTS ---
+import React from 'react';
 import { Routes, Route } from 'react-router-dom'; 
 
 // --- CONTEXT IMPORTS ---
@@ -19,6 +20,7 @@ import Login from './components/Login/Login.jsx';
 import ProtectedRoute from './components/ProtectedRoutes/ProtectedRoutes.jsx'; 
 import FinanceDashboard from './components/Finance/FinanceDashboard.jsx';
 import InventoryManagement from './components/InventoryDashboard/InventoryManagement.jsx';
+import PDFDashboard from './components/Document/PDFDahsboard.jsx';
 // --- STYLES ---
 
 
@@ -28,13 +30,21 @@ import styles from './App.module.css';
 // --- LAYOUT COMPONENT ---
 // This preserves your exact design for dashboard pages
 const DashboardLayout = ({ children }) => {
+  const [sidebarOpen, setSidebarOpen] = React.useState(
+    window.innerWidth > 768 // Open by default on desktop
+  );
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   return (
     <div className={styles.app}>
-      <Header />
+      <Header sidebarOpen={sidebarOpen} />
       <div className={styles.mainContent}>
-        <Sidebar />
-        <div className={styles.contentWrapper}>
-          {children}
+        <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+        <div className={`${styles.contentWrapper} ${!sidebarOpen ? styles.contentWrapperSidebarClosed : ''}`}>
+          {React.cloneElement(children, { toggleSidebar, sidebarOpen })}
         </div>
       </div>
     </div>
@@ -89,12 +99,23 @@ function App() {
 
 
         <Route path= "/inventory" element={
-          <ProtectedRoute allowedRoles={['admin']}>
+          <ProtectedRoute allowedRoles={['admin', 'representative']}>
             <DashboardLayout>
              <InventoryManagement/>
             </DashboardLayout>
           </ProtectedRoute>
         } />
+
+
+
+         <Route path="/documents" element={
+              <ProtectedRoute allowedRoles={['admin', 'secretary', 'representative']}>
+                <DashboardLayout>
+                  <PDFDashboard />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+
 
         <Route path="/reports" element={
           <ProtectedRoute allowedRoles={['admin']}>
@@ -106,7 +127,7 @@ function App() {
 
         {/* 3. ADMIN + SECRETARY ROUTES */}
         <Route path="/announcement" element={
-          <ProtectedRoute allowedRoles={['admin', 'secretary' ]}>
+          <ProtectedRoute allowedRoles={['admin', 'secretary' ,'representative']}>
             <DashboardLayout>
               <Announcement />
             </DashboardLayout>
