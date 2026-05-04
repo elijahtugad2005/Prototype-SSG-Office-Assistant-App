@@ -1,0 +1,782 @@
+/* =====================================================
+   TrackOrder.module.css
+   Consistent with Order & ProductManagement design system
+   ===================================================== */
+
+/* =====================================================
+   DESIGN TOKENS
+   ===================================================== */
+:root {
+  --to-bg:           #f8fafc;
+  --to-card-bg:      #ffffff;
+  --to-border:       #e2e8f0;
+  --to-text-primary: #0f172a;
+  --to-text-secondary: #64748b;
+  --to-text-muted:   #94a3b8;
+  --to-blue:         #3b82f6;
+  --to-blue-dark:    #2563eb;
+  --to-blue-light:   #eff6ff;
+  --to-green:        #10b981;
+  --to-green-light:  #ecfdf5;
+  --to-amber:        #f59e0b;
+  --to-amber-light:  #fffbeb;
+  --to-red:          #ef4444;
+  --to-red-light:    #fef2f2;
+  --to-radius:       12px;
+  --to-shadow-sm:    0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+  --to-shadow-md:    0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+  --to-shadow-lg:    0 12px 40px rgba(0,0,0,0.12);
+  --to-font:         'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* =====================================================
+   CONTAINER
+   ===================================================== */
+
+.container {
+  background-color: var(--to-bg);
+  font-family: var(--to-font);
+  color: var(--to-text-primary);
+  min-height: 100vh;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =====================================================
+   TOP BAR
+   ===================================================== */
+
+.topBar {
+  padding: 2rem 2.5rem 1.25rem;
+  border-bottom: 1px solid var(--to-border);
+  background: var(--to-card-bg);
+  flex-shrink: 0;
+}
+
+.eyebrow {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--to-text-muted);
+  margin: 0 0 0.3rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--to-text-primary);
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--to-text-secondary);
+  margin: 0;
+}
+
+/* =====================================================
+   CONTENT
+   ===================================================== */
+
+.content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 2rem 2.5rem;
+  flex: 1;
+  width: 100%;
+}
+
+/* =====================================================
+   SEARCH SECTION
+   ===================================================== */
+
+.searchSection {
+  margin-bottom: 2rem;
+}
+
+.searchCard {
+  background: var(--to-card-bg);
+  border: 1px solid var(--to-border);
+  border-radius: var(--to-radius);
+  padding: 2rem;
+  box-shadow: var(--to-shadow-sm);
+}
+
+.searchHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.searchIcon {
+  width: 56px;
+  height: 56px;
+  background: var(--to-blue-light);
+  border: 2px solid rgba(59,130,246,0.25);
+  color: var(--to-blue);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.searchTitle {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--to-text-primary);
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.searchSubtitle {
+  font-size: 0.875rem;
+  color: var(--to-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* =====================================================
+   SEARCH FORM
+   ===================================================== */
+
+.searchForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.searchTypeToggle {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  background: var(--to-bg);
+  border-radius: 8px;
+  border: 1px solid var(--to-border);
+}
+
+.toggleBtn {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--to-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--to-font);
+}
+
+.toggleBtn:hover {
+  color: var(--to-text-primary);
+}
+
+.toggleBtnActive {
+  background: var(--to-card-bg);
+  color: var(--to-blue);
+  box-shadow: var(--to-shadow-sm);
+}
+
+.searchInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchInputIcon {
+  position: absolute;
+  left: 1rem;
+  color: var(--to-text-muted);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.85rem 1rem 0.85rem 2.75rem;
+  border: 1px solid var(--to-border);
+  border-radius: 8px;
+  background: var(--to-card-bg);
+  color: var(--to-text-primary);
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  font-family: var(--to-font);
+}
+
+.searchInput::placeholder {
+  color: var(--to-text-muted);
+}
+
+.searchInput:focus {
+  border-color: var(--to-blue);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+}
+
+.searchButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background: var(--to-blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  font-family: var(--to-font);
+  letter-spacing: 0.01em;
+}
+
+.searchButton:hover:not(:disabled) {
+  background: var(--to-blue-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(59,130,246,0.35);
+}
+
+.searchButton:disabled {
+  background: #cbd5e1;
+  color: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--to-red-light);
+  color: var(--to-red);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* =====================================================
+   NO RESULTS
+   ===================================================== */
+
+.noResults {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: var(--to-card-bg);
+  border: 1px solid var(--to-border);
+  border-radius: var(--to-radius);
+  box-shadow: var(--to-shadow-sm);
+}
+
+.noResultsIcon {
+  width: 64px;
+  height: 64px;
+  background: var(--to-bg);
+  border: 2px solid var(--to-border);
+  color: var(--to-text-muted);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+
+.noResultsTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--to-text-primary);
+  margin: 0 0 0.5rem;
+}
+
+.noResultsText {
+  font-size: 0.875rem;
+  color: var(--to-text-secondary);
+  margin: 0;
+  line-height: 1.65;
+}
+
+/* =====================================================
+   ORDER DETAILS SECTION
+   ===================================================== */
+
+.orderDetailsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* =====================================================
+   STATUS CARD
+   ===================================================== */
+
+.statusCard {
+  background: var(--to-card-bg);
+  border: 2px solid var(--to-border);
+  border-radius: var(--to-radius);
+  padding: 2rem;
+  box-shadow: var(--to-shadow-md);
+}
+
+.statusHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.statusIconWrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.statusInfo {
+  flex: 1;
+}
+
+.statusLabel {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--to-text-primary);
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.statusDescription {
+  font-size: 0.875rem;
+  color: var(--to-text-secondary);
+  margin: 0;
+  line-height: 1.65;
+}
+
+/* =====================================================
+   PROGRESS BAR
+   ===================================================== */
+
+.progressSection {
+  margin-bottom: 2rem;
+}
+
+.progressBar {
+  width: 100%;
+  height: 8px;
+  background: var(--to-bg);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--to-blue);
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+.progressText {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--to-text-secondary);
+}
+
+/* =====================================================
+   TIMELINE
+   ===================================================== */
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--to-border);
+}
+
+.timelineItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.timelineItem:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 1.5rem;
+  bottom: -1.25rem;
+  width: 2px;
+  background: var(--to-border);
+}
+
+.timelineItemActive:not(:last-child)::before {
+  background: var(--to-blue);
+}
+
+.timelineDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--to-bg);
+  border: 2px solid var(--to-border);
+  flex-shrink: 0;
+  position: absolute;
+  left: 0;
+  top: 0.25rem;
+}
+
+.timelineItemActive .timelineDot {
+  background: var(--to-blue);
+  border-color: var(--to-blue);
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+}
+
+.timelineContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.timelineLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--to-text-primary);
+}
+
+.timelineItemActive .timelineLabel {
+  color: var(--to-blue);
+}
+
+.timelineDate {
+  font-size: 0.75rem;
+  color: var(--to-text-secondary);
+}
+
+/* =====================================================
+   INFO GRID
+   ===================================================== */
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.infoCard {
+  background: var(--to-card-bg);
+  border: 1px solid var(--to-border);
+  border-radius: var(--to-radius);
+  overflow: hidden;
+  box-shadow: var(--to-shadow-sm);
+}
+
+.infoCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--to-bg);
+  border-bottom: 1px solid var(--to-border);
+}
+
+.infoCardTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--to-text-primary);
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.infoCardBody {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.infoLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--to-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.infoValue {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--to-text-primary);
+  text-align: right;
+  word-break: break-word;
+}
+
+.infoValueHighlight {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--to-blue);
+  text-align: right;
+}
+
+/* =====================================================
+   ACTION BUTTONS
+   ===================================================== */
+
+.actionButtons {
+  display: flex;
+  gap: 0.75rem;
+  padding-top: 1rem;
+}
+
+.searchAgainButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  background: var(--to-blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  font-family: var(--to-font);
+}
+
+.searchAgainButton:hover {
+  background: var(--to-blue-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(59,130,246,0.35);
+}
+
+.homeButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 1.5rem;
+  background: transparent;
+  color: var(--to-text-secondary);
+  border: 1px solid var(--to-border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--to-font);
+}
+
+.homeButton:hover {
+  background: var(--to-bg);
+  border-color: #94a3b8;
+  color: var(--to-text-primary);
+}
+
+/* =====================================================
+   RESPONSIVE — tablet (≤ 768px)
+   ===================================================== */
+
+@media (max-width: 768px) {
+  .topBar {
+    padding: 1.5rem 1rem 1rem;
+  }
+
+  .content {
+    padding: 1.5rem 1rem 2rem;
+  }
+
+  .title {
+    font-size: 1.3rem;
+  }
+
+  .searchCard {
+    padding: 1.5rem;
+  }
+
+  .searchTitle {
+    font-size: 1.2rem;
+  }
+
+  .statusCard {
+    padding: 1.5rem;
+  }
+
+  .statusHeader {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .statusLabel {
+    font-size: 1.2rem;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+  }
+
+  .searchAgainButton,
+  .homeButton {
+    width: 100%;
+  }
+
+  .timeline {
+    padding-left: 0.5rem;
+  }
+}
+
+/* =====================================================
+   RESPONSIVE — small phones (≤ 480px)
+   ===================================================== */
+
+@media (max-width: 480px) {
+  .topBar {
+    padding: 1.25rem 0.75rem 0.85rem;
+  }
+
+  .content {
+    padding: 1.25rem 0.75rem 1.5rem;
+  }
+
+  .title {
+    font-size: 1.15rem;
+  }
+
+  .searchCard {
+    padding: 1.25rem;
+  }
+
+  .searchTitle {
+    font-size: 1.1rem;
+  }
+
+  .searchIcon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .statusCard {
+    padding: 1.25rem;
+  }
+
+  .statusIconWrapper {
+    width: 48px;
+    height: 48px;
+  }
+
+  .statusLabel {
+    font-size: 1.1rem;
+  }
+
+  .infoCardBody {
+    padding: 1rem;
+  }
+
+  .infoRow {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .infoValue,
+  .infoValueHighlight {
+    text-align: left;
+  }
+}
+
+/* =====================================================
+   DARK MODE
+   ===================================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --to-bg:           #0f172a;
+    --to-card-bg:      #1e293b;
+    --to-border:       #334155;
+    --to-text-primary: #f1f5f9;
+    --to-text-secondary: #94a3b8;
+    --to-text-muted:   #64748b;
+    --to-blue-light:   rgba(59,130,246,0.12);
+    --to-green-light:  rgba(16,185,129,0.1);
+    --to-amber-light:  rgba(245,158,11,0.1);
+    --to-red-light:    rgba(239,68,68,0.1);
+  }
+
+  .searchInput {
+    background: #273548;
+    border-color: var(--to-border);
+    color: var(--to-text-primary);
+  }
+
+  .searchInput::placeholder {
+    color: var(--to-text-muted);
+  }
+
+  .toggleBtn {
+    background: transparent;
+  }
+
+  .toggleBtnActive {
+    background: #273548;
+  }
+
+  .searchTypeToggle {
+    background: rgba(255,255,255,0.03);
+  }
+
+  .infoCardHeader {
+    background: rgba(255,255,255,0.03);
+  }
+
+  .homeButton {
+    background: transparent;
+  }
+
+  .homeButton:hover {
+    background: rgba(255,255,255,0.05);
+  }
+
+  .noResultsIcon {
+    background: rgba(255,255,255,0.03);
+  }
+}

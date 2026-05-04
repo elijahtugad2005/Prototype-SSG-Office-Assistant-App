@@ -1,27 +1,21 @@
 import { useState, useEffect } from 'react';
 import styles from './Header.module.css';
 
-function Header({ sidebarOpen }) {
+function Header({ sidebarOpen, toggleSidebar }) {
   const [isShrunk, setIsShrunk] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
-      // If scrolling down (and not at top) - shrink the header
       if (currentScrollY > lastScrollY && currentScrollY > 50) {
         setIsShrunk(true);
-      }
-      // If scrolling up - show the full header
-      else if (currentScrollY < lastScrollY) {
+      } else if (currentScrollY < lastScrollY) {
         setIsShrunk(false);
       }
-      
       setLastScrollY(currentScrollY);
     };
 
-    // Throttle the scroll event for better performance
     let ticking = false;
     const throttledHandleScroll = () => {
       if (!ticking) {
@@ -34,25 +28,39 @@ function Header({ sidebarOpen }) {
     };
 
     window.addEventListener('scroll', throttledHandleScroll, { passive: true });
-    
-    // Clean up
-    return () => {
-      window.removeEventListener('scroll', throttledHandleScroll);
-    };
+    return () => window.removeEventListener('scroll', throttledHandleScroll);
   }, [lastScrollY]);
 
   return (
-    <header className={`${styles.header} ${isShrunk ? styles.shrink : ''} ${!sidebarOpen ? styles.headerSidebarClosed : ''}`}>
-     
-      <div className={styles.titleWrapper}>
-        <h1 className={styles.ssgtitle}>SUPREME STUDENT GOVERNMENT</h1>
+    <header
+      className={`${styles.header} ${isShrunk ? styles.shrink : ''} ${!sidebarOpen ? styles.headerSidebarClosed : ''}`}
+    >
+      {/* Hamburger — left side, always visible */}
+      {toggleSidebar && (
+        <button
+          className={styles.hamburger}
+          onClick={toggleSidebar}
+          aria-label={sidebarOpen ? 'Close navigation' : 'Open navigation'}
+          title={sidebarOpen ? 'Close navigation' : 'Open navigation'}
+        >
+          <span className={`${styles.hamburgerBar} ${sidebarOpen ? styles.barTop : ''}`} />
+          <span className={`${styles.hamburgerBar} ${sidebarOpen ? styles.barMid : ''}`} />
+          <span className={`${styles.hamburgerBar} ${sidebarOpen ? styles.barBot : ''}`} />
+        </button>
+      )}
+
+      {/* Centre — editorial title block */}
+      <div className={styles.titleBlock}>
+        <p className={styles.eyebrow}>Official Student Government Platform</p>
+        <h1 className={styles.ssgtitle}>Supreme Student Government</h1>
+        <p className={styles.subtitle}>Cebu Technological University — Daanbantayan Campus</p>
       </div>
 
-      <div className={styles.textContainer}>
-        <h1>DAANBANTAYAN CAMPUS</h1>
-        <h2>Agujo Medellin Cebu</h2>
+      {/* Right — campus detail */}
+      <div className={styles.campusDetail}>
+        <span className={styles.campusName}>CTU Daanbantayan</span>
+        <span className={styles.campusLocation}>Agujo, Daanbantayan, Cebu</span>
       </div>
-      
     </header>
   );
 }

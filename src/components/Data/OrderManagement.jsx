@@ -13,6 +13,9 @@ function OrderManagement() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   
+  // Navigation state
+  const [activeSection, setActiveSection] = useState('dashboard');
+  
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -21,6 +24,10 @@ function OrderManagement() {
   const [statusFilter, setStatusFilter] = useState('All');
   const [paymentFilter, setPaymentFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Pagination
+  const [page, setPage] = useState(1);
+  const PER_PAGE = 10;
 
   // ========================================
   // FETCH ORDERS FROM FIREBASE
@@ -210,96 +217,120 @@ function OrderManagement() {
   };
 
   // ========================================
-  // RENDER
+  // PAGINATION
   // ========================================
-  return (
-    <div className={styles.container}>
-      
-      {/* HEADER */}
-      <div className={styles.header}>
-        <div className={styles.titleSection}>
-          <h2>Order Management</h2>
-          <p>View and manage all customer orders</p>
+  const totalPages = Math.max(1, Math.ceil(filteredOrders.length / PER_PAGE));
+  const paginatedOrders = filteredOrders.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+
+  // ========================================
+  // RENDER DASHBOARD VIEW
+  // ========================================
+  const renderDashboardView = () => (
+    <div className={styles.dashboardView}>
+      {/* KPI Row */}
+      <div className={styles.kpiRow}>
+        <div className={styles.kpiCard}>
+          <div className={styles.kpiCardHeader}>
+            <span className={styles.kpiCardLabel}>Total Orders</span>
+            <span className={styles.kpiCardIcon}>
+              <Package size={20} />
+            </span>
+          </div>
+          <p className={styles.kpiCardValue}>{stats.total}</p>
+          <p className={styles.kpiCardSub}>all time orders</p>
+        </div>
+
+        <div className={styles.kpiCard}>
+          <div className={styles.kpiCardHeader}>
+            <span className={styles.kpiCardLabel}>Pending</span>
+            <span className={styles.kpiCardIcon}>
+              <Clock size={20} />
+            </span>
+          </div>
+          <p className={styles.kpiCardValue}>{stats.pending}</p>
+          <p className={styles.kpiCardSub}>awaiting payment</p>
+        </div>
+
+        <div className={styles.kpiCard}>
+          <div className={styles.kpiCardHeader}>
+            <span className={styles.kpiCardLabel}>Paid</span>
+            <span className={styles.kpiCardIcon}>
+              <CreditCard size={20} />
+            </span>
+          </div>
+          <p className={styles.kpiCardValue}>{stats.paid}</p>
+          <p className={styles.kpiCardSub}>payment confirmed</p>
+        </div>
+
+        <div className={styles.kpiCard}>
+          <div className={styles.kpiCardHeader}>
+            <span className={styles.kpiCardLabel}>Ongoing</span>
+            <span className={styles.kpiCardIcon}>
+              <Truck size={20} />
+            </span>
+          </div>
+          <p className={styles.kpiCardValue}>{stats.ongoing}</p>
+          <p className={styles.kpiCardSub}>in progress</p>
+        </div>
+
+        <div className={styles.kpiCard}>
+          <div className={styles.kpiCardHeader}>
+            <span className={styles.kpiCardLabel}>Completed</span>
+            <span className={styles.kpiCardIcon}>
+              <CheckCircle size={20} />
+            </span>
+          </div>
+          <p className={styles.kpiCardValue}>{stats.completed}</p>
+          <p className={styles.kpiCardSub}>successfully delivered</p>
+        </div>
+
+        <div className={styles.kpiCard}>
+          <div className={styles.kpiCardHeader}>
+            <span className={styles.kpiCardLabel}>Cancelled</span>
+            <span className={styles.kpiCardIcon}>
+              <X size={20} />
+            </span>
+          </div>
+          <p className={styles.kpiCardValue}>{stats.cancelled}</p>
+          <p className={styles.kpiCardSub}>cancelled orders</p>
+        </div>
+
+        <div className={styles.kpiCard}>
+          <div className={styles.kpiCardHeader}>
+            <span className={styles.kpiCardLabel}>Revenue</span>
+            <span className={styles.kpiCardIcon}>
+              <DollarSign size={20} />
+            </span>
+          </div>
+          <p className={styles.kpiCardValue}>₱{stats.totalRevenue.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+          <p className={styles.kpiCardSub}>total revenue</p>
         </div>
       </div>
+    </div>
+  );
 
-      {/* STATISTICS CARDS */}
-      <div className={styles.statsGrid}>
-        <div className={styles.statCard}>
-          <Package className={styles.statIcon} size={24} />
-          <div className={styles.statInfo}>
-            <span className={styles.statLabel}>Total Orders</span>
-            <span className={styles.statValue}>{stats.total}</span>
+  // ========================================
+  // RENDER ORDERS TABLE VIEW
+  // ========================================
+  const renderOrdersTableView = () => (
+    <div className={styles.ordersView}>
+      {/* Toolbar */}
+      <div className={styles.productsToolbar}>
+        <div className={styles.productsToolbarLeft}>
+          <div className={styles.searchWrapper}>
+            <Search className={styles.searchIcon} size={16} />
+            <input
+              type="text"
+              className={styles.searchInput}
+              placeholder="Search by Order ID, Name, or Email..."
+              value={searchQuery}
+              onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
+            />
           </div>
-        </div>
 
-        <div className={styles.statCard}>
-          <Clock className={styles.statIcon} size={24} />
-          <div className={styles.statInfo}>
-            <span className={styles.statLabel}>Pending</span>
-            <span className={styles.statValue}>{stats.pending}</span>
-          </div>
-        </div>
-
-        <div className={styles.statCard}>
-          <CreditCard className={styles.statIcon} size={24} />
-          <div className={styles.statInfo}>
-            <span className={styles.statLabel}>Paid</span>
-            <span className={styles.statValue}>{stats.paid}</span>
-          </div>
-        </div>
-
-        <div className={styles.statCard}>
-          <Truck className={styles.statIcon} size={24} />
-          <div className={styles.statInfo}>
-            <span className={styles.statLabel}>Ongoing</span>
-            <span className={styles.statValue}>{stats.ongoing}</span>
-          </div>
-        </div>
-
-        <div className={styles.statCard}>
-          <CheckCircle className={styles.statIcon} size={24} />
-          <div className={styles.statInfo}>
-            <span className={styles.statLabel}>Completed</span>
-            <span className={styles.statValue}>{stats.completed}</span>
-          </div>
-        </div>
-
-        <div className={styles.statCard}>
-          <X className={styles.statIcon} size={24} />
-          <div className={styles.statInfo}>
-            <span className={styles.statLabel}>Cancelled</span>
-            <span className={styles.statValue}>{stats.cancelled}</span>
-          </div>
-        </div>
-
-        <div className={styles.statCard}>
-          <DollarSign className={styles.statIcon} size={24} />
-          <div className={styles.statInfo}>
-            <span className={styles.statLabel}>Revenue</span>
-            <span className={styles.statValue}>₱{stats.totalRevenue.toFixed(2)}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* FILTERS SECTION */}
-      <div className={styles.filtersSection}>
-        <div className={styles.searchWrapper}>
-          <Search className={styles.searchIcon} size={18} />
-          <input
-            type="text"
-            className={styles.searchInput}
-            placeholder="Search by Order ID, Name, or Email..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-
-        <div className={styles.filterGroup}>
-          <label>Status:</label>
           <select
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
             className={styles.filterSelect}
           >
             <option value="All">All Status</option>
@@ -309,13 +340,10 @@ function OrderManagement() {
             <option value="Completed">Completed</option>
             <option value="Cancelled">Cancelled</option>
           </select>
-        </div>
 
-        <div className={styles.filterGroup}>
-          <label>Payment:</label>
           <select
             value={paymentFilter}
-            onChange={(e) => setPaymentFilter(e.target.value)}
+            onChange={(e) => { setPaymentFilter(e.target.value); setPage(1); }}
             className={styles.filterSelect}
           >
             <option value="All">All Methods</option>
@@ -325,7 +353,7 @@ function OrderManagement() {
         </div>
       </div>
 
-      {/* ORDERS TABLE */}
+      {/* Table */}
       <div className={styles.tableWrapper}>
         {loading ? (
           <div className={styles.emptyState}>
@@ -341,189 +369,184 @@ function OrderManagement() {
             </p>
           </div>
         ) : (
-          <div className={styles.ordersGrid}>
-            {filteredOrders.map((order) => (
-              <div key={order.docId} className={styles.orderCard}>
-                
-                {/* ORDER HEADER */}
-                <div className={styles.orderHeader}>
-                  <div className={styles.orderIdSection}>
-                    <span className={styles.orderId}>{order.orderId}</span>
-                    <span className={styles.orderDate}>{formatDate(order.dateOrdered)}</span>
-                  </div>
-                  <span 
-                    className={styles.statusBadge}
-                    style={{
-                      backgroundColor: getStatusColor(order.orderStatus),
-                      color: getStatusTextColor(order.orderStatus)
-                    }}
-                  >
-                    {order.orderStatus}
-                  </span>
-                </div>
-
-                {/* CUSTOMER INFO */}
-                <div className={styles.infoSection}>
-                  <h4 className={styles.sectionTitle}>Customer Information</h4>
-                  <div className={styles.infoGrid}>
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Name:</span>
-                      <span className={styles.infoValue}>{order.customerInfo?.fullName}</span>
+          <table className={styles.orderTable}>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Payment</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedOrders.map((order) => (
+                <tr key={order.docId} className={styles.tableRow}>
+                  <td className={styles.orderIdCell}>{order.orderId}</td>
+                  <td>
+                    <div className={styles.customerCell}>
+                      <span className={styles.customerName}>{order.customerInfo?.fullName}</span>
+                      <span className={styles.customerEmail}>{order.customerInfo?.email}</span>
                     </div>
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>School ID:</span>
-                      <span className={styles.infoValue}>{order.customerInfo?.schoolID}</span>
+                  </td>
+                  <td>
+                    <div className={styles.productCell}>
+                      <span className={styles.productName}>{order.productInfo?.productName}</span>
+                      {(order.productInfo?.size !== 'N/A' || order.productInfo?.color !== 'N/A') && (
+                        <span className={styles.productVariant}>
+                          {order.productInfo?.size !== 'N/A' && `Size: ${order.productInfo?.size}`}
+                          {order.productInfo?.size !== 'N/A' && order.productInfo?.color !== 'N/A' && ' • '}
+                          {order.productInfo?.color !== 'N/A' && `Color: ${order.productInfo?.color}`}
+                        </span>
+                      )}
                     </div>
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Email:</span>
-                      <span className={styles.infoValue}>{order.customerInfo?.email}</span>
-                    </div>
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Phone:</span>
-                      <span className={styles.infoValue}>{order.customerInfo?.phoneNumber}</span>
-                    </div>
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Program:</span>
-                      <span className={styles.infoValue}>
-                        {order.customerInfo?.bachelorDegree} - {order.customerInfo?.section}
-                      </span>
-                    </div>
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Address:</span>
-                      <span className={styles.infoValue}>{order.customerInfo?.address}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* PRODUCT INFO */}
-                <div className={styles.infoSection}>
-                  <h4 className={styles.sectionTitle}>Product Details</h4>
-                  <div className={styles.infoGrid}>
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Product:</span>
-                      <span className={styles.infoValue}>{order.productInfo?.productName}</span>
-                    </div>
-                    {order.productInfo?.size !== 'N/A' && (
-                      <div className={styles.infoItem}>
-                        <span className={styles.infoLabel}>Size:</span>
-                        <span className={styles.infoValue}>{order.productInfo?.size}</span>
-                      </div>
-                    )}
-                    {order.productInfo?.color !== 'N/A' && (
-                      <div className={styles.infoItem}>
-                        <span className={styles.infoLabel}>Color:</span>
-                        <span className={styles.infoValue}>{order.productInfo?.color}</span>
-                      </div>
-                    )}
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Quantity:</span>
-                      <span className={styles.infoValue}>{order.productInfo?.quantity}</span>
-                    </div>
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Price/Unit:</span>
-                      <span className={styles.infoValue}>₱{order.productInfo?.pricePerUnit?.toFixed(2)}</span>
-                    </div>
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Total:</span>
-                      <span className={styles.totalPrice}>₱{order.productInfo?.totalPrice?.toFixed(2)}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* PAYMENT INFO */}
-                <div className={styles.infoSection}>
-                  <h4 className={styles.sectionTitle}>Payment Information</h4>
-                  <div className={styles.infoGrid}>
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Method:</span>
-                      <span className={styles.infoValue}>{order.paymentInfo?.paymentMethod}</span>
-                    </div>
-                    {order.paymentInfo?.paymentMethod === 'Online' && (
-                      <>
-                        <div className={styles.infoItem}>
-                          <span className={styles.infoLabel}>Type:</span>
-                          <span className={styles.infoValue}>{order.paymentInfo?.onlinePaymentType}</span>
-                        </div>
-                        <div className={styles.infoItem}>
-                          <span className={styles.infoLabel}>Reference:</span>
-                          <span className={styles.infoValue}>{order.paymentInfo?.referenceNumber}</span>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                {/* STATUS CHANGE BUTTONS */}
-                <div className={styles.statusButtonsSection}>
-                  <h4 className={styles.sectionTitle}>Update Status</h4>
-                  <div className={styles.statusButtons}>
-                    <button
-                      className={`${styles.statusBtn} ${styles.pendingBtn} ${order.orderStatus === 'Pending' ? styles.activeStatus : ''}`}
-                      onClick={() => handleStatusChange(order, 'Pending')}
-                      title="Mark as Pending"
+                  </td>
+                  <td className={styles.quantityCell}>{order.productInfo?.quantity}</td>
+                  <td className={styles.priceCell}>₱{order.productInfo?.totalPrice?.toFixed(2)}</td>
+                  <td>
+                    <span 
+                      className={styles.statusBadge}
+                      style={{
+                        backgroundColor: getStatusColor(order.orderStatus),
+                        color: getStatusTextColor(order.orderStatus)
+                      }}
                     >
-                      <ClockIcon size={14} />
-                      Pending
-                    </button>
-                    <button
-                      className={`${styles.statusBtn} ${styles.paidBtn} ${order.orderStatus === 'Paid' ? styles.activeStatus : ''}`}
-                      onClick={() => handleStatusChange(order, 'Paid')}
-                      title="Mark as Paid"
-                    >
-                      <CreditCard size={14} />
-                      Paid
-                    </button>
-                    <button
-                      className={`${styles.statusBtn} ${styles.ongoingBtn} ${order.orderStatus === 'Ongoing' ? styles.activeStatus : ''}`}
-                      onClick={() => handleStatusChange(order, 'Ongoing')}
-                      title="Mark as Ongoing"
-                    >
-                      <Truck size={14} />
-                      Ongoing
-                    </button>
-                    <button
-                      className={`${styles.statusBtn} ${styles.completedBtn} ${order.orderStatus === 'Completed' ? styles.activeStatus : ''}`}
-                      onClick={() => handleStatusChange(order, 'Completed')}
-                      title="Mark as Completed"
-                    >
-                      <Check size={14} />
-                      Completed
-                    </button>
-                    <button
-                      className={`${styles.statusBtn} ${styles.cancelledBtn} ${order.orderStatus === 'Cancelled' ? styles.activeStatus : ''}`}
-                      onClick={() => handleStatusChange(order, 'Cancelled')}
-                      title="Cancel Order"
-                    >
-                      <X size={14} />
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-
-                {/* ACTIONS */}
-                <div className={styles.actions}>
-                  <button
-                    className={`${styles.actionBtn} ${styles.editBtn}`}
-                    onClick={() => handleEditClick(order)}
-                    title="Edit Order"
-                  >
-                    <Edit2 size={16} />
-                    Edit
-                  </button>
-                  <button
-                    className={`${styles.actionBtn} ${styles.deleteBtn}`}
-                    onClick={() => handleDeleteOrder(order.docId, order.orderId)}
-                    title="Delete Order"
-                  >
-                    <Trash2 size={16} />
-                    Delete
-                  </button>
-                </div>
-
-              </div>
-            ))}
-          </div>
+                      {order.orderStatus}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={styles.paymentBadge}>
+                      {order.paymentInfo?.paymentMethod}
+                    </span>
+                  </td>
+                  <td className={styles.dateCell}>{formatDate(order.dateOrdered)}</td>
+                  <td>
+                    <div className={styles.tableActions}>
+                      {/* Status Change Dropdown */}
+                      <select
+                        className={styles.statusSelect}
+                        value={order.orderStatus}
+                        onChange={(e) => {
+                          if (window.confirm(`Change order ${order.orderId} status to "${e.target.value}"?`)) {
+                            updateOrderStatus(order.docId, e.target.value);
+                          }
+                        }}
+                        title="Change Status"
+                      >
+                        <option value="Pending">Pending</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                      
+                      <button
+                        className={styles.tableEditBtn}
+                        onClick={() => handleEditClick(order)}
+                        title="Edit Order"
+                      >
+                        <Edit2 size={14} />
+                        Edit
+                      </button>
+                      <button
+                        className={styles.tableDeleteBtn}
+                        onClick={() => handleDeleteOrder(order.docId, order.orderId)}
+                        title="Delete Order"
+                      >
+                        <Trash2 size={14} />
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
+      </div>
+
+      {/* Pagination */}
+      {filteredOrders.length > 0 && (
+        <div className={styles.pagination}>
+          <span className={styles.paginationInfo}>
+            Showing {filteredOrders.length === 0 ? 0 : (page - 1) * PER_PAGE + 1}–{Math.min(page * PER_PAGE, filteredOrders.length)} of {filteredOrders.length}
+          </span>
+          <div className={styles.paginationControls}>
+            <button
+              className={styles.paginationBtn}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+            >
+              ← Previous
+            </button>
+            <span className={styles.paginationPage}>{page} / {totalPages}</span>
+            <button
+              className={styles.paginationBtn}
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+            >
+              Next →
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  // ========================================
+  // RENDER SETTINGS VIEW
+  // ========================================
+  const renderSettingsView = () => (
+    <div className={styles.settingsView}>
+      <div className={styles.settingsPlaceholder}>
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </svg>
+        <h3>Settings</h3>
+        <p>Order management settings will appear here.</p>
+      </div>
+    </div>
+  );
+
+  // ========================================
+  // RENDER
+  // ========================================
+  return (
+    <div className={styles.container}>
+      
+      {/* Internal Tab Navigation */}
+      <div className={styles.omTabNav}>
+        <button
+          className={`${styles.omTabBtn} ${activeSection === 'dashboard' ? styles.omTabBtnActive : ''}`}
+          onClick={() => setActiveSection('dashboard')}
+        >
+          📊 Dashboard
+        </button>
+        <button
+          className={`${styles.omTabBtn} ${activeSection === 'orders' ? styles.omTabBtnActive : ''}`}
+          onClick={() => setActiveSection('orders')}
+        >
+          📦 Orders
+          <span className={styles.omTabBadge}>{orders.length}</span>
+        </button>
+        <button
+          className={`${styles.omTabBtn} ${activeSection === 'settings' ? styles.omTabBtnActive : ''}`}
+          onClick={() => setActiveSection('settings')}
+        >
+          ⚙️ Settings
+        </button>
+      </div>
+
+      <div className={styles.viewContent}>
+        {/* Render views based on active section */}
+        {activeSection === 'dashboard' && renderDashboardView()}
+        {activeSection === 'orders' && renderOrdersTableView()}
+        {activeSection === 'settings' && renderSettingsView()}
       </div>
 
       {/* EDIT MODAL */}

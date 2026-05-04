@@ -12,6 +12,10 @@
   --color-orange: #D94F1F;          /* Darker orange (was #FF6B35) */
   --color-orange-hover: #E66B3D;    /* Darker orange hover (was #FF8555) */
   --color-orange-light: rgba(217, 79, 31, 0.2); /* Darker transparent overlay */
+
+  /* Warm white — used on hover states instead of orange text */
+  --color-ivory: #F8F4EC;           /* Ivory — warm, editorial, not stark white */
+  --color-pearl: #F5F0E8;           /* Pearl — slightly deeper ivory for borders/accents */
   
   /* Neutral colors - Darker grays */
   --color-white: #FFFFFF;
@@ -151,9 +155,8 @@ html, body {
     overflow-x: hidden;
     box-sizing: border-box;
     scroll-behavior: smooth;
-    background: 
-        linear-gradient(rgba(101, 7, 7, 0.8), rgba(101, 7, 7, 0.8)), /* Color overlay */
-        url('/Untitled Design.png') center/cover no-repeat;
+    /* Neutral dark background — prevents red bleed-through when sidebar is closed */
+    background-color: var(--color-charcoal);
 }
 
 *, *::before, *::after {

@@ -1,4 +1,6 @@
 /* Modern Sidebar Styles - DARK THEME */
+
+/* ─── Container ─── */
 .container {
   background-color: var(--color-charcoal);
   color: var(--color-white);
@@ -9,7 +11,7 @@
   left: 0;
   padding: 0;
   box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -25,6 +27,7 @@
   transform: translateX(-100%);
 }
 
+/* ─── Scroll container ─── */
 .listContainer {
   display: flex;
   flex-direction: column;
@@ -39,39 +42,7 @@
   display: none;
 }
 
-/* Toggle Button - Hidden since we use hamburger on Homepage */
-.toggleButton {
-  display: none;
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  background-color: var(--color-orange);
-  color: var(--color-white);
-  border: none;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  font-size: 1.5rem;
-  cursor: pointer;
-  z-index: 1001;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
-  transition: all 0.3s ease;
-}
-
-.toggleButton:hover {
-  background-color: var(--color-orange-hover);
-  transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4);
-}
-
-.toggleButtonOpen {
-  left: 260px;
-}
-
-/* Sidebar Header */
+/* ─── Sidebar Header ─── */
 .sidebarHeader {
   padding: 2rem 1.5rem;
   border-bottom: 1px solid var(--color-crimson);
@@ -120,6 +91,12 @@
   flex-shrink: 0;
   box-shadow: 0 4px 12px rgba(107, 31, 31, 0.2);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.logoIcon {
+  font-size: 1.75rem;
+  width: 28px;
+  height: 28px;
 }
 
 .logoText {
@@ -183,7 +160,7 @@
   display: inline-block;
 }
 
-/* Navigation List */
+/* ─── Navigation List ─── */
 .navList {
   list-style: none;
   padding: 1rem 0.75rem;
@@ -218,8 +195,10 @@
 }
 
 .navIcon {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   min-width: 24px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -244,7 +223,7 @@
   color: var(--color-white);
 }
 
-/* Button Section */
+/* ─── Button Section ─── */
 .buttonSection {
   padding: 1rem 0.75rem;
   border-top: 1px solid var(--color-crimson);
@@ -291,7 +270,7 @@
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }
 
-/* Overlay for mobile */
+/* ─── Overlay ─── */
 .overlay {
   display: none;
   position: fixed;
@@ -304,141 +283,57 @@
   backdrop-filter: blur(2px);
 }
 
-/* Mobile floating toggle button */
-.mobileToggle {
-  position: fixed;
-  bottom: 2rem;
-  left: 2rem;
-  width: 56px;
-  height: 56px;
-  background: linear-gradient(135deg, var(--color-burgundy), var(--color-orange));
-  border: none;
-  border-radius: 50%;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.4);
-  z-index: 998;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: pulse 2s infinite;
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Hide button when sidebar is open */
-.container.open ~ .mobileToggle {
-  opacity: 0;
-  pointer-events: none;
-  transform: scale(0.8);
-}
-
-@keyframes pulse {
-  0%, 100% {
-    box-shadow: 0 4px 16px rgba(255, 107, 53, 0.4);
-  }
-  50% {
-    box-shadow: 0 4px 24px rgba(255, 107, 53, 0.6), 0 0 0 8px rgba(255, 107, 53, 0.1);
+/* ─── Desktop (≥ 769px) ─── */
+@media (min-width: 769px) {
+  .container.open ~ .overlay {
+    display: block;
   }
 }
 
-.mobileToggle:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
-  animation: none;
+/* ─── Tablet (769px – 1024px) ─── */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .container {
+    width: 260px;
+  }
 }
 
-.mobileToggle:active {
-  transform: scale(0.95);
-}
-
-/* Overlay for desktop/mobile */
-.overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  backdrop-filter: blur(2px);
-}
-
-/* Mobile styles */
+/* ─── Mobile (≤ 768px) ─── */
 @media (max-width: 768px) {
   .container {
     width: 280px;
-    transform: translateX(-100%);
-    box-shadow: none;
   }
 
   .container.open {
-    transform: translateX(0);
     box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
   }
 
-  .container.closed {
-    width: 280px;
-    transform: translateX(-100%);
+  /* Tab vertically centered on mobile */
+  .sidebarTab {
+    top: 50%;
+    transform: translateY(-50%);
   }
 
-  /* Show floating toggle button on mobile */
-  .mobileToggle {
-    display: flex;
+  .overlay {
+    display: block;
   }
 
-  /* Hide floating button when sidebar is open */
-  .container.open ~ .mobileToggle {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  /* Mobile: Always show full sidebar when open */
   .sidebarHeader {
     padding: 1.5rem 1rem;
   }
 
   .logoSection {
     margin-bottom: 1rem;
-    justify-content: space-between;
-  }
-
-  /* Logo button more prominent on mobile */
-  .logoToggleButton {
-    position: relative;
-  }
-
-  .logoToggleButton::after {
-    content: '✕';
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background-color: var(--color-orange);
-    color: white;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    font-weight: bold;
-    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.4);
-    line-height: 1;
   }
 
   .logo {
-    width: 55px;
-    height: 55px;
-    font-size: 1.6rem;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
   }
 
   .logoText {
     display: block;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
   }
 
   .userInfo {
@@ -446,35 +341,13 @@
     padding: 0.875rem;
   }
 
-  .userAvatar {
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-  }
-
-  .userName {
-    font-size: 0.95rem;
-  }
-
-  .userRole {
-    font-size: 0.7rem;
-  }
-
   .navList {
     padding: 0.75rem 0.5rem;
   }
 
   .navLink {
-    padding: 0.875rem 0.875rem;
+    padding: 0.875rem;
     font-size: 0.9rem;
-  }
-
-  .navIcon {
-    font-size: 1.4rem;
-  }
-
-  .linkText {
-    display: block;
   }
 
   .buttonSection {
@@ -486,87 +359,21 @@
     padding: 0.875rem;
     font-size: 0.9rem;
   }
-
-  .overlay {
-    display: block;
-  }
-
-  /* Show overlay only when sidebar is open */
-  .container.closed ~ .overlay {
-    display: none;
-  }
-
-  .toggleButton {
-    left: 20px;
-  }
-
-  .toggleButtonOpen {
-    left: 260px;
-  }
 }
 
-/* Tablet adjustments */
-@media (max-width: 1024px) and (min-width: 769px) {
-  .container {
-    width: 260px;
-  }
-
-  .container.closed {
-    transform: translateX(-100%);
-  }
-}
-
-/* Desktop styles */
-@media (min-width: 769px) {
-  /* Overlay on desktop too when sidebar is open */
-  .overlay {
-    display: none;
-  }
-
-  .container.open ~ .overlay {
-    display: block;
-  }
-}
-
-/* Small mobile devices */
+/* ─── Small phones (≤ 480px) ─── */
 @media (max-width: 480px) {
   .container {
     width: 100vw;
-    max-width: 320px;
-  }
-
-  .mobileToggle {
-    width: 50px;
-    height: 50px;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    font-size: 1.3rem;
+    max-width: 300px;
   }
 
   .sidebarHeader {
     padding: 1.25rem 0.875rem;
   }
 
-  .logo {
-    width: 50px;
-    height: 50px;
-    font-size: 1.5rem;
-  }
-
-  .logoText {
-    font-size: 1.2rem;
-  }
-
-  .userInfo {
-    padding: 0.75rem;
-  }
-
   .navLink {
     padding: 0.75rem;
     font-size: 0.875rem;
-  }
-
-  .navIcon {
-    font-size: 1.3rem;
   }
 }

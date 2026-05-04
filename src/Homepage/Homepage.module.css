@@ -59,7 +59,7 @@
   padding: 0;
   transition: border-color 0.25s;
 }
-.hamburgerButton:hover { border-color: var(--color-orange); }
+.hamburgerButton:hover { border-color: var(--color-ivory); }
 
 .hamburgerLine {
   width: 22px;
@@ -67,7 +67,7 @@
   background-color: var(--color-white);
   transition: background-color 0.25s;
 }
-.hamburgerButton:hover .hamburgerLine { background-color: var(--color-orange); }
+.hamburgerButton:hover .hamburgerLine { background-color: var(--color-ivory); }
 
 /* ── Section rule ─────────────────────────────────────────── */
 .sectionRule {
@@ -88,7 +88,7 @@
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.25em;
-  color: var(--color-orange);
+  color: var(--color-ivory);
   margin-bottom: calc(var(--rhythm) * 0.5);
 }
 
@@ -205,7 +205,7 @@
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.28em;
-  color: var(--color-orange);
+  color: var(--color-ivory);
   margin-bottom: var(--rhythm);
   text-transform: uppercase;
 }
@@ -239,8 +239,8 @@
 .exploreButton {
   display: inline-block;
   background: transparent;
-  border: 1px solid var(--color-orange);
-  color: var(--color-orange);
+  border: 1px solid var(--color-ivory);
+  color: var(--color-ivory);
   padding: 0.8rem 2.4rem;
   font-family: var(--font-accent);
   font-size: 0.78rem;
@@ -251,7 +251,7 @@
   transition: background 0.25s, color 0.25s, transform 0.2s;
 }
 .exploreButton:hover {
-  background: var(--color-orange);
+  background: var(--color-ivory);
   color: var(--color-charcoal);
   transform: scale(1.02);
 }
@@ -269,7 +269,7 @@
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.22em;
-  color: var(--color-orange);
+  color: var(--color-ivory);
   margin: 0 0 var(--rhythm);
 }
 
@@ -286,18 +286,62 @@
   padding: calc(var(--rhythm) * 0.75) 0;
   border-bottom: 1px solid var(--color-medium-gray);
   cursor: pointer;
-  transition: color 0.2s;
+  transition: all 0.2s ease;
 }
 .quickAccessCard:last-child { border-bottom: none; }
-.quickAccessCard:hover .quickAccessLabel { color: var(--color-orange); }
+.quickAccessCard:hover .quickAccessLabel { color: var(--color-ivory); }
 
-.quickAccessIcon { font-size: 1.4rem; min-width: 28px; text-align: center; }
+/* Clickable quick access card */
+.quickAccessCardClickable {
+  cursor: pointer;
+  position: relative;
+}
+
+.quickAccessCardClickable::before {
+  content: '';
+  position: absolute;
+  left: -1rem;
+  right: -1rem;
+  top: 0;
+  bottom: 0;
+  background: var(--color-orange-light);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border-radius: 4px;
+}
+
+.quickAccessCardClickable:hover::before {
+  opacity: 1;
+}
+
+.quickAccessCardClickable:hover {
+  transform: translateX(4px);
+}
+
+.quickAccessCardClickable:hover .quickAccessLabel {
+  color: var(--color-orange);
+}
+
+.quickAccessCardClickable:hover .quickAccessIcon {
+  transform: scale(1.1);
+}
+
+.quickAccessIcon { 
+  font-size: 1.4rem; 
+  min-width: 28px; 
+  text-align: center;
+  transition: transform 0.2s ease;
+  position: relative;
+  z-index: 1;
+}
 
 .quickAccessLabel {
   font-family: var(--font-body);
   font-size: 0.95rem;
   color: var(--color-white);
   transition: color 0.2s;
+  position: relative;
+  z-index: 1;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -368,7 +412,7 @@
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.2em;
-  color: var(--color-orange);
+  color: var(--color-ivory);
   margin-bottom: 0.5rem;
 }
 
@@ -397,7 +441,7 @@
   float: left;
   line-height: 0.75;
   margin-right: 0.08em;
-  color: var(--color-orange);
+  color: var(--color-ivory);
   background: var(--color-burgundy);
   padding: 0.08em 0.12em;
 }
@@ -416,7 +460,7 @@
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-orange);
+  color: var(--color-ivory);
 }
 
 .stock {
@@ -460,8 +504,8 @@
   gap: 0.5rem;
   width: 100%;
   background: transparent;
-  border: 1px solid var(--color-orange);
-  color: var(--color-orange);
+  border: 1px solid var(--color-ivory);
+  color: var(--color-ivory);
   padding: 0.8rem;
   margin-top: var(--rhythm);
   font-family: var(--font-accent);
@@ -473,7 +517,7 @@
   transition: background 0.25s, color 0.25s, transform 0.2s;
 }
 .orderButton:hover {
-  background: var(--color-orange);
+  background: var(--color-ivory);
   color: var(--color-charcoal);
   transform: scale(1.02);
 }
@@ -510,7 +554,7 @@
   cursor: pointer;
   transition: border-color 0.25s;
 }
-.announcementCard:hover { border-color: var(--color-orange); }
+.announcementCard:hover { border-color: var(--color-pearl); }
 
 .announcementFeatured { grid-row: span 1; }
 
@@ -547,7 +591,7 @@
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.22em;
-  color: var(--color-orange);
+  color: var(--color-ivory);
   margin-bottom: 0.6rem;
 }
 
@@ -576,7 +620,7 @@
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.12em;
-  color: var(--color-orange);
+  color: var(--color-ivory);
   cursor: pointer;
 }
 .announcementToggle span:first-child {
@@ -585,7 +629,7 @@
   justify-content: center;
   width: 22px;
   height: 22px;
-  border: 1px solid var(--color-orange);
+  border: 1px solid var(--color-ivory);
   font-size: 1rem;
   line-height: 1;
 }
@@ -618,7 +662,7 @@
   float: left;
   line-height: 0.75;
   margin-right: 0.08em;
-  color: var(--color-orange);
+  color: var(--color-ivory);
   background: var(--color-burgundy);
   padding: 0.08em 0.12em;
 }
@@ -686,13 +730,13 @@
 .announcementListToggle {
   font-family: var(--font-accent);
   font-size: 1.1rem;
-  color: var(--color-orange);
+  color: var(--color-ivory);
   display: flex;
   align-items: center;
   justify-content: center;
   width: 24px;
   height: 24px;
-  border: 1px solid var(--color-orange);
+  border: 1px solid var(--color-ivory);
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -767,7 +811,7 @@
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.2em;
-  color: var(--color-orange);
+  color: var(--color-ivory);
   margin-bottom: 0.35rem;
   text-transform: uppercase;
 }
@@ -811,8 +855,8 @@
   transition: border-color 0.2s, color 0.2s;
 }
 .socialLink:hover {
-  border-color: var(--color-orange);
-  color: var(--color-orange);
+  border-color: var(--color-ivory);
+  color: var(--color-ivory);
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -843,7 +887,7 @@
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.28em;
-  color: var(--color-orange);
+  color: var(--color-ivory);
   white-space: nowrap;
 }
 

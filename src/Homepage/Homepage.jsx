@@ -122,11 +122,17 @@ function Homepage({ toggleSidebar, sidebarOpen }) {
             <p className={styles.quickAccessEyebrow}>QUICK ACCESS</p>
             <div className={styles.quickAccessGrid}>
               {[
-                { icon: '📊', label: 'Dashboard & Tracking' },
-                { icon: '👥', label: 'Student Engagement Portal' },
-                { icon: '📅', label: 'Event & Activity Planning' },
-              ].map(({ icon, label }) => (
-                <div key={label} className={styles.quickAccessCard}>
+                { icon: '📦', label: 'Track My Order', action: () => navigate('/track-order') },
+                { icon: '👥', label: 'Student Engagement Portal', action: null },
+                { icon: '📅', label: 'Event & Activity Planning', action: null },
+              ].map(({ icon, label, action }) => (
+                <div 
+                  key={label} 
+                  className={`${styles.quickAccessCard} ${action ? styles.quickAccessCardClickable : ''}`}
+                  onClick={action}
+                  role={action ? 'button' : 'div'}
+                  tabIndex={action ? 0 : undefined}
+                >
                   <span className={styles.quickAccessIcon}>{icon}</span>
                   <span className={styles.quickAccessLabel}>{label}</span>
                 </div>

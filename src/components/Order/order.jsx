@@ -183,7 +183,7 @@ function Order(props) {
       customerInfo: {
         fullName: formData.fullName,
         bachelorDegree: formData.bachelorDegree,
-        section: formData.section,
+        year: formData.year,
         address: formData.address,
         email: formData.email,
         phoneNumber: formData.phoneNumber,
@@ -287,7 +287,7 @@ useEffect(() => {
     setFormData({
       fullName: order.customerInfo?.fullName || '',
       bachelorDegree: order.customerInfo?.bachelorDegree || '',
-      section: order.customerInfo?.section || '',
+      year: order.customerInfo?.year || '',
       address: order.customerInfo?.address || '',
       email: order.customerInfo?.email || '',
       phoneNumber: order.customerInfo?.phoneNumber || '',
@@ -334,6 +334,9 @@ useEffect(() => {
           </p>
 
           <div className={styles.successButtons}>
+            <button onClick={() => navigate('/track-order', { state: { orderId: generatedOrderId } })} className={styles.trackOrderButton}>
+              Track My Order
+            </button>
             <button onClick={handleNewOrder} className={styles.newOrderButton}>
               Place Another Order
             </button>
@@ -351,15 +354,23 @@ useEffect(() => {
   // ========================================
   return (
     <div className={styles.container}>
-      <div className={styles.formWrapper}>
-        <h1 className={styles.title}>Place Your Order</h1>
+      {/* Top Bar - matches ProductManagement style */}
+      <div className={styles.topBar}>
+        <p className={styles.eyebrow}>Order Management</p>
+        <h1 className={styles.title}>{editingOrder ? 'Edit Order' : 'Place Your Order'}</h1>
         <p className={styles.subtitle}>Fill in the details below to complete your order</p>
+      </div>
 
+      <div className={styles.formWrapper}>
         <form onSubmit={handleSubmit} className={styles.form}>
           
           {/* CUSTOMER INFORMATION */}
           <div className={styles.section}>
-            <h2 className={styles.sectionTitle}>Customer Information</h2>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Customer Information</h2>
+              <span className={styles.sectionBadge}>Step 1</span>
+            </div>
+            <div className={styles.sectionBody}>
             
             <div className={styles.formGroup}>
               <label className={styles.label}>Full Name *</label>
@@ -400,10 +411,11 @@ useEffect(() => {
                   <option value="BSIT">BSIT - Information Technology</option>
                   <option value="BSCS">BSCS - Computer Science</option>
                   <option value="BSHM">BSHM - Hospitality Management</option>
-                  <option value="BSED">BSED - Education</option>
-                  <option value="BSBA">BSBA - Business Administration</option>
-                  <option value="BSN">BSN - Nursing</option>
-                  <option value="BSCE">BSCE - Civil Engineering</option>
+                  <option value="BEED">BSED - Education</option>
+                  <option value = "BSFI">BSFI - Fishries</option>
+                  <option value = "BIT AUTO"> BIT AUTO - Automotive</option>
+                  <option value = "BIT ELEC"> BIT ELEC - Electricity</option>
+                  <option value = "BSIE"> BSIE - Enginnering </option>
                 </select>
                 {errors.bachelorDegree && <span className={styles.errorText}>{errors.bachelorDegree}</span>}
               </div>
@@ -416,15 +428,11 @@ useEffect(() => {
                   onChange={handleChange}
                   className={`${styles.select} ${errors.section ? styles.inputError : ''}`}
                 >
-                  <option value="">Select Section</option>
-                  <option value="1A">1A</option>
-                  <option value="1B">1B</option>
-                  <option value="2A">2A</option>
-                  <option value="2B">2B</option>
-                  <option value="3A">3A</option>
-                  <option value="3B">3B</option>
-                  <option value="4A">4A</option>
-                  <option value="4B">4B</option>
+                  <option value="">Select Year Level</option>
+                  <option value = "1st year">First Year</option>
+                  <option value = "2nd year">Second Year</option>
+                  <option value = "3rd year">Third Year</option>
+                  <option value = "4th year">Third Year</option>
                 </select>
                 {errors.section && <span className={styles.errorText}>{errors.section}</span>}
               </div>
@@ -470,11 +478,16 @@ useEffect(() => {
                 {errors.phoneNumber && <span className={styles.errorText}>{errors.phoneNumber}</span>}
               </div>
             </div>
+            </div>
           </div>
 
           {/* PRODUCT SELECTION */}
           <div className={styles.section}>
-            <h2 className={styles.sectionTitle}>Product Selection</h2>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Product Selection</h2>
+              <span className={styles.sectionBadge}>Step 2</span>
+            </div>
+            <div className={styles.sectionBody}>
             
             <div className={styles.formGroup}>
               <label className={styles.label}>Select Product *</label>
@@ -560,11 +573,16 @@ useEffect(() => {
                 <span className={styles.totalPrice}>₱{calculateTotal().toFixed(2)}</span>
               </div>
             )}
+            </div>
           </div>
 
           {/* PAYMENT INFORMATION */}
           <div className={styles.section}>
-            <h2 className={styles.sectionTitle}>Payment Information</h2>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Payment Information</h2>
+              <span className={styles.sectionBadge}>Step 3</span>
+            </div>
+            <div className={styles.sectionBody}>
             
             <div className={styles.formGroup}>
               <label className={styles.label}>Payment Method *</label>
@@ -625,24 +643,28 @@ useEffect(() => {
                 </div>
               </>
             )}
+            </div>
           </div>
 
-          {/* SUBMIT BUTTON */}
-          <button 
-            type="submit" 
-            disabled={loading}
-            className={`${styles.submitButton} ${loading ? styles.submitButtonDisabled : ''}`}
-          >
-            {loading ? 'Processing Order...' : 'Place Order'}
-          </button>
+          {/* SUBMIT BUTTONS */}
+          <div className={styles.buttonGroup}>
+            <button 
+              type="submit" 
+              disabled={loading}
+              className={`${styles.submitButton} ${loading ? styles.submitButtonDisabled : ''}`}
+            >
+              {loading && <span className={styles.spinner} />}
+              {loading ? 'Processing Order...' : editingOrder ? 'Update Order' : 'Place Order'}
+            </button>
 
-          <button 
-            type="button"
-            onClick={() => navigate('/')}
-            className={styles.cancelButton}
-          >
-            Cancel & Go Back
-          </button>
+            <button 
+              type="button"
+              onClick={editingOrder ? handleNewOrder : () => navigate('/')}
+              className={styles.cancelButton}
+            >
+              {editingOrder ? 'Cancel' : 'Cancel & Go Back'}
+            </button>
+          </div>
         </form>
       </div>
     </div>

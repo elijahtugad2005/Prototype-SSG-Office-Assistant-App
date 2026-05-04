@@ -59,7 +59,7 @@ function Login() {
   return (
     <div className={styles.container}>
       <div className={styles.loginCard}>
-        <h1 className={styles.title}>Login to Shirio</h1>
+        <h1 className={styles.title}>Login to SSG APP</h1>
         <p className={styles.subtitle}>Student Government Management System</p>
 
         {error && (
@@ -67,7 +67,7 @@ function Login() {
             ❌ {error}
           </div>
         )}
-
+            //Email
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
             <label className={styles.label}>Email Address</label>
@@ -80,7 +80,7 @@ function Login() {
               required
             />
           </div>
-
+              //Password
           <div className={styles.formGroup}>
             <label className={styles.label}>Password</label>
             <input

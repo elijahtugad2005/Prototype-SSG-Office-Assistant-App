@@ -2,6 +2,22 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext/AuthContext.jsx'; 
 import styles from './Sidebar.module.css';
+// Professional icon imports from react-icons
+import { 
+  HiHome, 
+  HiShoppingCart, 
+  HiChartBar, 
+  HiCurrencyDollar, 
+  HiDocumentText, 
+  HiCube, 
+  HiSpeakerphone, 
+  HiFolder,
+  HiLogout,
+  HiLogin,
+  HiSearch,
+  HiShoppingBag
+} from 'react-icons/hi';
+import { RiGovernmentFill } from 'react-icons/ri';
 
    function Sidebar({ isOpen, toggleSidebar }) {
     const { currentUser, userRole, logout, loading, userName } = useAuth(); 
@@ -15,14 +31,16 @@ import styles from './Sidebar.module.css';
     const name = currentUser ? (userName || 'user ') : 'name';
     
     const navItems = [
-      { to: "/", text: "Home", icon: "🏠", roles: ['public', 'admin', 'secretary', 'representative'] },
-      { to: "/order", text: "Place Order", icon: "🛒", roles: ['public', 'admin', 'secretary', 'representative'] },
-      { to: "/admin", text: "Admin Dashboard", icon: "📊", roles: ['admin'] },
-      { to: "/finance", text: "Finance", icon: "💰", roles: ['admin' , 'secretary'] },
-      { to: "/reports", text: "Reports", icon: "📄", roles: ['admin'] },
-      { to: "/inventory", text: "Inventory", icon: "📦", roles: ['admin' , 'representative'] },
-      { to: "/announcement", text: "Announcements", icon: "📢", roles: ['admin', 'secretary', 'representative'] },
-      { to: "/documents", text: "Documents", icon: "📁", roles: ['admin', 'secretary', 'representative'] }
+      { to: "/", text: "Home", icon: HiHome, roles: ['public', 'admin', 'secretary', 'representative'] },
+      { to: "/order", text: "Place Order", icon: HiShoppingCart, roles: ['public', 'admin', 'secretary', 'representative'] },
+      { to: "/track-order", text: "Track Order", icon: HiSearch, roles: ['public', 'admin', 'secretary', 'representative'] },
+      { to: "/admin", text: "Admin Dashboard", icon: HiChartBar, roles: ['admin'] },
+      { to: "/commerce", text: "Commerce Hub", icon: HiShoppingBag, roles: ['admin', 'representative'] },
+      { to: "/finance", text: "Finance", icon: HiCurrencyDollar, roles: ['admin' , 'secretary'] },
+      { to: "/reports", text: "Reports", icon: HiDocumentText, roles: ['admin'] },
+      { to: "/inventory", text: "Inventory", icon: HiCube, roles: ['admin' , 'representative'] },
+      { to: "/announcement", text: "Announcements", icon: HiSpeakerphone, roles: ['admin', 'secretary', 'representative'] },
+      { to: "/documents", text: "Documents", icon: HiFolder, roles: ['admin', 'secretary', 'representative'] }
     ];
 
     const closeSidebar = () => {
@@ -49,15 +67,6 @@ import styles from './Sidebar.module.css';
 
     return (
       <>
-        {/* Mobile floating toggle button */}
-        <button
-          className={styles.mobileToggle}
-          onClick={toggleSidebar}
-          aria-label={isOpen ? 'Close menu' : 'Open menu'}
-        >
-          {isOpen ? '✕' : '☰'}
-        </button>
-
         {/* Overlay when sidebar is open */}
         {isOpen && (
           <div 
@@ -68,6 +77,7 @@ import styles from './Sidebar.module.css';
         )}
         
         <nav className={`${styles.container} ${isOpen ? styles.open : styles.closed}`}>
+
           <div className={styles.listContainer}>
             {/* Sidebar header */}
             <div className={styles.sidebarHeader}>
@@ -78,7 +88,9 @@ import styles from './Sidebar.module.css';
                   aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
                   title={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
                 >
-                  <div className={styles.logo}>SSG</div>
+                  <div className={styles.logo}>
+                    <RiGovernmentFill className={styles.logoIcon} />
+                  </div>
                 </button>
                 {isOpen && <h2 className={styles.logoText}>Supremo Gobyerno</h2>}
               </div>
@@ -99,21 +111,27 @@ import styles from './Sidebar.module.css';
             <ul className={styles.navList}>
               {navItems
                 .filter(item => item.roles.includes(role))
-                .map((item) => (
-                  <li key={item.to}>
-                    <NavLink
-                      to={item.to}
-                      className={({ isActive }) => 
-                        isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
-                      }
-                      onClick={handleLinkClick}
-                      title={!isOpen ? item.text : ''}
-                    >
-                      <span className={styles.navIcon}>{item.icon}</span>
-                      {isOpen && <span className={styles.linkText}>{item.text}</span>}
-                    </NavLink>
-                  </li>
-              ))}
+                .map((item) => {
+                  const IconComponent = item.icon;
+                  return (
+                    <li key={item.to}>
+                      <NavLink
+                        to={item.to}
+                        className={({ isActive }) => 
+                          isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+                        }
+                        onClick={() => {
+                          /* Auto-close sidebar on any nav click */
+                          if (isOpen) toggleSidebar();
+                        }}
+                        title={!isOpen ? item.text : ''}
+                      >
+                        <IconComponent className={styles.navIcon} />
+                        {isOpen && <span className={styles.linkText}>{item.text}</span>}
+                      </NavLink>
+                    </li>
+                  );
+              })}
             </ul>
             
             <div className={styles.buttonSection}>
@@ -123,17 +141,17 @@ import styles from './Sidebar.module.css';
                   onClick={handleLogout}
                   title={!isOpen ? 'Logout' : ''}
                 >
-                  <span className={styles.navIcon}>🚪</span>
+                  <HiLogout className={styles.navIcon} />
                   {isOpen && <span>Logout</span>}
                 </button>
               ) : (
                 <NavLink 
                   to="/login"
                   className={styles.loginButton}
-                  onClick={handleLinkClick}
+                  onClick={() => { if (isOpen) toggleSidebar(); }}
                   title={!isOpen ? 'Login' : ''}
                 >
-                  <span className={styles.navIcon}>🔑</span>
+                  <HiLogin className={styles.navIcon} />
                   {isOpen && <span>Login</span>}
                 </NavLink>
               )}

@@ -14,6 +14,8 @@ import Sidebar from './components/Sidebar/Sidebar.jsx';
 import WorkinProgress from './components/WorkinProgress/WorkinProgress.jsx';
 import Homepage from './Homepage/Homepage.jsx';
 import Order from './components/Order/order.jsx';
+import TrackOrder from './components/TrackOrder/TrackOrder.jsx';
+import CommerceHub from './components/CommerceHub/CommerceHub.jsx';
 import Announcement from './components/Announcement.jsx';
 import ClassUpload from './components/ClassUpload.jsx';
 import Login from './components/Login/Login.jsx'; 
@@ -40,7 +42,7 @@ const DashboardLayout = ({ children }) => {
 
   return (
     <div className={styles.app}>
-      <Header sidebarOpen={sidebarOpen} />
+      <Header sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <div className={styles.mainContent}>
         <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
         <div className={`${styles.contentWrapper} ${!sidebarOpen ? styles.contentWrapperSidebarClosed : ''}`}>
@@ -80,6 +82,12 @@ function App() {
           </DashboardLayout>
         } />
 
+        <Route path="/track-order" element={
+          <DashboardLayout>
+            <TrackOrder />
+          </DashboardLayout>
+        } />
+
         {/* 2. ADMIN ONLY ROUTES */}
         <Route path="/admin" element={
           <ProtectedRoute allowedRoles={['admin']}>
@@ -102,6 +110,14 @@ function App() {
           <ProtectedRoute allowedRoles={['admin', 'representative']}>
             <DashboardLayout>
              <InventoryManagement/>
+            </DashboardLayout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/commerce" element={
+          <ProtectedRoute allowedRoles={['admin', 'representative']}>
+            <DashboardLayout>
+              <CommerceHub />
             </DashboardLayout>
           </ProtectedRoute>
         } />
