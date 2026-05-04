@@ -16,6 +16,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ function Login() {
             ❌ {error}
           </div>
         )}
-            //Email
+           
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
             <label className={styles.label}>Email Address</label>
@@ -80,17 +81,28 @@ function Login() {
               required
             />
           </div>
-              //Password
+              
           <div className={styles.formGroup}>
             <label className={styles.label}>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className={styles.input}
-              required
-            />
+            <div className={styles.passwordWrapper}>
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                className={styles.input}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className={styles.togglePasswordButton}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                tabIndex={-1}
+              >
+                {showPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
           </div>
 
           <button 

@@ -1,22 +1,22 @@
-/* Modern Sidebar Styles - DARK THEME */
+/* Modern Sidebar Styles - NOW WITH THEME SUPPORT */
 
 /* ─── Container ─── */
 .container {
-  background-color: var(--color-charcoal);
-  color: var(--color-white);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
   width: 280px;
   height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
   padding: 0;
-  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-md);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-right: 1px solid var(--color-crimson);
+  border-right: 1px solid var(--color-border-accent);
 }
 
 .container.open {
@@ -45,8 +45,8 @@
 /* ─── Sidebar Header ─── */
 .sidebarHeader {
   padding: 2rem 1.5rem;
-  border-bottom: 1px solid var(--color-crimson);
-  background-color: var(--color-deep-red);
+  border-bottom: 1px solid var(--color-border-accent);
+  background-color: var(--color-bg-secondary);
 }
 
 .logoSection {
@@ -67,29 +67,29 @@
 }
 
 .logoToggleButton:hover .logo {
-  box-shadow: 0 6px 18px rgba(255, 107, 53, 0.4);
+  box-shadow: 0 6px 18px var(--color-accent-light);
   transform: scale(1.08);
 }
 
 .logoToggleButton:focus-visible {
-  outline: 2px solid var(--color-orange);
+  outline: 2px solid var(--color-accent-primary);
   outline-offset: 3px;
 }
 
 .logo {
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, var(--color-burgundy), var(--color-orange));
+  background: linear-gradient(135deg, var(--color-bg-secondary), var(--color-accent-primary));
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-white);
+  color: var(--color-text-primary);
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.5rem;
   font-weight: bold;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(107, 31, 31, 0.2);
+  box-shadow: var(--shadow-sm);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
@@ -102,7 +102,7 @@
 .logoText {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.3rem;
-  color: var(--color-white);
+  color: var(--color-text-primary);
   margin: 0;
   letter-spacing: 0.05em;
   white-space: nowrap;
@@ -114,20 +114,20 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background-color: var(--color-burgundy);
+  background-color: var(--color-bg-tertiary);
   border-radius: 12px;
-  border: 1px solid var(--color-crimson);
+  border: 1px solid var(--color-border-accent);
 }
 
 .userAvatar {
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-orange), var(--color-orange-hover));
+  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-hover));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-white);
+  color: var(--color-text-inverse);
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.3rem;
   font-weight: bold;
@@ -143,7 +143,7 @@
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 1rem;
   font-weight: 600;
-  color: var(--color-white);
+  color: var(--color-text-primary);
   margin: 0 0 0.25rem 0;
   white-space: nowrap;
   overflow: hidden;
@@ -153,8 +153,8 @@
 .userRole {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.75rem;
-  color: var(--color-medium-gray);
-  background-color: var(--color-deep-red);
+  color: var(--color-text-secondary);
+  background-color: var(--color-bg-secondary);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   display: inline-block;
@@ -173,7 +173,7 @@
 }
 
 .navLink {
-  color: var(--color-white);
+  color: var(--color-text-primary);
   text-decoration: none;
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.95rem;
@@ -189,8 +189,8 @@
 }
 
 .navLink:hover {
-  background-color: var(--color-orange-light);
-  color: var(--color-orange);
+  background-color: var(--color-bg-hover);
+  color: var(--color-accent-primary);
   transform: translateX(5px);
 }
 
@@ -212,22 +212,22 @@
 }
 
 .active {
-  background-color: var(--color-orange);
-  color: var(--color-white);
+  background-color: var(--color-accent-primary);
+  color: var(--color-text-inverse);
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+  box-shadow: var(--shadow-sm);
 }
 
 .active:hover {
-  background-color: var(--color-orange-hover);
-  color: var(--color-white);
+  background-color: var(--color-accent-hover);
+  color: var(--color-text-inverse);
 }
 
 /* ─── Button Section ─── */
 .buttonSection {
   padding: 1rem 0.75rem;
-  border-top: 1px solid var(--color-crimson);
-  background-color: var(--color-deep-red);
+  border-top: 1px solid var(--color-border-accent);
+  background-color: var(--color-bg-secondary);
 }
 
 .logoutButton,
@@ -256,18 +256,18 @@
 .logoutButton:hover {
   background-color: #d32f2f;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .loginButton {
   background-color: var(--color-success);
-  color: var(--color-white);
+  color: var(--color-text-inverse);
 }
 
 .loginButton:hover {
   background-color: #388e3c;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 /* ─── Overlay ─── */
@@ -278,7 +278,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--overlay-bg);
   z-index: 999;
   backdrop-filter: blur(2px);
 }
@@ -375,5 +375,257 @@
   .navLink {
     padding: 0.75rem;
     font-size: 0.875rem;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   THEME SETTINGS BUTTON
+═══════════════════════════════════════════════════════════ */
+
+.settingsButton {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  background-color: transparent;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-accent);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 0.75rem;
+}
+
+.settingsButton:hover {
+  background-color: var(--color-bg-hover);
+  border-color: var(--color-accent-primary);
+  color: var(--color-accent-primary);
+  transform: translateX(2px);
+}
+
+.settingsButton .navIcon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   THEME MODAL
+═══════════════════════════════════════════════════════════ */
+
+.themeModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--overlay-bg);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.themeModal {
+  background-color: var(--color-bg-primary);
+  border: 2px solid var(--color-border-accent);
+  border-radius: 12px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.themeModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1.75rem;
+  border-bottom: 1px solid var(--color-border-accent);
+  background-color: var(--color-bg-secondary);
+}
+
+.themeModalTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.themeModalClose {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 1px solid var(--color-border-accent);
+  border-radius: 6px;
+  color: var(--color-text-primary);
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.themeModalClose:hover {
+  background-color: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+  transform: rotate(90deg);
+}
+
+.themeModalBody {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: calc(90vh - 100px);
+  overflow-y: auto;
+}
+
+/* ─── Theme Option Card ─── */
+.themeOption {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  background-color: var(--color-bg-card);
+  border: 2px solid var(--color-border-primary);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.themeOption:hover {
+  background-color: var(--color-bg-hover);
+  border-color: var(--color-accent-primary);
+  transform: translateX(4px);
+}
+
+.themeOptionActive {
+  background-color: var(--color-accent-light);
+  border-color: var(--color-accent-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.themePreview {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.themePreviewIcon {
+  font-size: 1.75rem;
+  color: white;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.themeOptionContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.themeOptionName {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 0.25rem;
+  letter-spacing: 0.01em;
+}
+
+.themeOptionDesc {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.themeOptionCheck {
+  width: 28px;
+  height: 28px;
+  background-color: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .themeModal {
+    max-width: 95%;
+    margin: 0 1rem;
+  }
+
+  .themeModalHeader {
+    padding: 1.25rem 1.25rem;
+  }
+
+  .themeModalBody {
+    padding: 1.25rem;
+  }
+
+  .themeOption {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .themePreview {
+    width: 50px;
+    height: 50px;
+  }
+
+  .themePreviewIcon {
+    font-size: 1.5rem;
+  }
+
+  .themeOptionName {
+    font-size: 0.95rem;
+  }
+
+  .themeOptionDesc {
+    font-size: 0.8rem;
   }
 }

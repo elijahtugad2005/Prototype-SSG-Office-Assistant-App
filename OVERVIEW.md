@@ -2,6 +2,23 @@
 
 The **SSG Office Assistant App** is a *React-based admin dashboard* designed to help student leaders efficiently manage their organization. It provides comprehensive tools to **add, view, edit, and delete student member profiles**, and also includes a system for **managing products and processing customer orders** online, aiming to streamline administrative tasks and improve service to students.
 
+## Recent Updates (May 2026)
+
+### ✅ Track My Order Feature
+Complete order tracking system allowing users to search orders by Order ID or Email, with real-time status updates and visual progress indicators. See `Documentations/TRACK_ORDER_FEATURE.md` for details.
+
+### ✅ Commerce Hub for Representatives
+Unified portal combining Order Management and Product Management with tabbed interface, specifically designed for representative roles. See `Documentations/COMMERCE_HUB_FEATURE.md` for details.
+
+### ✅ Login Password Toggle
+Enhanced login security with show/hide password button featuring eye icon and accessibility support. See `Documentations/LOGIN_PASSWORD_TOGGLE_FEATURE.md` for details.
+
+### ✅ Calendar Widget Redesign
+Complete visual redesign matching Homepage's editorial dark mode theme with full day card color changes based on event types (Class, Exam, Event, Holiday, Meeting). See `Documentations/CALENDAR_WIDGET_REDESIGN.md` for details.
+
+### ✅ Officers Carousel
+Transformed Officers section from scrolling grid to interactive carousel with arrow navigation, dot indicators, and responsive behavior (3 cards on desktop, 2 on tablet, 1 on mobile). See `Documentations/OFFICERS_CAROUSEL_FEATURE.md` for details.
+
 
 ## Visual Overview
 

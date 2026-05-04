@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext/AuthContext.jsx'; 
+import { useTheme } from '../../contexts/ThemeContext';
 import styles from './Sidebar.module.css';
 // Professional icon imports from react-icons
 import { 
@@ -15,13 +16,19 @@ import {
   HiLogout,
   HiLogin,
   HiSearch,
-  HiShoppingBag
+  HiShoppingBag,
+  HiCog,
+  HiMoon,
+  HiSun,
+  HiX
 } from 'react-icons/hi';
 import { RiGovernmentFill } from 'react-icons/ri';
 
    function Sidebar({ isOpen, toggleSidebar }) {
     const { currentUser, userRole, logout, loading, userName } = useAuth(); 
+    const { theme, changeTheme } = useTheme();
     const navigate = useNavigate();
+    const [showThemeModal, setShowThemeModal] = useState(false);
 
     if (loading) {
       return null; 
@@ -64,6 +71,35 @@ import { RiGovernmentFill } from 'react-icons/ri';
         console.error("Logout failed:", error);
       }
     };
+
+    const handleThemeChange = (newTheme) => {
+      changeTheme(newTheme);
+      setShowThemeModal(false);
+    };
+
+    const themes = [
+      { 
+        id: 'dark', 
+        name: 'Dark Mode', 
+        description: 'Original maroon editorial theme',
+        icon: HiMoon,
+        preview: 'linear-gradient(135deg, #2D0A0A 0%, #D94F1F 100%)'
+      },
+      { 
+        id: 'light', 
+        name: 'Light Mode', 
+        description: 'Clean white theme',
+        icon: HiSun,
+        preview: 'linear-gradient(135deg, #FFFFFF 0%, #3B82F6 100%)'
+      },
+      { 
+        id: 'clean', 
+        name: 'Clean Mode', 
+        description: 'Minimal gray theme',
+        icon: HiCog,
+        preview: 'linear-gradient(135deg, #FAFAFA 0%, #424242 100%)'
+      }
+    ];
 
     return (
       <>
@@ -135,6 +171,16 @@ import { RiGovernmentFill } from 'react-icons/ri';
             </ul>
             
             <div className={styles.buttonSection}>
+              {/* Theme Settings Button */}
+              <button 
+                className={styles.settingsButton}
+                onClick={() => setShowThemeModal(true)}
+                title={!isOpen ? 'Theme Settings' : ''}
+              >
+                <HiCog className={styles.navIcon} />
+                {isOpen && <span>Theme Settings</span>}
+              </button>
+
               {currentUser ? (
                 <button 
                   className={styles.logoutButton}
@@ -158,6 +204,51 @@ import { RiGovernmentFill } from 'react-icons/ri';
             </div>
           </div>
         </nav>
+
+        {/* Theme Settings Modal */}
+        {showThemeModal && (
+          <div className={styles.themeModalOverlay} onClick={() => setShowThemeModal(false)}>
+            <div className={styles.themeModal} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.themeModalHeader}>
+                <h2 className={styles.themeModalTitle}>Choose Theme</h2>
+                <button 
+                  className={styles.themeModalClose}
+                  onClick={() => setShowThemeModal(false)}
+                  aria-label="Close"
+                >
+                  <HiX />
+                </button>
+              </div>
+              
+              <div className={styles.themeModalBody}>
+                {themes.map((themeOption) => {
+                  const IconComponent = themeOption.icon;
+                  return (
+                    <button
+                      key={themeOption.id}
+                      className={`${styles.themeOption} ${theme === themeOption.id ? styles.themeOptionActive : ''}`}
+                      onClick={() => handleThemeChange(themeOption.id)}
+                    >
+                      <div 
+                        className={styles.themePreview}
+                        style={{ background: themeOption.preview }}
+                      >
+                        <IconComponent className={styles.themePreviewIcon} />
+                      </div>
+                      <div className={styles.themeOptionContent}>
+                        <h3 className={styles.themeOptionName}>{themeOption.name}</h3>
+                        <p className={styles.themeOptionDesc}>{themeOption.description}</p>
+                      </div>
+                      {theme === themeOption.id && (
+                        <div className={styles.themeOptionCheck}>✓</div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
       </>
     );
   }

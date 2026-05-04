@@ -95,6 +95,33 @@ function CalendarWidget() {
   };
 
   // ========================================
+  // GET EVENT TYPE CLASS FOR DAY
+  // Returns specific class based on event types present
+  // ========================================
+  const getEventTypeClass = (events) => {
+    if (events.length === 0) return '';
+    
+    // Get all unique event types for this day
+    const eventTypes = [...new Set(events.map(e => e.eventType))];
+    
+    // If only one type, use specific class
+    if (eventTypes.length === 1) {
+      const type = eventTypes[0];
+      switch(type) {
+        case 'Class': return styles.hasEventsClass;
+        case 'Exam': return styles.hasEventsExam;
+        case 'Event': return styles.hasEventsEvent;
+        case 'Holiday': return styles.hasEventsHoliday;
+        case 'Meeting': return styles.hasEventsMeeting;
+        default: return styles.hasEvents;
+      }
+    }
+    
+    // Multiple types - use default burgundy gradient
+    return styles.hasEvents;
+  };
+
+  // ========================================
   // RENDER CALENDAR GRID
   // ========================================
   const renderCalendar = () => {
@@ -114,11 +141,14 @@ function CalendarWidget() {
         day === new Date().getDate() && 
         selectedMonth === new Date().getMonth() && 
         selectedYear === new Date().getFullYear();
+      
+      // Get event-type specific class for full card color change
+      const eventTypeClass = getEventTypeClass(events);
 
       days.push(
         <div 
           key={day} 
-          className={`${styles.calendarDay} ${isToday ? styles.calendarDayToday : ''} ${events.length > 0 ? styles.hasEvents : ''}`}
+          className={`${styles.calendarDay} ${isToday ? styles.calendarDayToday : ''} ${eventTypeClass}`}
           onClick={() => handleDateClick(day)}
         >
           <div className={styles.calendarDayNumber}>{day}</div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase/firebaseConfig';
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, Timestamp } from 'firebase/firestore';
+import styles from './Announcement.module.css';
 
 function Announcement() {
   // ========================================
@@ -438,7 +439,7 @@ const handleImageChange = async (e) => {
 
     // Empty cells for days before month starts
     for (let i = 0; i < firstDay; i++) {
-      days.push(<div key={`empty-${i}`} style={styles.calendarDayEmpty}></div>);
+      days.push(<div key={`empty-${i}`} className={styles.calendarDayEmpty}></div>);
     }
 
     // Days of the month
@@ -452,28 +453,23 @@ const handleImageChange = async (e) => {
       days.push(
         <div 
           key={day} 
-          style={{
-            ...styles.calendarDay,
-            ...(isToday ? styles.calendarDayToday : {})
-          }}
+          className={`${styles.calendarDay} ${isToday ? styles.calendarDayToday : ''}`}
         >
-          <div style={styles.calendarDayNumber}>{day}</div>
+          <div className={styles.calendarDayNumber}>{day}</div>
           {events.length > 0 && (
-            <div style={styles.calendarDayEvents}>
+            <div className={styles.calendarDayEvents}>
               {events.slice(0, 2).map((event, idx) => (
                 <div 
                   key={idx}
-                  style={{
-                    ...styles.calendarEventDot,
-                    backgroundColor: getEventTypeColor(event.eventType)
-                  }}
+                  className={styles.calendarEventDot}
+                  style={{ backgroundColor: getEventTypeColor(event.eventType) }}
                   title={event.eventName}
                 >
                   {event.eventName.substring(0, 10)}...
                 </div>
               ))}
               {events.length > 2 && (
-                <div style={styles.calendarMoreEvents}>+{events.length - 2}</div>
+                <div className={styles.calendarMoreEvents}>+{events.length - 2} more</div>
               )}
             </div>
           )}
@@ -482,8 +478,8 @@ const handleImageChange = async (e) => {
     }
 
     return (
-      <div style={styles.calendarWrapper}>
-        <div style={styles.calendarHeader}>
+      <div className={styles.calendarWrapper}>
+        <div className={styles.calendarHeader}>
           <button 
             onClick={() => {
               if (selectedMonth === 0) {
@@ -493,11 +489,11 @@ const handleImageChange = async (e) => {
                 setSelectedMonth(selectedMonth - 1);
               }
             }}
-            style={styles.calendarNavButton}
+            className={styles.calendarNavButton}
           >
             ◀
           </button>
-          <h3 style={styles.calendarTitle}>
+          <h3 className={styles.calendarTitle}>
             {monthNames[selectedMonth]} {selectedYear}
           </h3>
           <button 
@@ -509,19 +505,19 @@ const handleImageChange = async (e) => {
                 setSelectedMonth(selectedMonth + 1);
               }
             }}
-            style={styles.calendarNavButton}
+            className={styles.calendarNavButton}
           >
             ▶
           </button>
         </div>
         
-        <div style={styles.calendarDayNames}>
+        <div className={styles.calendarDayNames}>
           {dayNames.map(name => (
-            <div key={name} style={styles.calendarDayName}>{name}</div>
+            <div key={name} className={styles.calendarDayName}>{name}</div>
           ))}
         </div>
         
-        <div style={styles.calendarGrid}>
+        <div className={styles.calendarGrid}>
           {days}
         </div>
       </div>
@@ -532,31 +528,27 @@ const handleImageChange = async (e) => {
   // RENDER
   // ========================================
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h2 style={styles.mainTitle}>Announcements & Events</h2>
-        <p style={styles.headerSubtitle}>Manage announcements and calendar events</p>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h2 className={styles.mainTitle}>Announcements & Events</h2>
+        <p className={styles.headerSubtitle}>Manage announcements and calendar events</p>
       </div>
 
       {/* TAB NAVIGATION */}
-      <div style={styles.tabContainer}>
+      <div className={styles.tabContainer}>
         <button
           onClick={() => setActiveTab('announcements')}
-          style={{
-            ...styles.tab,
-            ...(activeTab === 'announcements' ? styles.tabActive : {})
-          }}
+          className={`${styles.tab} ${activeTab === 'announcements' ? styles.tabActive : ''}`}
         >
-          📢 Announcements ({announcements.length})
+          📢 Announcements
+          <span className={styles.tabBadge}>{announcements.length}</span>
         </button>
         <button
           onClick={() => setActiveTab('calendar')}
-          style={{
-            ...styles.tab,
-            ...(activeTab === 'calendar' ? styles.tabActive : {})
-          }}
+          className={`${styles.tab} ${activeTab === 'calendar' ? styles.tabActive : ''}`}
         >
-          📅 Event Calendar ({calendarEvents.length})
+          📅 Event Calendar
+          <span className={styles.tabBadge}>{calendarEvents.length}</span>
         </button>
       </div>
 
@@ -564,59 +556,67 @@ const handleImageChange = async (e) => {
       {activeTab === 'announcements' && (
         <div>
           {/* ADD/EDIT ANNOUNCEMENT FORM */}
-          <div style={styles.formWrapper}>
-            <h3 style={styles.sectionTitle}>
-              {editingAnnouncementId ? 'Edit Announcement' : 'Create New Announcement'}
+          <div className={styles.formWrapper}>
+            <h3 className={styles.sectionTitle}>
+              {editingAnnouncementId ? '✏️ Edit Announcement' : '➕ Create New Announcement'}
             </h3>
 
-            <form onSubmit={editingAnnouncementId ? handleUpdateAnnouncement : handleAddAnnouncement} style={styles.form}>
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Announcement Title *</label>
+            <form onSubmit={editingAnnouncementId ? handleUpdateAnnouncement : handleAddAnnouncement} className={styles.form}>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>
+                  Announcement Title <span className={styles.required}>*</span>
+                </label>
                 <input
                   type="text"
                   name="title"
                   value={announcementForm.title}
                   onChange={handleAnnouncementChange}
                   placeholder="e.g., Student Council Meeting"
-                  style={styles.input}
+                  className={styles.input}
                   required
                 />
               </div>
 
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Description *</label>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>
+                  Description <span className={styles.required}>*</span>
+                </label>
                 <textarea
                   name="description"
                   value={announcementForm.description}
                   onChange={handleAnnouncementChange}
                   placeholder="Detailed description of the announcement..."
                   rows="4"
-                  style={styles.textarea}
+                  className={styles.textarea}
                   required
                 />
               </div>
 
-              <div style={styles.formRow}>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Venue *</label>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>
+                    Venue <span className={styles.required}>*</span>
+                  </label>
                   <input
                     type="text"
                     name="venue"
                     value={announcementForm.venue}
                     onChange={handleAnnouncementChange}
                     placeholder="e.g., Main Auditorium"
-                    style={styles.input}
+                    className={styles.input}
                     required
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Category *</label>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>
+                    Category <span className={styles.required}>*</span>
+                  </label>
                   <select
                     name="category"
                     value={announcementForm.category}
                     onChange={handleAnnouncementChange}
-                    style={styles.select}
+                    className={styles.select}
                   >
                     <option value="General">General</option>
                     <option value="Academic">Academic</option>
@@ -627,63 +627,63 @@ const handleImageChange = async (e) => {
                 </div>
               </div>
 
-              <div style={styles.formRow}>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Event Date *</label>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>
+                    Event Date <span className={styles.required}>*</span>
+                  </label>
                   <input
                     type="date"
                     name="eventDate"
                     value={announcementForm.eventDate}
                     onChange={handleAnnouncementChange}
-                    style={styles.input}
+                    className={styles.input}
                     required
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Event Time *</label>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>
+                    Event Time <span className={styles.required}>*</span>
+                  </label>
                   <input
                     type="time"
                     name="eventTime"
                     value={announcementForm.eventTime}
                     onChange={handleAnnouncementChange}
-                    style={styles.input}
+                    className={styles.input}
                     required
                   />
                 </div>
               </div>
 
-             <div style={styles.formGroup}>
-                <label style={styles.label}>Announcement Image</label>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Announcement Image</label>
                 <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    style={styles.fileInput}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className={styles.fileInput}
                 />
-                <p style={styles.helperText}>
-                    Image will be saved to: <code>/AnnouncementPic/[filename]</code>
+                <p className={styles.helperText}>
+                  Recommended: JPG or PNG, max 1MB (will be compressed automatically)
                 </p>
                 
                 {imagePreview && (
-                    <div style={styles.imagePreviewContainer}>
-                        <img src={imagePreview} alt="Preview" style={styles.imagePreview} />
-                    </div>
+                  <div className={styles.imagePreviewContainer}>
+                    <img src={imagePreview} alt="Preview" className={styles.imagePreview} />
+                  </div>
                 )}
-            </div>
-              
+              </div>
 
-              <div style={styles.buttonGroup}>
+              <div className={styles.buttonGroup}>
                 <button
                   type="submit"
                   disabled={loading}
-                  style={{
-                    ...styles.submitButton,
-                    ...(loading ? styles.submitButtonDisabled : {})
-                  }}
+                  className={styles.submitButton}
                 >
                   {loading 
-                    ? 'Processing...' 
+                    ? '⏳ Processing...' 
                     : editingAnnouncementId 
                       ? '💾 Update Announcement' 
                       : '➕ Add Announcement'}
@@ -703,8 +703,10 @@ const handleImageChange = async (e) => {
                         category: 'General',
                         imageBase64: '',
                       });
+                      setImagePreview(null);
+                      setSelectedImage(null);
                     }}
-                    style={styles.cancelButton}
+                    className={styles.cancelButton}
                   >
                     ❌ Cancel
                   </button>
@@ -714,79 +716,75 @@ const handleImageChange = async (e) => {
           </div>
 
           {/* ANNOUNCEMENTS LIST */}
-          <div style={styles.announcementsWrapper}>
-            <h3 style={styles.sectionTitle}>All Announcements</h3>
+          <div className={styles.announcementsWrapper}>
+            <h3 className={styles.sectionTitle}>All Announcements</h3>
             
             {announcements.length === 0 ? (
-              <div style={styles.emptyState}>
-                <p style={styles.emptyText}>No announcements yet. Create your first one above!</p>
+              <div className={styles.emptyState}>
+                <p className={styles.emptyText}>No announcements yet. Create your first one above!</p>
               </div>
             ) : (
-              <div style={styles.announcementsList}>
+              <div className={styles.announcementsList}>
                 {announcements.map((announcement) => (
-                  <div key={announcement.id} style={styles.announcementCard}>
+                  <div key={announcement.id} className={styles.announcementCard}>
                     <div 
-                      style={styles.announcementHeader}
+                      className={styles.announcementHeader}
                       onClick={() => setExpandedId(expandedId === announcement.id ? null : announcement.id)}
                     >
-                      <div style={styles.announcementHeaderLeft}>
-                        <h4 style={styles.announcementTitle}>{announcement.title}</h4>
-                        <div style={styles.announcementMeta}>
+                      <div className={styles.announcementHeaderLeft}>
+                        <h4 className={styles.announcementTitle}>{announcement.title}</h4>
+                        <div className={styles.announcementMeta}>
                           <span 
-                            style={{
-                              ...styles.categoryBadge,
-                              backgroundColor: getCategoryColor(announcement.category)
-                            }}
+                            className={styles.categoryBadge}
+                            style={{ backgroundColor: getCategoryColor(announcement.category) }}
                           >
                             {announcement.category}
                           </span>
-                          <span style={styles.announcementDate}>
+                          <span className={styles.announcementDate}>
                             📅 {formatDate(announcement.eventDate)} at {announcement.eventTime}
                           </span>
                         </div>
                       </div>
-                      <div style={styles.expandIcon}>
-                        {expandedId === announcement.id ? '▲' : '▼'}
+                      <div className={`${styles.expandIcon} ${expandedId === announcement.id ? styles.expandIconExpanded : ''}`}>
+                        ▼
                       </div>
                     </div>
 
-
-                                            {/* ADD THIS BLOCK */}
-                        {announcement.imageBase64 && (
-                            <div style={styles.announcementImageWrapper}>
-                                <img 
-                                    src={announcement.imageBase64}
-                                    alt={announcement.title}
-                                    style={styles.announcementImage}
-                                    onError={(e) => {
-                                        e.target.src = '/AnnouncementPic/default.jpg';
-                                    }}
-                                />
-                            </div>
-                        )}
+                    {announcement.imageBase64 && (
+                      <div className={styles.announcementImageWrapper}>
+                        <img 
+                          src={announcement.imageBase64}
+                          alt={announcement.title}
+                          className={styles.announcementImage}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
 
                     {expandedId === announcement.id && (
-                      <div style={styles.announcementBody}>
-                        <div style={styles.announcementDetail}>
-                          <strong style={styles.detailLabel}>Description:</strong>
-                          <p style={styles.detailValue}>{announcement.description}</p>
+                      <div className={styles.announcementBody}>
+                        <div className={styles.announcementDetail}>
+                          <strong className={styles.detailLabel}>Description:</strong>
+                          <p className={styles.detailValue}>{announcement.description}</p>
                         </div>
 
-                        <div style={styles.announcementDetail}>
-                          <strong style={styles.detailLabel}>Venue:</strong>
-                          <p style={styles.detailValue}>📍 {announcement.venue}</p>
+                        <div className={styles.announcementDetail}>
+                          <strong className={styles.detailLabel}>Venue:</strong>
+                          <p className={styles.detailValue}>📍 {announcement.venue}</p>
                         </div>
 
-                        <div style={styles.announcementActions}>
+                        <div className={styles.announcementActions}>
                           <button
                             onClick={() => handleEditAnnouncement(announcement)}
-                            style={styles.editButton}
+                            className={styles.editButton}
                           >
                             ✏️ Edit
                           </button>
                           <button
                             onClick={() => handleDeleteAnnouncement(announcement.id, announcement.title)}
-                            style={styles.deleteButton}
+                            className={styles.deleteButton}
                           >
                             🗑️ Delete
                           </button>
@@ -805,45 +803,51 @@ const handleImageChange = async (e) => {
       {activeTab === 'calendar' && (
         <div>
           {/* ADD/EDIT EVENT FORM */}
-          <div style={styles.formWrapper}>
-            <h3 style={styles.sectionTitle}>
-              {editingEventId ? 'Edit Calendar Event' : 'Add Calendar Event'}
+          <div className={styles.formWrapper}>
+            <h3 className={styles.sectionTitle}>
+              {editingEventId ? '✏️ Edit Calendar Event' : '➕ Add Calendar Event'}
             </h3>
 
-            <form onSubmit={editingEventId ? handleUpdateEvent : handleAddEvent} style={styles.form}>
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Event Name *</label>
+            <form onSubmit={editingEventId ? handleUpdateEvent : handleAddEvent} className={styles.form}>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>
+                  Event Name <span className={styles.required}>*</span>
+                </label>
                 <input
                   type="text"
                   name="eventName"
                   value={eventForm.eventName}
                   onChange={handleEventChange}
                   placeholder="e.g., Midterm Exam - Math"
-                  style={styles.input}
+                  className={styles.input}
                   required
                 />
               </div>
 
-              <div style={styles.formRow}>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Event Date *</label>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>
+                    Event Date <span className={styles.required}>*</span>
+                  </label>
                   <input
                     type="date"
                     name="eventDate"
                     value={eventForm.eventDate}
                     onChange={handleEventChange}
-                    style={styles.input}
+                    className={styles.input}
                     required
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Event Type *</label>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>
+                    Event Type <span className={styles.required}>*</span>
+                  </label>
                   <select
                     name="eventType"
                     value={eventForm.eventType}
                     onChange={handleEventChange}
-                    style={styles.select}
+                    className={styles.select}
                   >
                     <option value="Class">Class</option>
                     <option value="Exam">Exam</option>
@@ -854,42 +858,39 @@ const handleImageChange = async (e) => {
                 </div>
               </div>
 
-              <div style={styles.checkboxGroup}>
-                <label style={styles.checkboxLabel}>
+              <div className={styles.checkboxGroup}>
+                <label className={styles.checkboxLabel}>
                   <input
                     type="checkbox"
                     name="requiresAttendance"
                     checked={eventForm.requiresAttendance}
                     onChange={handleEventChange}
-                    style={styles.checkbox}
+                    className={styles.checkbox}
                   />
                   <span>Requires Attendance</span>
                 </label>
               </div>
 
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Description (Optional)</label>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Description (Optional)</label>
                 <textarea
                   name="description"
                   value={eventForm.description}
                   onChange={handleEventChange}
                   placeholder="Additional details about this event..."
                   rows="3"
-                  style={styles.textarea}
+                  className={styles.textarea}
                 />
               </div>
 
-              <div style={styles.buttonGroup}>
+              <div className={styles.buttonGroup}>
                 <button
                   type="submit"
                   disabled={loading}
-                  style={{
-                    ...styles.submitButton,
-                    ...(loading ? styles.submitButtonDisabled : {})
-                  }}
+                  className={styles.submitButton}
                 >
                   {loading 
-                    ? 'Processing...' 
+                    ? '⏳ Processing...' 
                     : editingEventId 
                       ? '💾 Update Event' 
                       : '➕ Add Event'}
@@ -908,7 +909,7 @@ const handleImageChange = async (e) => {
                         description: '',
                       });
                     }}
-                    style={styles.cancelButton}
+                    className={styles.cancelButton}
                   >
                     ❌ Cancel
                   </button>
@@ -918,40 +919,38 @@ const handleImageChange = async (e) => {
           </div>
 
           {/* CALENDAR VIEW */}
-          <div style={styles.calendarSection}>
+          <div className={styles.calendarSection}>
             {renderCalendar()}
           </div>
 
           {/* EVENTS LIST */}
-          <div style={styles.eventsListWrapper}>
-            <h3 style={styles.sectionTitle}>Upcoming Events</h3>
+          <div className={styles.eventsListWrapper}>
+            <h3 className={styles.sectionTitle}>Upcoming Events</h3>
             
             {calendarEvents.length === 0 ? (
-              <div style={styles.emptyState}>
-                <p style={styles.emptyText}>No events scheduled yet.</p>
+              <div className={styles.emptyState}>
+                <p className={styles.emptyText}>No events scheduled yet.</p>
               </div>
             ) : (
-              <div style={styles.eventsList}>
+              <div className={styles.eventsList}>
                 {calendarEvents.map((event) => (
-                  <div key={event.id} style={styles.eventCard}>
-                    <div style={styles.eventCardHeader}>
+                  <div key={event.id} className={styles.eventCard}>
+                    <div className={styles.eventCardHeader}>
                       <div>
-                        <h4 style={styles.eventCardTitle}>{event.eventName}</h4>
-                        <p style={styles.eventCardDate}>
+                        <h4 className={styles.eventCardTitle}>{event.eventName}</h4>
+                        <p className={styles.eventCardDate}>
                           📅 {formatDate(event.eventDate)}
                         </p>
                       </div>
-                      <div style={styles.eventBadges}>
+                      <div className={styles.eventBadges}>
                         <span 
-                          style={{
-                            ...styles.eventTypeBadge,
-                            backgroundColor: getEventTypeColor(event.eventType)
-                          }}
+                          className={styles.eventTypeBadge}
+                          style={{ backgroundColor: getEventTypeColor(event.eventType) }}
                         >
                           {event.eventType}
                         </span>
                         {event.requiresAttendance && (
-                          <span style={styles.attendanceBadge}>
+                          <span className={styles.attendanceBadge}>
                             ✓ Attendance Required
                           </span>
                         )}
@@ -959,19 +958,19 @@ const handleImageChange = async (e) => {
                     </div>
 
                     {event.description && (
-                      <p style={styles.eventCardDesc}>{event.description}</p>
+                      <p className={styles.eventCardDesc}>{event.description}</p>
                     )}
 
-                    <div style={styles.eventCardActions}>
+                    <div className={styles.eventCardActions}>
                       <button
-                        onClick={() => handleEditEvent(event.id)}
-                        style={styles.editButton}
+                        onClick={() => handleEditEvent(event)}
+                        className={styles.editButton}
                       >
                         ✏️ Edit
                       </button>
                       <button
                         onClick={() => handleDeleteEvent(event.id, event.eventName)}
-                        style={styles.deleteButton}
+                        className={styles.deleteButton}
                       >
                         🗑️ Delete
                       </button>
@@ -986,500 +985,4 @@ const handleImageChange = async (e) => {
     </div>
   );
 }
-
-// ========================================
-// STYLES
-// ========================================
-const styles = {
-  container: {
-    width: '100%',
-    maxWidth: '100%',
-    padding: '1.5rem',
-    backgroundColor: '#4c1515',
-    borderRadius: '1rem',
-    fontFamily: 'Arial, sans-serif',
-    boxSizing: 'border-box',
-  },
-  header: {
-    marginBottom: '2rem',
-  },
-  mainTitle: {
-    fontSize: '2rem',
-    color: '#fe5c03',
-    marginBottom: '0.5rem',
-    fontWeight: 'bold',
-  },
-  headerSubtitle: {
-    fontSize: '1rem',
-    color: '#c0c0c0',
-  },
-  tabContainer: {
-    display: 'flex',
-    gap: '1rem',
-    marginBottom: '2rem',
-    flexWrap: 'wrap',
-  },
-  tab: {
-    padding: '0.8rem 1.5rem',
-    backgroundColor: '#732020',
-    color: '#c0c0c0',
-    border: '2px solid transparent',
-    borderRadius: '50px',
-    fontSize: '0.95rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-  },
-  tabActive: {
-    backgroundColor: '#fe5c03',
-    color: '#000',
-    borderColor: '#fe5c03',
-  },
-  formWrapper: {
-    margin: '0 auto',
-    backgroundColor: '#5a1a1a',
-    borderRadius: '1rem',
-    padding: '2rem',
-    marginBottom: '2rem',
-    border: '1px solid rgba(254, 92, 3, 0.2)',
-  },
-  sectionTitle: {
-    fontSize: '1.5rem',
-    color: '#fe5c03',
-    marginBottom: '1.5rem',
-    fontWeight: 'bold',
-    borderBottom: '2px solid rgba(254, 92, 3, 0.3)',
-    paddingBottom: '0.5rem',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1.2rem',
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  formRow: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: '1rem',
-  },
-  label: {
-    fontSize: '0.9rem',
-    color: '#f1f1f1',
-    marginBottom: '0.4rem',
-    fontWeight: '600',
-  },
-  input: {
-    padding: '0.8rem',
-    border: '1px solid #7a2a2a',
-    borderRadius: '0.5rem',
-    backgroundColor: '#732020',
-    color: '#f1f1f1',
-    fontSize: '0.95rem',
-    outline: 'none',
-  },
-  textarea: {
-    padding: '0.8rem',
-    border: '1px solid #7a2a2a',
-    borderRadius: '0.5rem',
-    backgroundColor: '#732020',
-    color: '#f1f1f1',
-    fontSize: '0.95rem',
-    outline: 'none',
-    resize: 'vertical',
-    fontFamily: 'Arial, sans-serif',
-  },
-  select: {
-    padding: '0.8rem',
-    border: '1px solid #7a2a2a',
-    borderRadius: '0.5rem',
-    backgroundColor: '#732020',
-    color: '#f1f1f1',
-    fontSize: '0.95rem',
-    outline: 'none',
-    cursor: 'pointer',
-  },
-  checkboxGroup: {
-    padding: '1rem',
-    backgroundColor: '#732020',
-    borderRadius: '0.5rem',
-    border: '1px solid rgba(254, 92, 3, 0.2)',
-  },
-  checkboxLabel: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.8rem',
-    color: '#f1f1f1',
-    fontSize: '0.95rem',
-    cursor: 'pointer',
-  },
-  checkbox: {
-    width: '18px',
-    height: '18px',
-    cursor: 'pointer',
-  },
-  buttonGroup: {
-    display: 'flex',
-    gap: '0.8rem',
-    flexWrap: 'wrap',
-    marginTop: '1rem',
-  },
-  submitButton: {
-    flex: 1,
-    padding: '1rem',
-    backgroundColor: '#fe5c03',
-    color: '#000',
-    border: 'none',
-    borderRadius: '50px',
-    fontSize: '1rem',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    minWidth: '200px',
-  },
-  submitButtonDisabled: {
-    backgroundColor: '#7a2a2a',
-    cursor: 'not-allowed',
-    opacity: 0.6,
-  },
-  cancelButton: {
-    flex: 1,
-    padding: '1rem',
-    backgroundColor: '#f44336',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '50px',
-    fontSize: '1rem',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    minWidth: '200px',
-  },
-  announcementsWrapper: {
-    backgroundColor: '#5a1a1a',
-    borderRadius: '1rem',
-    padding: '2rem',
-    border: '1px solid rgba(254, 92, 3, 0.2)',
-  },
-  emptyState: {
-    textAlign: 'center',
-    padding: '3rem',
-  },
-  emptyText: {
-    color: '#c0c0c0',
-    fontSize: '1.1rem',
-  },
-  announcementsList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem',
-  },
-  announcementCard: {
-    backgroundColor: '#732020',
-    borderRadius: '0.8rem',
-    border: '1px solid rgba(254, 92, 3, 0.2)',
-    overflow: 'hidden',
-    transition: 'all 0.3s ease',
-  },
-  announcementHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '1.5rem',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s ease',
-  },
-  announcementHeaderLeft: {
-    flex: 1,
-  },
-  announcementTitle: {
-    fontSize: '1.3rem',
-    color: '#f1f1f1',
-    marginBottom: '0.5rem',
-    fontWeight: 'bold',
-  },
-  announcementMeta: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1rem',
-    flexWrap: 'wrap',
-  },
-  categoryBadge: {
-    padding: '0.3rem 0.8rem',
-    borderRadius: '15px',
-    fontSize: '0.85rem',
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  announcementDate: {
-    fontSize: '0.9rem',
-    color: '#c0c0c0',
-  },
-  expandIcon: {
-    fontSize: '1.2rem',
-    color: '#fe5c03',
-    marginLeft: '1rem',
-  },
-  announcementBody: {
-    padding: '0 1.5rem 1.5rem 1.5rem',
-    backgroundColor: '#8a2a2a',
-  },
-  announcementDetail: {
-    marginBottom: '1rem',
-  },
-  detailLabel: {
-    color: '#fe5c03',
-    fontSize: '0.95rem',
-    display: 'block',
-    marginBottom: '0.3rem',
-  },
-  detailValue: {
-    color: '#f1f1f1',
-    fontSize: '0.95rem',
-    lineHeight: '1.6',
-  },
-  announcementActions: {
-    display: 'flex',
-    gap: '1rem',
-    marginTop: '1.5rem',
-    paddingTop: '1rem',
-    borderTop: '1px solid rgba(254, 92, 3, 0.2)',
-  },
-  editButton: {
-    flex: 1,
-    padding: '0.8rem',
-    backgroundColor: '#fe5c03',
-    color: '#000',
-    border: 'none',
-    borderRadius: '50px',
-    fontSize: '0.9rem',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-  },
-  deleteButton: {
-    flex: 1,
-    padding: '0.8rem',
-    backgroundColor: '#f44336',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '50px',
-    fontSize: '0.9rem',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-  },
-  calendarSection: {
-    backgroundColor: '#5a1a1a',
-    borderRadius: '1rem',
-    padding: '2rem',
-    marginBottom: '2rem',
-    border: '1px solid rgba(254, 92, 3, 0.2)',
-  },
-  calendarWrapper: {
-    width: '100%',
-  },
-  calendarHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '1.5rem',
-  },
-  calendarTitle: {
-    fontSize: '1.5rem',
-    color: '#fe5c03',
-    fontWeight: 'bold',
-  },
-  calendarNavButton: {
-    padding: '0.5rem 1rem',
-    backgroundColor: '#732020',
-    color: '#fe5c03',
-    border: '1px solid #fe5c03',
-    borderRadius: '0.5rem',
-    fontSize: '1.2rem',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-  },
-  calendarDayNames: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(7, 1fr)',
-    gap: '0.5rem',
-    marginBottom: '0.5rem',
-  },
-  calendarDayName: {
-    textAlign: 'center',
-    color: '#fe5c03',
-    fontSize: '0.9rem',
-    fontWeight: 'bold',
-    padding: '0.5rem',
-  },
-  calendarGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(7, 1fr)',
-    gap: '0.5rem',
-  },
-  calendarDay: {
-    minHeight: '80px',
-    backgroundColor: '#732020',
-    borderRadius: '0.5rem',
-    padding: '0.5rem',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    border: '1px solid rgba(254, 92, 3, 0.1)',
-  },
-  calendarDayToday: {
-    border: '2px solid #fe5c03',
-    backgroundColor: '#8a2a2a',
-  },
-  calendarDayEmpty: {
-    minHeight: '80px',
-  },
-  calendarDayNumber: {
-    fontSize: '0.9rem',
-    color: '#f1f1f1',
-    fontWeight: 'bold',
-    marginBottom: '0.3rem',
-  },
-  calendarDayEvents: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.2rem',
-  },
-  calendarEventDot: {
-    fontSize: '0.7rem',
-    color: '#fff',
-    padding: '0.2rem 0.4rem',
-    borderRadius: '10px',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-  calendarMoreEvents: {
-    fontSize: '0.7rem',
-    color: '#c0c0c0',
-    fontStyle: 'italic',
-    marginTop: '0.2rem',
-  },
-  eventsListWrapper: {
-    backgroundColor: '#5a1a1a',
-    borderRadius: '1rem',
-    padding: '2rem',
-    border: '1px solid rgba(254, 92, 3, 0.2)',
-  },
-  eventsList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem',
-  },
-  eventCard: {
-    backgroundColor: '#732020',
-    borderRadius: '0.8rem',
-    padding: '1.5rem',
-    border: '1px solid rgba(254, 92, 3, 0.2)',
-  },
-  eventCardHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: '1rem',
-    flexWrap: 'wrap',
-    gap: '1rem',
-  },
-  eventCardTitle: {
-    fontSize: '1.2rem',
-    color: '#f1f1f1',
-    marginBottom: '0.3rem',
-    fontWeight: 'bold',
-  },
-  eventCardDate: {
-    fontSize: '0.9rem',
-    color: '#c0c0c0',
-  },
-  eventBadges: {
-    display: 'flex',
-    gap: '0.5rem',
-    flexWrap: 'wrap',
-  },
-  eventTypeBadge: {
-    padding: '0.3rem 0.8rem',
-    borderRadius: '15px',
-    fontSize: '0.85rem',
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  attendanceBadge: {
-    padding: '0.3rem 0.8rem',
-    borderRadius: '15px',
-    fontSize: '0.85rem',
-    fontWeight: 'bold',
-    backgroundColor: '#4caf50',
-    color: '#fff',
-  },
-  eventCardDesc: {
-    color: '#c0c0c0',
-    fontSize: '0.95rem',
-    lineHeight: '1.6',
-    marginBottom: '1rem',
-  },
-  eventCardActions: {
-    display: 'flex',
-    gap: '1rem',
-    paddingTop: '1rem',
-    borderTop: '1px solid rgba(254, 92, 3, 0.2)',
-  },
-
-  fileInput: {
-    padding: '0.7rem',
-    border: '2px dashed #7a2a2a',
-    borderRadius: '0.5rem',
-    backgroundColor: '#732020',
-    color: '#f1f1f1',
-    fontSize: '0.9rem',
-    cursor: 'pointer',
-},
-helperText: {
-    fontSize: '0.8rem',
-    color: '#c0c0c0',
-    marginTop: '0.4rem',
-},
-imagePreviewContainer: {
-    marginTop: '1rem',
-    textAlign: 'center',
-},
-imagePreview: {
-    maxWidth: '300px',
-    maxHeight: '200px',
-    borderRadius: '0.5rem',
-    border: '2px solid #fe5c03',
-},
-  announcementImageWrapper: {
-    width: '100%',
-    maxWidth: '400px',        // Prevents excessive width
-    maxHeight: '300px',       // Prevents excessive height
-    height: 'auto',
-    margin: '0 auto',         // Centers the wrapper horizontally
-    overflow: 'hidden',
-    backgroundColor: '#8a2a2a',
-    padding: '0.7rem',
-    borderRadius: '10px',
-    boxSizing: 'border-box',
-    display: 'flex',          // Flexbox for perfect centering
-    justifyContent: 'center', // Horizontal centering
-    alignItems: 'center',     // Vertical centering
-    marginBottom: '10px',
-  },
-  announcementImage: {
-    width: '100%',
-    height: '100%',
-    maxWidth: '380px',        // Slightly less than wrapper max-width
-    maxHeight: '280px',       // Slightly less than wrapper max-height
-    objectFit: 'cover',       // Maintains aspect ratio, crops if needed
-    borderRadius: '10px',
-    display: 'block',
-  },
-
-};
-
 export default Announcement;

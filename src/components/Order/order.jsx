@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { db } from '../../firebase/firebaseConfig';
-import { collection, addDoc, onSnapshot, Timestamp, doc, updateDoc} from 'firebase/firestore';
+import { collection, addDoc, onSnapshot, Timestamp, doc, updateDoc, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import styles from './Order.module.css';
 
 function Order(props) {
@@ -9,6 +9,7 @@ function Order(props) {
   const navigate = useNavigate();
   const selectedProduct = location.state?.selectedProduct;
   const editingOrder = props.editingOrder;
+  const hasLoadedEditData = useRef(false); // Track if we've loaded edit data
 
   // ========================================
   // STATE MANAGEMENT
@@ -145,12 +146,41 @@ function Order(props) {
   };
 
   // ========================================
-  // GENERATE UNIQUE ORDER ID
+  // GENERATE UNIQUE ORDER ID (Sequential Format: ORD-DB-0001)
   // ========================================
-  const generateOrderId = () => {
-    const timestamp = Date.now();
-    const random = Math.floor(Math.random() * 1000);
-    return `ORD-${timestamp}-${random}`;
+  const generateOrderId = async () => {
+    try {
+      // Query the orders collection to get the latest order
+      const ordersRef = collection(db, 'orders');
+      const q = query(ordersRef, orderBy('createdAt', 'desc'), limit(1));
+      const querySnapshot = await getDocs(q);
+      
+      let nextNumber = 1; // Start from 0001
+      
+      if (!querySnapshot.empty) {
+        // Get the last order ID
+        const lastOrder = querySnapshot.docs[0].data();
+        const lastOrderId = lastOrder.orderId;
+        
+        // Extract the number from the last order ID (e.g., "ORD-DB-0042" -> 42)
+        if (lastOrderId && lastOrderId.startsWith('ORD-DB-')) {
+          const lastNumber = parseInt(lastOrderId.split('-')[2]);
+          if (!isNaN(lastNumber)) {
+            nextNumber = lastNumber + 1;
+          }
+        }
+      }
+      
+      // Format the number with leading zeros (e.g., 1 -> "0001")
+      const formattedNumber = String(nextNumber).padStart(4, '0');
+      
+      return `ORD-DB-${formattedNumber}`;
+    } catch (error) {
+      console.error('Error generating order ID:', error);
+      // Fallback to timestamp-based ID if there's an error
+      const timestamp = Date.now();
+      return `ORD-DB-${timestamp}`;
+    }
   };
 
   // ========================================
@@ -175,7 +205,7 @@ function Order(props) {
   setLoading(true);
 
   try {
-    const orderId = editingOrder ? editingOrder.orderId : generateOrderId();
+    const orderId = editingOrder ? editingOrder.orderId : await generateOrderId();
     const docId = editingOrder ? editingOrder.docId : null;
 
     const orderData = {
@@ -183,11 +213,11 @@ function Order(props) {
       customerInfo: {
         fullName: formData.fullName,
         bachelorDegree: formData.bachelorDegree,
-        year: formData.year,
+        section: formData.section, // Fixed: was 'year', should be 'section'
         address: formData.address,
         email: formData.email,
         phoneNumber: formData.phoneNumber,
-        schoolID: formData.schoolID, // Make sure this matches your Firestore field name
+        schoolID: formData.schoolID,
       },
       productInfo: {
         productId: formData.productId,
@@ -195,7 +225,7 @@ function Order(props) {
         size: formData.size || 'N/A',
         color: formData.color || 'N/A',
         quantity: parseInt(formData.quantity),
-        pricePerUnit: selectedProductData.price,
+        pricePerUnit: selectedProductData?.price || 0,
         totalPrice: calculateTotal(),
       },
       paymentInfo: {
@@ -205,7 +235,7 @@ function Order(props) {
       },
       orderStatus: editingOrder ? editingOrder.orderStatus : 'Pending',
       dateOrdered: editingOrder ? editingOrder.dateOrdered : Timestamp.now(),
-      updatedAt: Timestamp.now(), // Add update timestamp
+      updatedAt: Timestamp.now(),
     };
 
     // Check if editing or creating new
@@ -220,7 +250,7 @@ function Order(props) {
       }
     } else {
       // CREATE new order
-      orderData.createdAt = new Date().toISOString();
+      orderData.createdAt = Timestamp.now(); // Fixed: use Timestamp instead of string
       await addDoc(collection(db, 'orders'), orderData);
       setGeneratedOrderId(orderId);
       setSubmitSuccess(true);
@@ -234,7 +264,8 @@ function Order(props) {
 
   } catch (error) {
     console.error('Error submitting order:', error);
-    alert('Error submitting order. Please try again.');
+    console.error('Error details:', error.message);
+    alert(`Error submitting order: ${error.message}. Please try again.`);
     setLoading(false);
   }
 };
@@ -278,20 +309,19 @@ function Order(props) {
   // ========================================
 // HANDLE EDITING ORDER PROP
 // ========================================
-// ========================================
-// HANDLE EDITING ORDER PROP
-// ========================================
 useEffect(() => {
-  if (props.editingOrder) {
+  // Only load edit data once when component mounts with editingOrder
+  if (props.editingOrder && !hasLoadedEditData.current && products.length > 0) {
     const order = props.editingOrder;
+    
     setFormData({
       fullName: order.customerInfo?.fullName || '',
       bachelorDegree: order.customerInfo?.bachelorDegree || '',
-      year: order.customerInfo?.year || '',
+      section: order.customerInfo?.section || '',
       address: order.customerInfo?.address || '',
       email: order.customerInfo?.email || '',
       phoneNumber: order.customerInfo?.phoneNumber || '',
-      schoolID: order.customerInfo?.schoolID || '', // This might be missing from your data
+      schoolID: order.customerInfo?.schoolID || '',
       productId: order.productInfo?.productId || '',
       productName: order.productInfo?.productName || '',
       size: order.productInfo?.size || '',
@@ -302,12 +332,22 @@ useEffect(() => {
       referenceNumber: order.paymentInfo?.referenceNumber || '',
     });
     
-    // Also update the selectedProductData
+    // Update the selectedProductData
     const product = products.find(p => p.productId === order.productInfo?.productId);
     if (product) {
       setSelectedProductData(product);
     }
+    
+    // Mark as loaded so we don't reset again
+    hasLoadedEditData.current = true;
   }
+  
+  // Reset the flag when editingOrder changes or component unmounts
+  return () => {
+    if (!props.editingOrder) {
+      hasLoadedEditData.current = false;
+    }
+  };
 }, [props.editingOrder, products]);
 
   // ========================================
@@ -511,9 +551,27 @@ useEffect(() => {
 
             {selectedProductData && (
               <div className={styles.productPreview}>
-                <h3 className={styles.productPreviewTitle}>{selectedProductData.productName}</h3>
-                <p className={styles.productPreviewDesc}>{selectedProductData.description}</p>
-                <p className={styles.productPreviewPrice}>₱{selectedProductData.price} per unit</p>
+                {selectedProductData.imageUrl && (
+                  <div className={styles.productPreviewImage}>
+                    <img 
+                      src={selectedProductData.imageUrl} 
+                      alt={selectedProductData.productName}
+                      onError={(e) => { 
+                        e.target.src = 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&h=400&fit=crop'; 
+                      }}
+                    />
+                  </div>
+                )}
+                <div className={styles.productPreviewContent}>
+                  <h3 className={styles.productPreviewTitle}>{selectedProductData.productName}</h3>
+                  <p className={styles.productPreviewDesc}>{selectedProductData.description}</p>
+                  <div className={styles.productPreviewMeta}>
+                    <span className={styles.productPreviewPrice}>₱{selectedProductData.price} per unit</span>
+                    <span className={styles.productPreviewStock}>
+                      {selectedProductData.stockAvailable} in stock
+                    </span>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -658,7 +716,7 @@ useEffect(() => {
             </button>
 
             <button 
-              type="button"
+            type="button"
               onClick={editingOrder ? handleNewOrder : () => navigate('/')}
               className={styles.cancelButton}
             >

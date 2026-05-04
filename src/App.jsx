@@ -6,6 +6,7 @@ import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './components/AuthContext/AuthContext.jsx'; // Make sure this path is correct
 import { InventoryProvider , useInventory } from './components/InventoryContext/InventoryProvider.jsx'; 
 import { FinanceProvider } from './components/FinanceContext/FinanceProvider.jsx';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 // --- COMPONENT IMPORTS (Your Original Files) ---
 import AdminPage from './admin/admin.jsx';
@@ -24,7 +25,7 @@ import FinanceDashboard from './components/Finance/FinanceDashboard.jsx';
 import InventoryManagement from './components/InventoryDashboard/InventoryManagement.jsx';
 import PDFDashboard from './components/Document/PDFDahsboard.jsx';
 // --- STYLES ---
-
+import './styles/themes.css';
 
 import styles from './App.module.css';
 
@@ -56,10 +57,11 @@ const DashboardLayout = ({ children }) => {
 function App() {
   return (
     // NOTE: Removed <BrowserRouter> and <CardProvider> here as they are now in main.jsx
-    <AuthProvider> 
-      <InventoryProvider> 
-      <FinanceProvider>
-      <Routes>
+    <ThemeProvider>
+      <AuthProvider> 
+        <InventoryProvider> 
+        <FinanceProvider>
+        <Routes>
         {/* ========================================
             PUBLIC ROUTES (No Sidebar/Header)
             ======================================== */}
@@ -157,6 +159,7 @@ function App() {
       </FinanceProvider>
       </InventoryProvider>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 

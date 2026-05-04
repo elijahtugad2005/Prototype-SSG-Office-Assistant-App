@@ -268,9 +268,53 @@
   background: var(--om-card-bg);
   border: 1px solid var(--om-border);
   border-radius: var(--om-radius);
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: visible;
   box-shadow: var(--om-shadow-sm);
   padding: 1.5rem;
+  /* Enable horizontal scrolling on smaller screens */
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+
+/* Ensure table scrolls properly */
+.tableWrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.tableWrapper::-webkit-scrollbar-track {
+  background: var(--om-bg);
+  border-radius: 4px;
+}
+
+.tableWrapper::-webkit-scrollbar-thumb {
+  background: var(--om-border);
+  border-radius: 4px;
+}
+
+.tableWrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--om-text-muted);
+}
+
+/* Scroll hint for wide tables */
+.tableWrapper::before {
+  content: '← Scroll to see all columns →';
+  display: block;
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--om-text-muted);
+  padding: 0.5rem;
+  margin: -1rem -1rem 1rem -1rem;
+  background: var(--om-bg);
+  border-bottom: 1px solid var(--om-border);
+  border-radius: var(--om-radius) var(--om-radius) 0 0;
+  font-weight: 600;
+}
+
+@media (min-width: 1440px) {
+  .tableWrapper::before {
+    display: none; /* Hide scroll hint on large screens */
+  }
 }
 
 /* =====================================================
@@ -289,8 +333,10 @@
 
 .orderTable {
   width: 100%;
+  min-width: 1400px; /* Increased to accommodate Actions column */
   border-collapse: collapse;
   font-size: 0.85rem;
+  table-layout: fixed; /* Fixed layout for better column control */
 }
 
 .orderTable th {
@@ -305,6 +351,17 @@
   border-bottom: 1px solid var(--om-border);
   white-space: nowrap;
 }
+
+/* Set specific column widths */
+.orderTable th:nth-child(1) { width: 130px; } /* Order ID */
+.orderTable th:nth-child(2) { width: 180px; } /* Customer */
+.orderTable th:nth-child(3) { width: 200px; } /* Product */
+.orderTable th:nth-child(4) { width: 80px; }  /* Quantity */
+.orderTable th:nth-child(5) { width: 100px; } /* Total */
+.orderTable th:nth-child(6) { width: 100px; } /* Status */
+.orderTable th:nth-child(7) { width: 90px; }  /* Payment */
+.orderTable th:nth-child(8) { width: 150px; } /* Date */
+.orderTable th:nth-child(9) { width: 370px; } /* Actions - increased width */
 
 .orderTable td {
   padding: 0.85rem 1rem;
@@ -331,12 +388,14 @@
   font-weight: 700;
   color: var(--om-text-primary);
   font-size: 0.82rem;
+  min-width: 120px;
 }
 
 .customerCell {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  min-width: 180px;
 }
 
 .customerName {
@@ -353,6 +412,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  min-width: 200px;
 }
 
 .productName {
@@ -368,17 +428,20 @@
 .quantityCell {
   font-weight: 600;
   text-align: center;
+  min-width: 80px;
 }
 
 .priceCell {
   font-weight: 700;
   color: var(--om-blue);
+  min-width: 100px;
 }
 
 .dateCell {
   font-size: 0.78rem;
   color: var(--om-text-secondary);
   white-space: nowrap;
+  min-width: 150px;
 }
 
 .paymentBadge {
@@ -390,6 +453,8 @@
   font-size: 0.72rem;
   font-weight: 700;
   border: 1px solid rgba(59,130,246,0.15);
+  min-width: 70px;
+  justify-content: center;
 }
 
 /* Table Actions — matches ProductManagement */
@@ -397,7 +462,9 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* Prevent wrapping */
+  min-width: 360px; /* Increased space for all buttons */
+  justify-content: flex-start;
 }
 
 .statusSelect {
@@ -411,7 +478,8 @@
   cursor: pointer;
   transition: all 0.15s ease;
   font-family: var(--om-font);
-  min-width: 100px;
+  min-width: 110px;
+  flex-shrink: 0;
 }
 
 .statusSelect:hover {
@@ -432,13 +500,14 @@
   gap: 0.35rem;
   padding: 0.4rem 0.7rem;
   border-radius: 6px;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
   border: 1px solid transparent;
   transition: all 0.15s ease;
   font-family: var(--om-font);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .tableEditBtn {
@@ -451,6 +520,8 @@
   background: var(--om-blue);
   color: white;
   border-color: var(--om-blue);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(59,130,246,0.3);
 }
 
 .tableDeleteBtn {
@@ -463,6 +534,8 @@
   background: var(--om-red);
   color: white;
   border-color: var(--om-red);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(239,68,68,0.3);
 }
 
 /* =====================================================
